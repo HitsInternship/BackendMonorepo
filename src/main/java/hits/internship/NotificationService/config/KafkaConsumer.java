@@ -1,41 +1,56 @@
 package hits.internship.NotificationService.config;
 
-import hits.internship.NotificationService.service.MonitoringService;
-import hits.internship.NotificationService.service.TokenService;
+import hits.internship.NotificationService.service.EmailService;
+import hits.internship.NotificationService.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@ConditionalOnProperty(value = "${spring.kafka.enabled}", havingValue = "true")
 public class KafkaConsumer {
 
-    private final MonitoringService monitoringService;
-    private final TokenService tokenService;
+    private final NotificationService notificationService;
 
-    @KafkaListener(topics = "${monitoring-service.consumer.topic.response}")
-    public void listenResponse(String message) {
+    @KafkaListener(topicPartitions =@TopicPartition(
+            topic = "${notification.topic.request}",
+            partitions = "0"
+    ))
+    public void listenChangingPractise(String message) {
         log.info("Message received: {}", message);
-        monitoringService.parsingMessageResponse(message);
+        notificationService.parsingChangingPractise(message);
     }
 
-    @KafkaListener(topics = "${monitoring-service.consumer.topic.request}")
-    public void listenRequest(String message) {
+    @KafkaListener(topicPartitions =@TopicPartition(
+            topic = "${notification.topic.request}",
+            partitions = "1"
+    ))
+    public void listenRegistration(String message) {
         log.info("Message received: {}", message);
-        monitoringService.parsingMessageRequest(message);
+        notificationService.parsingRegistration(message);
     }
 
-    @KafkaListener(topics = "${monitoring-service.consumer.topic.error}")
-    public void listenError(String message) {
+    @KafkaListener(topicPartitions =@TopicPartition(
+            topic = "${notification.topic.request}",
+            partitions = "2"
+    ))
+    public void listenChangingPassword(String message) {
         log.info("Message received: {}", message);
-        monitoringService.parsingMessageError(message);
+        notificationService.parsingChangingPassword(message);
     }
 
-    @KafkaListener(topics = "${monitoring-service.consumer.topic.deleted-tokens}")
-    public void listenTokens(String message) {
+    @KafkaListener(topicPartitions =@TopicPartition(
+            topic = "${notification.topic.request}",
+            partitions = "3"
+    ))
+    public void listenDeadline(String message) {
         log.info("Message received: {}", message);
-        tokenService.addDeletedToken(message);
+        notificationService.parsingDeadline(message);
     }
 }

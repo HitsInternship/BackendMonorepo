@@ -1,8 +1,6 @@
 package hits.internship.NotificationService.exception;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-public class WrongData extends UsernameNotFoundException {
+public class WrongData extends Exception {
 
     public WrongData(String message) {
         super(message);
