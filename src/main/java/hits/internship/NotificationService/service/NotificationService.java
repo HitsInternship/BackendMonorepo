@@ -26,6 +26,23 @@ public class NotificationService {
     @Value("${notification.topic.response}")
     private String responseTopic;
 
+    public void parsingGeneral(String message) {
+        try{
+            JsonNode rootNode = objectMapper.readTree(message);
+            EventType eventType = EventType.valueOf(rootNode.get("eventType").asText());
+            switch (eventType) {
+                case deadline -> parsingDeadline(message);
+                case registration -> parsingRegistration(message);
+                case changing_password -> parsingChangingPassword(message);
+                case changing_practise -> parsingChangingPractise(message);
+                default -> sendError(message);
+            }
+        } catch (Exception ex) {
+            log.error("Failed to extract eventType from malformed message: {}", message);
+            sendError(message);
+        }
+    }
+
     public void parsingChangingPractise(String message) {
         try {
             ChangingPractise changingPractise = objectMapper.readValue(message, ChangingPractise.class);
@@ -71,7 +88,7 @@ public class NotificationService {
         try{
             JsonNode rootNode = objectMapper.readTree(message);
             UUID id = UUID.fromString(rootNode.get("id").asText());
-            KafkaMessageResponse errorMessage = new KafkaMessageResponse(id, StatusType.denied, "Error parsing the message: " + message);
+            KafkaMessageResponse errorMessage = new KafkaMessageResponse(id, StatusType.denied, "Error parsing the message");
             kafkaProducer.sendMessage(responseTopic, errorMessage.toString());
         } catch (Exception ex) {
             log.error("Failed to extract ID from malformed message: {}", message);
