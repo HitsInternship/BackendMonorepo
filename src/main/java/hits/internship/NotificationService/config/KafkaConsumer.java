@@ -1,7 +1,6 @@
 package hits.internship.NotificationService.config;
 
-import hits.internship.NotificationService.service.MonitoringService;
-import hits.internship.NotificationService.service.TokenService;
+import hits.internship.NotificationService.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -12,30 +11,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KafkaConsumer {
 
-    private final MonitoringService monitoringService;
-    private final TokenService tokenService;
+    private final NotificationService notificationService;
 
-    @KafkaListener(topics = "${monitoring-service.consumer.topic.response}")
-    public void listenResponse(String message) {
+    @KafkaListener(topics = "${notification.topic.request}")
+    public void listen(String message) {
         log.info("Message received: {}", message);
-        monitoringService.parsingMessageResponse(message);
-    }
-
-    @KafkaListener(topics = "${monitoring-service.consumer.topic.request}")
-    public void listenRequest(String message) {
-        log.info("Message received: {}", message);
-        monitoringService.parsingMessageRequest(message);
-    }
-
-    @KafkaListener(topics = "${monitoring-service.consumer.topic.error}")
-    public void listenError(String message) {
-        log.info("Message received: {}", message);
-        monitoringService.parsingMessageError(message);
-    }
-
-    @KafkaListener(topics = "${monitoring-service.consumer.topic.deleted-tokens}")
-    public void listenTokens(String message) {
-        log.info("Message received: {}", message);
-        tokenService.addDeletedToken(message);
+        notificationService.parsingGeneral(message);
     }
 }
