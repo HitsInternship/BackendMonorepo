@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hits.internship.NotificationService.config.KafkaProducer;
+import hits.internship.NotificationService.model.enumeration.EventType;
 import hits.internship.NotificationService.model.enumeration.StatusType;
 import hits.internship.NotificationService.model.kafka.*;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ public class NotificationService {
     public void parsingChangingPractise(String message) {
         try {
             ChangingPractise changingPractise = objectMapper.readValue(message, ChangingPractise.class);
+            emailService.createChangePractise(changingPractise);
         } catch (JsonProcessingException e) {
             log.error("Error parsing the message: {}", message);
             sendError(message);
@@ -57,6 +59,7 @@ public class NotificationService {
     public void parsingRegistration(String message) {
         try {
             Registration registration = objectMapper.readValue(message, Registration.class);
+            emailService.createRegistrationMail(registration);
         } catch (JsonProcessingException e) {
             log.error("Error parsing the message: {}", message);
             sendError(message);
@@ -77,6 +80,7 @@ public class NotificationService {
     public void parsingDeadline(String message) {
         try {
             Deadline deadline = objectMapper.readValue(message, Deadline.class);
+            emailService.createDeadlineMail(deadline);
         } catch (JsonProcessingException e) {
             log.error("Error parsing the message: {}", message);
             sendError(message);

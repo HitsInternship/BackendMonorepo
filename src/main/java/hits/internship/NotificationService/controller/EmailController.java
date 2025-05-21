@@ -2,6 +2,7 @@ package hits.internship.NotificationService.controller;
 
 import hits.internship.NotificationService.entity.Mail;
 import hits.internship.NotificationService.service.EmailService;
+import hits.internship.NotificationService.service.NotificationService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -21,6 +22,7 @@ import java.io.FileNotFoundException;
 public class EmailController {
 
     private final EmailService emailService;
+    private final NotificationService notificationService;
 
     @PostMapping("/simple")
     public void sendSimpleEmail(@RequestBody Mail mail){
@@ -31,6 +33,11 @@ public class EmailController {
     public void sendHTMLEmail(@RequestBody Mail mail) throws MessagingException {
         emailService.sendHTMLEmail(mail);
     }
+//    @PostMapping("/test")
+//    public void sendHTMLEmailTest(@RequestBody Mail mail) throws MessagingException {
+//        notificationService.parsingRegistration(mail);
+//    }
+//
 
     @PostMapping("/template")
     public void sendEmailWithThymeLeaf(@RequestBody Mail mail) throws MessagingException {

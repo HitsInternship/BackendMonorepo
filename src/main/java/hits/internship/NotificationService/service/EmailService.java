@@ -1,6 +1,10 @@
 package hits.internship.NotificationService.service;
 
 import hits.internship.NotificationService.entity.Mail;
+import hits.internship.NotificationService.model.enumeration.DeadlineType;
+import hits.internship.NotificationService.model.kafka.ChangingPractise;
+import hits.internship.NotificationService.model.kafka.Deadline;
+import hits.internship.NotificationService.model.kafka.Registration;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +19,11 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+
+import static org.unbescape.html.HtmlEscape.escapeHtml;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +31,26 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Async
     public void sendSimpleEmail(Mail mail) {
@@ -52,22 +80,17 @@ public class EmailService {
     @Async
     @SneakyThrows
     public void sendEmailWithThymeLeaf(Mail mail) throws MessagingException {
-        for (String recipient: mail.getTo()){
-            Context context = new Context();
-            context.setVariable("username", recipient);
 
-            String process = templateEngine.process("ThymeLeafMail", context);
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message);
-
-            helper.setSubject(mail.getSubject());
-            helper.setFrom("testmail6743@gmail.com");
-            helper.setText(process, true);
-            helper.setTo(recipient);
-
-            mailSender.send(message);
-        }
+        helper.setSubject(mail.getSubject());
+        helper.setFrom("testmail6743@gmail.com");
+        helper.setText(mail.getBody(), true);
+        helper.setTo(mail.getTo());
+        ClassPathResource classPathResource = new ClassPathResource("extension.jpg");
+        helper.addAttachment(Objects.requireNonNull(classPathResource.getFilename()), classPathResource);
+        mailSender.send(message);
     }
 
     @Async
@@ -87,5 +110,51 @@ public class EmailService {
 
             mailSender.send(message);
         }
+    }
+
+    public void createRegistrationMail(Registration registration) {
+        Context context = new Context();
+        context.setVariable("email", registration.getEmail());
+        context.setVariable("password", registration.getPassword());
+
+        String process = templateEngine.process("Registration", context);
+        Mail mail = new Mail(new String[]{registration.getEmail()}, "Registration", process);
+        sendEmailWithThymeLeaf(mail);
+    }
+
+    public void createChangePractise(ChangingPractise changingPractise) {
+        Context context = new Context();
+        context.setVariable("oldCompany", changingPractise.getOldCompanyName());
+        context.setVariable("oldPosition", changingPractise.getOldPosition());
+        context.setVariable("newCompany", changingPractise.getNewCompanyName());
+        context.setVariable("newPosition", changingPractise.getNewPosition());
+
+        switch (changingPractise.getNewStatus()) {
+            case completed ->  context.setVariable("status", "Выполнено успешно");
+            case denied ->  context.setVariable("status", "Отказано в переводе");
+            case in_progress -> context.setVariable("status", "В процессе перевода");
+        }
+
+        String process = templateEngine.process("ChangingPractise", context);
+        Mail mail = new Mail(new String[]{changingPractise.getEmail()}, "Смена практики", process);
+        sendEmailWithThymeLeaf(mail);
+    }
+
+    public void createDeadlineMail(Deadline deadline) {
+        String url = deadline.getEvent().equals(DeadlineType.practise_diary) ? "https://ваш-сайт.ru/practise-diary" : "https://ваш-сайт.ru/internship-application";
+        Context context = new Context();
+        context.setVariable("deadline", deadline);
+        context.setVariable("daysRemaining", calculateDaysRemaining(deadline.getDeadlineDate()));
+        context.setVariable("url", url);
+        String process = templateEngine.process("deadline-notification", context);
+        Mail mail = new Mail(new String[]{deadline.getEmail()}, "Напоминание о дедлайне", process);
+        sendEmailWithThymeLeaf(mail);
+    }
+
+    private long calculateDaysRemaining(OffsetDateTime deadlineDate) {
+        if (deadlineDate == null) {
+            return 0;
+        }
+        return ChronoUnit.DAYS.between(OffsetDateTime.now(), deadlineDate);
     }
 }
