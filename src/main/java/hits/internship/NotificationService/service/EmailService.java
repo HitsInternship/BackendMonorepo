@@ -37,7 +37,6 @@ public class EmailService {
     private String responseTopic;
 
     @Async
-    @SneakyThrows
     public void sendEmailWithThymeLeaf(Mail mail) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -53,7 +52,8 @@ public class EmailService {
 
             KafkaMessageResponse successfulMessage = new KafkaMessageResponse(mail.getId(), KafkaMessageStatus.completed, null);
             kafkaProducer.sendMessage(responseTopic, successfulMessage.toString());
-        } catch (MessagingException ex) {
+        } catch (Exception ex) {
+            log.error("Error when sending an email with id: {}", mail.getId());
             KafkaMessageResponse errorMessage = new KafkaMessageResponse(mail.getId(), KafkaMessageStatus.error, "Error when sending an email");
             kafkaProducer.sendMessage(responseTopic, errorMessage.toString());
         }
