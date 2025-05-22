@@ -1,17 +1,16 @@
 package hits.internship.NotificationService.service;
 
+import hits.internship.NotificationService.config.KafkaProducer;
 import hits.internship.NotificationService.entity.Mail;
 import hits.internship.NotificationService.model.enumeration.DeadlineType;
-import hits.internship.NotificationService.model.kafka.AdmissionInternship;
-import hits.internship.NotificationService.model.kafka.ChangingPractise;
-import hits.internship.NotificationService.model.kafka.Deadline;
-import hits.internship.NotificationService.model.kafka.Registration;
-import jakarta.mail.internet.InternetAddress;
+import hits.internship.NotificationService.model.enumeration.KafkaMessageStatus;
+import hits.internship.NotificationService.model.kafka.*;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.messaging.MessagingException;
@@ -21,96 +20,42 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-import static org.unbescape.html.HtmlEscape.escapeHtml;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class EmailService {
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    private final KafkaProducer kafkaProducer;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @Async
-    public void sendSimpleEmail(Mail mail) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(mail.getTo());
-        message.setSubject(mail.getSubject());
-        message.setText(mail.getBody());
-
-        mailSender.send(message);
-    }
+    @Value("${notification.topic.response}")
+    private String responseTopic;
 
     @Async
     @SneakyThrows
-    public void sendHTMLEmail(Mail mail){
-        MimeMessage message = mailSender.createMimeMessage();
-
-        message.setFrom(new InternetAddress("HITS@gmail.com"));
-        for (String recipient: mail.getTo()){
-            message.addRecipients(MimeMessage.RecipientType.TO, recipient);
-        }
-        message.setSubject(mail.getSubject());
-        message.setContent(mail.getBody(), "text/html; charset=utf-8");
-
-        mailSender.send(message);
-    }
-
-    @Async
-    @SneakyThrows
-    public void sendEmailWithThymeLeaf(Mail mail) throws MessagingException {
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-        helper.setSubject(mail.getSubject());
-        helper.setFrom("testmail6743@gmail.com");
-        helper.setText(mail.getBody(), true);
-        helper.setTo(mail.getTo());
-        ClassPathResource classPathResource = new ClassPathResource("extension.jpg");
-        helper.addAttachment(Objects.requireNonNull(classPathResource.getFilename()), classPathResource);
-        mailSender.send(message);
-    }
-
-    @Async
-    @SneakyThrows
-    public void sendEmailWithAttachment(Mail mail) throws MessagingException {
-        for (String recipient: mail.getTo()){
+    public void sendEmailWithThymeLeaf(Mail mail) {
+        try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
+            helper.setSubject(mail.getSubject());
             helper.setFrom("testmail6743@gmail.com");
-            helper.setTo(recipient);
-            helper.setSubject("Testing Mail API With Attachment");
-            helper.setText("Please find the attached document below");
-
-            ClassPathResource classPathResource = new ClassPathResource("hello.jpg");
+            helper.setText(mail.getBody(), true);
+            helper.setTo(mail.getTo());
+            ClassPathResource classPathResource = new ClassPathResource("extension.jpg");
             helper.addAttachment(Objects.requireNonNull(classPathResource.getFilename()), classPathResource);
-
             mailSender.send(message);
+
+            KafkaMessageResponse successfulMessage = new KafkaMessageResponse(mail.getId(), KafkaMessageStatus.completed, null);
+            kafkaProducer.sendMessage(responseTopic, successfulMessage.toString());
+        } catch (MessagingException ex) {
+            KafkaMessageResponse errorMessage = new KafkaMessageResponse(mail.getId(), KafkaMessageStatus.error, "Error when sending an email");
+            kafkaProducer.sendMessage(responseTopic, errorMessage.toString());
         }
     }
 
@@ -120,7 +65,7 @@ public class EmailService {
         context.setVariable("password", registration.getPassword());
 
         String process = templateEngine.process("Registration", context);
-        Mail mail = new Mail(new String[]{registration.getEmail()}, "Регистрация", process);
+        Mail mail = new Mail(registration.getId(), registration.getEmail(), "Регистрация", process);
         sendEmailWithThymeLeaf(mail);
     }
 
@@ -137,8 +82,8 @@ public class EmailService {
             case in_progress -> context.setVariable("status", "В процессе перевода");
         }
 
-        String process = templateEngine.process("ChangingPractise", context);
-        Mail mail = new Mail(new String[]{changingPractise.getEmail()}, "Смена практики", process);
+        String process = templateEngine.process("Changing-practise", context);
+        Mail mail = new Mail(changingPractise.getId(), changingPractise.getEmail(), "Смена практики", process);
         sendEmailWithThymeLeaf(mail);
     }
 
@@ -149,7 +94,7 @@ public class EmailService {
         context.setVariable("daysRemaining", calculateDaysRemaining(deadline.getDeadlineDate()));
         context.setVariable("url", url);
         String process = templateEngine.process("deadline-notification", context);
-        Mail mail = new Mail(new String[]{deadline.getEmail()}, "Напоминание о дедлайне", process);
+        Mail mail = new Mail(deadline.getId(), deadline.getEmail(), "Напоминание о дедлайне", process);
         sendEmailWithThymeLeaf(mail);
     }
 
@@ -166,7 +111,7 @@ public class EmailService {
         context.setVariable("position", admissionInternship.getPosition());
 
         String process = templateEngine.process("Admission-internship", context);
-        Mail mail = new Mail(new String[]{admissionInternship.getEmail()}, "Зачисление на практику", process);
+        Mail mail = new Mail(admissionInternship.getId(), admissionInternship.getEmail(), "Зачисление на практику", process);
         sendEmailWithThymeLeaf(mail);
     }
 }

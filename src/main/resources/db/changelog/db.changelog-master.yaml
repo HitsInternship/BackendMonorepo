@@ -1,4 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: changes/2025-05-02__create-db.sql
-      relativeToChangeLogFile: true

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявление на смену практики</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #4a6baf;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .content {
+            padding: 25px;
+        }
+        .change-card {
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        .old-info {
+            background-color: #ffeeee;
+            border: 1px solid #ffcccc;
+            width: 48%;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .new-info {
+            background-color: #eeffee;
+            border: 1px solid #ccffcc;
+            width: 48%;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        .arrow {
+            font-size: 24px;
+            align-self: center;
+            color: #4a6baf;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4a6baf;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        .company-name {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="header">
+        <h1>Статус заявления на смену практики</h1>
+    </div>
+
+    <div class="content">
+        <p>Уведомляем вас о статусе вашего заявления:</p>
+
+        <div class="change-card">
+            <div class="old-info">
+                <h3>Текущее место:</h3>
+                <p class="company-name" th:text="${oldCompany}">Текущая компания</p>
+                <p th:text="${oldPosition}">Текущая позиция</p>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="new-info">
+                <h3>Новое место:</h3>
+                <p class="company-name" th:text="${newCompany}">Новая компания</p>
+                <p th:text="${newPosition}">Новая позиция</p>
+                <div class="status-badge">
+                    Статус: <span th:text="${status}">Статус</span>
+                </div>
+            </div>
+        </div>
+
+        <p th:if="${status == 'Выполнено успешно'}">
+            Ваше заявление одобрено. Смена практики будет произведена в указанные сроки.
+        </p>
+        <p th:if="${status == 'Отказано в переводе'}">
+            Ваше заявление отклонено. Пожалуйста, свяжитесь с куратором для уточнения деталей.
+        </p>
+        <p th:if="${status == 'В процессе перевода'}">
+            Ваше заявление находится на рассмотрении. Результат будет объявлен в ближайшее время.
+        </p>
+
+        <p style="margin-top: 20px;">
+            <a href="https://ваш-сайт.ru/internship-requests" class="button">Мои заявления</a>
+            <a href="mailto:internship@company.com" style="margin-left: 10px;">Контакты</a>
+        </p>
+    </div>
+
+    <div class="footer">
+        <p>Это письмо отправлено автоматически. Пожалуйста, не отвечайте на него.</p>
+        <p>© 2025 Ваш Университет. Все права защищены.</p>
+    </div>
+</div>
+</body>
+</html>
