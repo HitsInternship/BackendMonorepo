@@ -4,5 +4,6 @@ public enum EventType {
     changing_practise,
     registration,
     changing_password,
-    deadline
+    deadline,
+    admission_internship
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hits.internship.NotificationService.config.KafkaProducer;
 import hits.internship.NotificationService.model.enumeration.EventType;
+import hits.internship.NotificationService.model.enumeration.KafkaMessageStatus;
 import hits.internship.NotificationService.model.enumeration.StatusType;
 import hits.internship.NotificationService.model.kafka.*;
 import lombok.RequiredArgsConstructor;
@@ -36,11 +37,23 @@ public class NotificationService {
                 case registration -> parsingRegistration(message);
                 case changing_password -> parsingChangingPassword(message);
                 case changing_practise -> parsingChangingPractise(message);
+                case admission_internship -> parsingAdmissionInternship(message);
                 default -> sendError(message);
             }
         } catch (Exception ex) {
             log.error("Failed to extract eventType from malformed message: {}", message);
             sendError(message);
+        }
+    }
+
+    private void parsingAdmissionInternship(String message) {
+        try {
+            AdmissionInternship admissionInternship = objectMapper.readValue(message, AdmissionInternship.class);
+            emailService.createAdmissionInternship(admissionInternship);
+        } catch (JsonProcessingException e) {
+            log.error("Error parsing the message: {}", message);
+            sendError(message);
+            throw new RuntimeException(e);
         }
     }
 
@@ -92,7 +105,7 @@ public class NotificationService {
         try{
             JsonNode rootNode = objectMapper.readTree(message);
             UUID id = UUID.fromString(rootNode.get("id").asText());
-            KafkaMessageResponse errorMessage = new KafkaMessageResponse(id, StatusType.denied, "Error parsing the message");
+            KafkaMessageResponse errorMessage = new KafkaMessageResponse(id, KafkaMessageStatus.error, "Error parsing the message");
             kafkaProducer.sendMessage(responseTopic, errorMessage.toString());
         } catch (Exception ex) {
             log.error("Failed to extract ID from malformed message: {}", message);

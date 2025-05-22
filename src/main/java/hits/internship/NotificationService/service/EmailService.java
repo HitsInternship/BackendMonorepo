@@ -2,6 +2,7 @@ package hits.internship.NotificationService.service;
 
 import hits.internship.NotificationService.entity.Mail;
 import hits.internship.NotificationService.model.enumeration.DeadlineType;
+import hits.internship.NotificationService.model.kafka.AdmissionInternship;
 import hits.internship.NotificationService.model.kafka.ChangingPractise;
 import hits.internship.NotificationService.model.kafka.Deadline;
 import hits.internship.NotificationService.model.kafka.Registration;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
@@ -67,7 +69,7 @@ public class EmailService {
     public void sendHTMLEmail(Mail mail){
         MimeMessage message = mailSender.createMimeMessage();
 
-        message.setFrom(new InternetAddress("testmail6743@gmail.com"));
+        message.setFrom(new InternetAddress("HITS@gmail.com"));
         for (String recipient: mail.getTo()){
             message.addRecipients(MimeMessage.RecipientType.TO, recipient);
         }
@@ -118,7 +120,7 @@ public class EmailService {
         context.setVariable("password", registration.getPassword());
 
         String process = templateEngine.process("Registration", context);
-        Mail mail = new Mail(new String[]{registration.getEmail()}, "Registration", process);
+        Mail mail = new Mail(new String[]{registration.getEmail()}, "Регистрация", process);
         sendEmailWithThymeLeaf(mail);
     }
 
@@ -151,10 +153,20 @@ public class EmailService {
         sendEmailWithThymeLeaf(mail);
     }
 
-    private long calculateDaysRemaining(OffsetDateTime deadlineDate) {
+    private long calculateDaysRemaining(LocalDate deadlineDate) {
         if (deadlineDate == null) {
             return 0;
         }
-        return ChronoUnit.DAYS.between(OffsetDateTime.now(), deadlineDate);
+        return ChronoUnit.DAYS.between(LocalDate.now(), deadlineDate);
+    }
+
+    public void createAdmissionInternship(AdmissionInternship admissionInternship) {
+        Context context = new Context();
+        context.setVariable("companyName", admissionInternship.getCompanyName());
+        context.setVariable("position", admissionInternship.getPosition());
+
+        String process = templateEngine.process("Admission-internship", context);
+        Mail mail = new Mail(new String[]{admissionInternship.getEmail()}, "Зачисление на практику", process);
+        sendEmailWithThymeLeaf(mail);
     }
 }
