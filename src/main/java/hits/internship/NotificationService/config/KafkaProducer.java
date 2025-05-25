@@ -14,6 +14,6 @@ public class KafkaProducer {
 
     public void sendMessage(String topic, String message) {
         kafkaTemplate.send(topic, message);
-        log.info("Отправлено сообщение: {} в топик: {}", message, topic);
+        log.info("The message has been sent: {} in the topic: {}", message, topic);
     }
 }

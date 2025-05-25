@@ -2,6 +2,7 @@ package hits.internship.NotificationService.model.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hits.internship.NotificationService.model.enumeration.KafkaMessageStatus;
 import hits.internship.NotificationService.model.enumeration.StatusType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class KafkaMessageResponse {
     UUID id;
-    StatusType status;
+    KafkaMessageStatus status;
     String errorMessage;
 
     @Override

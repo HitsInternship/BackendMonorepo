@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class Registration extends KafkaMessageRequest{
-    String login;
-    String password;
+public class AdmissionInternship extends KafkaMessageRequest{
+    String companyName;
+    String position;
 }

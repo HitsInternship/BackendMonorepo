@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hits.internship.NotificationService.config.KafkaProducer;
+import hits.internship.NotificationService.model.enumeration.EventType;
+import hits.internship.NotificationService.model.enumeration.KafkaMessageStatus;
 import hits.internship.NotificationService.model.enumeration.StatusType;
 import hits.internship.NotificationService.model.kafka.*;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,7 @@ public class NotificationService {
                 case registration -> parsingRegistration(message);
                 case changing_password -> parsingChangingPassword(message);
                 case changing_practise -> parsingChangingPractise(message);
+                case admission_internship -> parsingAdmissionInternship(message);
                 default -> sendError(message);
             }
         } catch (Exception ex) {
@@ -43,9 +46,21 @@ public class NotificationService {
         }
     }
 
+    private void parsingAdmissionInternship(String message) {
+        try {
+            AdmissionInternship admissionInternship = objectMapper.readValue(message, AdmissionInternship.class);
+            emailService.createAdmissionInternship(admissionInternship);
+        } catch (JsonProcessingException e) {
+            log.error("Error parsing the message: {}", message);
+            sendError(message);
+            throw new RuntimeException(e);
+        }
+    }
+
     public void parsingChangingPractise(String message) {
         try {
             ChangingPractise changingPractise = objectMapper.readValue(message, ChangingPractise.class);
+            emailService.createChangePractise(changingPractise);
         } catch (JsonProcessingException e) {
             log.error("Error parsing the message: {}", message);
             sendError(message);
@@ -57,6 +72,7 @@ public class NotificationService {
     public void parsingRegistration(String message) {
         try {
             Registration registration = objectMapper.readValue(message, Registration.class);
+            emailService.createRegistrationMail(registration);
         } catch (JsonProcessingException e) {
             log.error("Error parsing the message: {}", message);
             sendError(message);
@@ -77,6 +93,7 @@ public class NotificationService {
     public void parsingDeadline(String message) {
         try {
             Deadline deadline = objectMapper.readValue(message, Deadline.class);
+            emailService.createDeadlineMail(deadline);
         } catch (JsonProcessingException e) {
             log.error("Error parsing the message: {}", message);
             sendError(message);
@@ -88,7 +105,7 @@ public class NotificationService {
         try{
             JsonNode rootNode = objectMapper.readTree(message);
             UUID id = UUID.fromString(rootNode.get("id").asText());
-            KafkaMessageResponse errorMessage = new KafkaMessageResponse(id, StatusType.denied, "Error parsing the message");
+            KafkaMessageResponse errorMessage = new KafkaMessageResponse(id, KafkaMessageStatus.error, "Error parsing the message");
             kafkaProducer.sendMessage(responseTopic, errorMessage.toString());
         } catch (Exception ex) {
             log.error("Failed to extract ID from malformed message: {}", message);
