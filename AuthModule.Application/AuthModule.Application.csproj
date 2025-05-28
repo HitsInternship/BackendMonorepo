@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>AuthModel.Service</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="EPPlus" Version="8.0.5" />
+      <PackageReference Include="JwtSecurityTokenCustom" Version="1.0.0.2" />
+      <PackageReference Include="MediatR" Version="12.5.0" />
+      <PackageReference Include="OfficeOpenXml.Core.ExcelPackage" Version="1.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AuthModule.Infrastructure\AuthModule.Infrastructure.csproj" />
+      <ProjectReference Include="..\AuthModule.Contracts\AuthModule.Contracts.csproj" />
+      <ProjectReference Include="..\Shared.Extensions\Shared.Extensions.csproj" />
+      <ProjectReference Include="..\UserModule.Contracts\UserModule.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

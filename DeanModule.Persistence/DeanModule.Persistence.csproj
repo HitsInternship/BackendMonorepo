@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DeanModule.Contracts\DeanModule.Contracts.csproj" />
+      <ProjectReference Include="..\DeanModule.Domain\DeanModule.Domain.csproj" />
+      <ProjectReference Include="..\DeanModule.Infrastructure\DeanModule.Infrastructure.csproj" />
+      <ProjectReference Include="..\Shared.Persistence\Shared.Persistence.csproj" />
+    </ItemGroup>
+
+</Project>

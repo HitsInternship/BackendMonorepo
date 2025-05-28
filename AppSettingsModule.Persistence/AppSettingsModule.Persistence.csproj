@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppSettingsModule.Contracts\AppSettingsModule.Contracts.csproj" />
+    <ProjectReference Include="..\AppSettingsModule.Domain\AppSettingsModule.Domain.csproj" />
+    <ProjectReference Include="..\AppSettingsModule.Infrastructure\AppSettingsModule.Infrastructure.csproj" />
+    <ProjectReference Include="..\Shared.Persistence\Shared.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

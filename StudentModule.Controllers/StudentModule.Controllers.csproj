@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="MediatR" Version="12.5.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StudentModule.Application\StudentModule.Application.csproj" />
+    <ProjectReference Include="..\StudentModule.Contracts\StudentModule.Contracts.csproj" />
+    <ProjectReference Include="..\StudentModule.Infrastructure\StudentModule.Infrastructure.csproj" />
+    <ProjectReference Include="..\StudentModule.Persistence\StudentModule.Persistence.csproj" />
+    <ProjectReference Include="..\UserModule.Persistence\UserModule.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>
