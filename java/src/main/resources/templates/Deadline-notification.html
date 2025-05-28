@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Напоминание о дедлайне</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #4a6baf;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .content {
+            padding: 25px;
+        }
+        .deadline-card {
+            border-left: 4px solid;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f9f9f9;
+        }
+        .practise {
+            border-color: #ff9800;
+        }
+        .selection {
+            border-color: #4caf50;
+        }
+        .deadline-date {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e91e63;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4a6baf;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="header">
+        <h1 th:if="${deadline.event == T(hits.internship.NotificationService.model.enumeration.DeadlineType).practise_diary}">
+            Напоминание о заполнении дневника практики
+        </h1>
+        <h1 th:if="${deadline.event == T(hits.internship.NotificationService.model.enumeration.DeadlineType).selection}">
+            Напоминание о подаче заявления на стажировку
+        </h1>
+    </div>
+
+    <div class="content">
+        <div th:classappend="${deadline.event == T(hits.internship.NotificationService.model.enumeration.DeadlineType).practise_diary} ? 'practise' : 'selection'"
+             class="deadline-card">
+            <p th:if="${deadline.event == T(hits.internship.NotificationService.model.enumeration.DeadlineType).practise_diary}">
+                Пожалуйста, не забудьте заполнить дневник практики до указанной даты.
+            </p>
+            <p th:if="${deadline.event == T(hits.internship.NotificationService.model.enumeration.DeadlineType).selection}">
+                Успейте подать заявление на стажировку до указанного срока.
+            </p>
+
+            <div class="deadline-date">
+                До <span th:text="${#temporals.format(deadline.deadlineDate, 'dd.MM.yyyy')}"></span>
+            </div>
+
+            <p>Осталось времени:
+                <span th:text="${daysRemaining}"></span> дней
+            </p>
+        </div>
+
+        <p>Для выполнения действия перейдите по ссылке:</p>
+        <a th:href="${url}"
+           class="button">
+        <span th:text="${#strings.equals(deadline.event.name(), 'practise_diary')} ?
+                  'Перейти к дневнику' : 'Подать заявление'"></span>
+        </a>
+    </div>
+
+    <div class="footer">
+        <p>Это письмо отправлено автоматически. Пожалуйста, не отвечайте на него.</p>
+        <p>© 2025 Ваш Университет. Все права защищены.</p>
+    </div>
+</div>
+</body>
+</html>
