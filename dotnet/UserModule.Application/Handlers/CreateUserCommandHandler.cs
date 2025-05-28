@@ -30,7 +30,8 @@ namespace UserModule.Application.Handlers
 
             await _userRepository.AddAsync(user);
 
-            await _mediator.Send(new CreateAspNetUserQuery() { UserId = user.Id, Email = user.Email });
+            await _mediator.Send(new CreateAspNetUserQuery() { UserId = user.Id, Email = user.Email },
+                cancellationToken);
 
             return user;
         }

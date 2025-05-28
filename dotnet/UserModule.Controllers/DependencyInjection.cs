@@ -22,9 +22,9 @@ namespace UserModule.Controllers
             });
         }
 
-        public static void UseUserModule(this IServiceProvider services)
+        public static async Task UseUserModule(this IServiceProvider services)
         {
-            services.AddUserModuleInfrastructure();
+            await services.AddUserModuleInfrastructure();
         }
     }
 }

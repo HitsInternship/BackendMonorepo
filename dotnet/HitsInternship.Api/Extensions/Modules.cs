@@ -27,10 +27,10 @@ public static class Modules
         services.AddAppSettingsModule(configuration);
     }
 
-    public static void UseApplicationModules(this IServiceProvider services)
+    public static async Task UseApplicationModules(this IServiceProvider services)
     {
         services.UseDeanModule();
-        services.UseUserModule();
+        await services.UseUserModule();
         services.UseDocumentModule();
         services.UseCompanyModule();
         services.UseAuthModule();

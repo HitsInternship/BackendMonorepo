@@ -44,7 +44,7 @@ public class LoginHandler : IRequestHandler<LoginDTO, LoginResponseDTO>
             throw new NotFound("Пользователь не найден");
         }
 
-        var accessToken = GenerateAccessToken(user);
+        var accessToken = await GenerateAccessToken(user);
         var refreshToken = GenerateRefreshToken();
 
         user.RefreshToken = refreshToken;
@@ -60,7 +60,7 @@ public class LoginHandler : IRequestHandler<LoginDTO, LoginResponseDTO>
 
         return new LoginResponseDTO
         {
-            AccessToken = accessToken.ToString(),
+            AccessToken = accessToken,
             RefreshToken = refreshToken,
             Roles = roleNames
         };
