@@ -46,7 +46,7 @@ namespace StudentModule.Application.Handlers.StudentHandlres
             {
                 UserId = user.Id,
                 User = user,
-                Middlename = request.ExelStudentDto.Middleтame,
+                Middlename = request.ExelStudentDto.Middlename,
                 Phone = null,
                 IsHeadMan = false,
                 Status = StudentStatus.InProcess,
