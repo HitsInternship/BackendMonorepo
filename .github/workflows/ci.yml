@@ -13,7 +13,6 @@ jobs:
         uses: actions/checkout@v2  
 
       - name: Build and Start Services 
-        working-directory: BackendMonorepo
         run: |
           docker-compose down
           docker system prune -af
