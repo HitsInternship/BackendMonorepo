@@ -2,7 +2,9 @@ namespace AuthModule.Contracts.Model;
 
 public class ExcelStudentDTO
 {
-    public string FIO { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public string Middleòame { get; set; }
     public string Email { get; set; }
     public string Group { get; set; }
 }

@@ -50,7 +50,7 @@ public class UploadExcelHandler : IRequestHandler<UploadExcelDTO, List<ExcelStud
 
             students.Add(new ExcelStudentDTO
             {
-                FIO = fio,
+                //FIO = fio,
                 Email = email,
                 Group = group
             });

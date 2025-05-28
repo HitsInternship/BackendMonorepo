@@ -18,6 +18,7 @@
     <ProjectReference Include="..\StudentModule.Contracts\StudentModule.Contracts.csproj" />
     <ProjectReference Include="..\StudentModule.Infrastructure\StudentModule.Infrastructure.csproj" />
     <ProjectReference Include="..\StudentModule.Persistence\StudentModule.Persistence.csproj" />
+    <ProjectReference Include="..\UserModule.Persistence\UserModule.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Shared.Domain.Exceptions;
 using UserModule.Contracts.Repositories;
 using UserInfrastructure;
+using UserModule.Domain.Enums;
 
 
 namespace AuthModel.Service.Handler;
@@ -51,12 +52,17 @@ public class LoginHandler : IRequestHandler<LoginDTO, LoginResponseDTO>
 
         await _context.SaveChangesAsync(cancellationToken);
         var roles = await _roleRepository.GetRolesByUserIdAsync(user.UserId.Value);
+        var roleNames = new List<RoleName>(roles.Count);
+        foreach (var role in roles)
+        {
+            roleNames.Add(role.RoleName);
+        }
 
         return new LoginResponseDTO
         {
             AccessToken = accessToken.ToString(),
             RefreshToken = refreshToken,
-            Roles = roles
+            Roles = roleNames
         };
     }
     
@@ -68,13 +74,15 @@ public class LoginHandler : IRequestHandler<LoginDTO, LoginResponseDTO>
 
         var claims = new List<Claim> { new Claim("UserId", user.UserId.ToString()) };
 
-        
+
         var roles = await _roleRepository.GetRolesByUserIdAsync(user.UserId.Value);
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role.RoleName.ToString()));
+
+            role.Users = null;
         }
-        
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),

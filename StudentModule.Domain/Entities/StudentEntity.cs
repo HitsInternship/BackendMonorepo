@@ -11,7 +11,7 @@ namespace StudentModule.Domain.Entities
         [NotMapped]
         public User User { get; set; }
         public string? Middlename { get; set; }
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         public bool IsHeadMan { get; set; }
         public StudentStatus Status { get; set; }
 

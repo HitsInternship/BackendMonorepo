@@ -34,6 +34,14 @@ namespace StudentModule.Persistence.Repositories
             return group;
         }
 
+        public async Task<GroupEntity> GetGroupByNumberAsync(int number)
+        {
+            var group = await context.Groups
+                .FirstOrDefaultAsync(g => g.GroupNumber == number);
+
+            return group;
+        }
+
         public async Task<bool> IsGroupWithNumderExistsAsync(int number)
         {
             return await context.Groups.AnyAsync(s => s.GroupNumber == number);

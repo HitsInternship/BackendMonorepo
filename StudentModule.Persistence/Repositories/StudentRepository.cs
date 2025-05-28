@@ -26,7 +26,10 @@ namespace StudentModule.Persistence.Repositories
 
         public Task<StudentEntity> GetStudentByUserIdAsync(Guid id)
         {
-            var student = context.SStudents.FirstOrDefaultAsync(s => s.UserId == id);
+            var student = context.SStudents
+                .Include(s => s.Group)
+                .ThenInclude(g => g.Stream)
+                .FirstOrDefaultAsync(s => s.UserId == id);
 
             return student;
         }
