@@ -18,6 +18,7 @@ namespace StudentModule.Contracts.Commands.StudentCommands
         public string Phone { get; set; }
         public bool IsHeadMan { get; set; }
         public StudentStatus Status { get; set; }
+        public StudentInternshipStatus InternshipStatus { get; set; }
         public Guid GroupId { get; set; }
     }
 }

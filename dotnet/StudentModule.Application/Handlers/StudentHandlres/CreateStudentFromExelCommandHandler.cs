@@ -50,6 +50,7 @@ namespace StudentModule.Application.Handlers.StudentHandlres
                 Phone = null,
                 IsHeadMan = false,
                 Status = StudentStatus.InProcess,
+                InternshipStatus = StudentInternshipStatus.Candidate,
                 GroupId = group.Id,
                 Group = group
             };
