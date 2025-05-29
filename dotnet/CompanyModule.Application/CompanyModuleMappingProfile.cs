@@ -17,12 +17,10 @@ public class CompanyModuleMappingProfile : Profile
         CreateMap<PartnershipAgreementRequest, PartnershipAgreement>();
         CreateMap<PartnershipAgreement, PartnershipAgreementResponse>();
 
-        CreateMap<CompanyPersonRequest, Curator>()
-            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.userRequest));
-        CreateMap<CompanyPersonRequest, CompanyRepresenter>()
+        CreateMap<CuratorRequest, Curator>()
             .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.userRequest));
 
-        CreateMap<CompanyPerson, CompanyPersonResponse>()
+        CreateMap<Curator, CuratorResponse>()
             .ForMember(dest => dest.id, opt => opt.MapFrom(src => src.UserId))
             .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name))
             .ForMember(dest => dest.surname, opt => opt.MapFrom(src => src.User.Surname))

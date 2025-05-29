@@ -9,15 +9,14 @@ using UserModule.Contracts.DTOs.Requests;
 
 namespace CompanyModule.Contracts.DTOs.Requests
 {
-    public class CompanyPersonRequest
+    public class CuratorRequest
     {
         public UserRequest? userRequest { get; set; }
         public Guid? userId { get; set; }
         public string telegram { get; set; }
         public string phone { get; set; }
-        public bool isCurator { get; set; }
         
 
-        public CompanyPersonRequest() {}
+        public CuratorRequest() {}
     }
 }

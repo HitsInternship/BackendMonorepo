@@ -15,7 +15,7 @@ namespace CompanyModule.Domain.Entities
         public CompanyStatus Status { get; set; }
 
         public List<PartnershipAgreement> Agreements { get; set; } = new List<PartnershipAgreement>();
-        public List<CompanyPerson> CompanyPersons { get; set; } = new List<CompanyPerson>();
+        public List<Curator> CompanyPersons { get; set; } = new List<Curator>();
         public List<Appointment> Appointments { get; set; } = new List<Appointment>();
 
         public Company() { }

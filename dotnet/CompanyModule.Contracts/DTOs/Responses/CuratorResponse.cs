@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CompanyModule.Contracts.DTOs.Responses
 {
-    public class CompanyPersonResponse
+    public class CuratorResponse
     {
         public Guid id { get; set; }
         public string name { get; set; }

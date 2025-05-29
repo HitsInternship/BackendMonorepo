@@ -17,7 +17,7 @@ namespace UserModule.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -56,24 +56,6 @@ namespace UserModule.Infrastructure.Migrations
                             Id = new Guid("30000000-0000-0000-0000-000000000000"),
                             IsDeleted = false,
                             RoleName = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("40000000-0000-0000-0000-000000000000"),
-                            IsDeleted = false,
-                            RoleName = 3
-                        },
-                        new
-                        {
-                            Id = new Guid("50000000-0000-0000-0000-000000000000"),
-                            IsDeleted = false,
-                            RoleName = 4
-                        },
-                        new
-                        {
-                            Id = new Guid("60000000-0000-0000-0000-000000000000"),
-                            IsDeleted = false,
-                            RoleName = 5
                         });
                 });
 

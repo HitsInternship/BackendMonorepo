@@ -55,7 +55,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAllOrigins");
 
-await app.Services.UseApplicationModules();
+app.Services.UseApplicationModules();
 app.UseAuthentication();
 app.UseAuthorization();
 
