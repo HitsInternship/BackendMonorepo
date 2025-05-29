@@ -3,6 +3,7 @@ using System;
 using CompanyModule.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CompanyModule.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyModuleDbContext))]
-    partial class CompanyModuleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250529112311_remove CompanyPerson")]
+    partial class removeCompanyPerson
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

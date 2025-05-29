@@ -72,10 +72,7 @@ namespace UserModule.Infrastructure.Migrations
                 {
                     { new Guid("10000000-0000-0000-0000-000000000000"), false, 0 },
                     { new Guid("20000000-0000-0000-0000-000000000000"), false, 1 },
-                    { new Guid("30000000-0000-0000-0000-000000000000"), false, 2 },
-                    { new Guid("40000000-0000-0000-0000-000000000000"), false, 3 },
-                    { new Guid("50000000-0000-0000-0000-000000000000"), false, 4 },
-                    { new Guid("60000000-0000-0000-0000-000000000000"), false, 5 }
+                    { new Guid("30000000-0000-0000-0000-000000000000"), false, 2 }
                 });
 
             migrationBuilder.CreateIndex(

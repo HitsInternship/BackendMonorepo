@@ -9,9 +9,9 @@ namespace SelectionModule.Application.Features.Commands.Vacancy;
 public class CloseVacancyCommandHandler : IRequestHandler<CloseVacancyCommand, Unit>
 {
     private readonly IVacancyRepository _vacancyRepository;
-    private readonly ICompanyPersonRepository _companyPersonRepository;
+    private readonly ICuratorRepository _companyPersonRepository;
 
-    public CloseVacancyCommandHandler(IVacancyRepository vacancyRepository, ICompanyPersonRepository companyPersonRepository)
+    public CloseVacancyCommandHandler(IVacancyRepository vacancyRepository, ICuratorRepository companyPersonRepository)
     {
         _vacancyRepository = vacancyRepository;
         _companyPersonRepository = companyPersonRepository;
@@ -24,7 +24,7 @@ public class CloseVacancyCommandHandler : IRequestHandler<CloseVacancyCommand, U
         
         var vacancy = await _vacancyRepository.GetByIdAsync(request.VacancyId);
 
-        if (!await _companyPersonRepository.CheckIfUserIsCompanyPerson(vacancy.CompanyId, request.UserId))
+        if (!await _companyPersonRepository.CheckIfUserIsCurator(vacancy.CompanyId, request.UserId))
             throw new Forbidden("You cannot close this vacancy");
         
         vacancy.IsClosed = true;

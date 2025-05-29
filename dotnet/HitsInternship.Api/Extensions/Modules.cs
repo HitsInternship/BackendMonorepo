@@ -8,6 +8,7 @@ using Shared.Extensions;
 using StudentModule.Controllers;
 using UserModule.Controllers;
 using AppSettingsModule.Controllers;
+using Shared.Extensions.GlobalInitializer;
 
 namespace HitsInternship.Api.Extensions;
 
@@ -27,10 +28,10 @@ public static class Modules
         services.AddAppSettingsModule(configuration);
     }
 
-    public static async Task UseApplicationModules(this IServiceProvider services)
+    public static void UseApplicationModules(this IServiceProvider services)
     {
         services.UseDeanModule();
-        await services.UseUserModule();
+        services.UseUserModule();
         services.UseDocumentModule();
         services.UseCompanyModule();
         services.UseAuthModule();
@@ -38,5 +39,6 @@ public static class Modules
         services.UseSelectionModule();
         services.UsePracticeModule();
         services.UseAppSettingsModule();
+        services.InitializeDatabases().Wait();
     }
 }

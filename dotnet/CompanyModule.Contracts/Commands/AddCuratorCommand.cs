@@ -9,5 +9,5 @@ using System.Threading.Tasks;
 
 namespace CompanyModule.Contracts.Commands
 {
-    public record AddCompanyPersonCommand(Guid companyId, CompanyPersonRequest createRequest) : IRequest<CompanyPerson>;
+    public record AddCuratorCommand(Guid companyId, CuratorRequest createRequest) : IRequest<Curator>;
 }

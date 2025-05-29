@@ -1,13 +1,6 @@
 ﻿using StudentModule.Domain.Entities;
 using StudentModule.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using UserModule.Domain.Entities;
+
 
 namespace StudentModule.Contracts.DTOs
 {
@@ -21,6 +14,7 @@ namespace StudentModule.Contracts.DTOs
         public string Phone { get; set; }
         public bool IsHeadMan { get; set; }
         public StudentStatus Status { get; set; }
+        public StudentInternshipStatus InternshipStatus { get; set; }
         public int? GroupNumber { get; set; }
         public int? Course { get; set; }
 
@@ -32,6 +26,7 @@ namespace StudentModule.Contracts.DTOs
             Middlename = student.Middlename;
             Phone = student.Phone;
             Status = student.Status;
+            InternshipStatus = student.InternshipStatus;
             IsHeadMan = student.IsHeadMan;
             Name = student.User.Name;
             Surname = student.User.Surname;

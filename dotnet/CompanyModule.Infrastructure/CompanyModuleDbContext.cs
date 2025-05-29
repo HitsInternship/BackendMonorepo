@@ -8,7 +8,7 @@ namespace CompanyModule.Infrastructure
         public DbSet<PartnershipAgreement> Agreements { get; set; }
 
         public DbSet<Company> Companies { get; set; }
-        public DbSet<CompanyPerson> CompanyPersons { get; set; }
+        public DbSet<Curator> Curators { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
 
         public DbSet<Attachment> Attachments { get; set; }
@@ -18,9 +18,6 @@ namespace CompanyModule.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Curator>();
-            modelBuilder.Entity<CompanyRepresenter>();
         }
     }
 }
