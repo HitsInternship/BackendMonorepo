@@ -10,5 +10,6 @@ public interface IApplicationRepository : IBaseEntityRepository<ApplicationEntit
     Task<IEnumerable<ApplicationEntity>> GetByCompanyId(Guid companyId);
     Task<IEnumerable<ApplicationEntity>> GetByPositionIdAsync(Guid positionId);
     Task<IEnumerable<ApplicationEntity>> GetByStatusAsync(ApplicationStatus status);
-   
+    
+    new Task<ApplicationEntity> GetByIdAsync(Guid id);
 }
