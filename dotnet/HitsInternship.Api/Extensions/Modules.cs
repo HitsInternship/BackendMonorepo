@@ -8,7 +8,8 @@ using Shared.Extensions;
 using StudentModule.Controllers;
 using UserModule.Controllers;
 using AppSettingsModule.Controllers;
-using Shared.Extensions.GlobalInitializer;
+using HitsInternship.Api.Extensions.GlobalInitializer;
+using NotificationModule.Controllers;
 
 namespace HitsInternship.Api.Extensions;
 
@@ -26,6 +27,7 @@ public static class Modules
         services.AddCompanyModule(configuration);
         services.AddPracticeModule(configuration);
         services.AddAppSettingsModule(configuration);
+        services.AddNotificationModule(configuration);
     }
 
     public static void UseApplicationModules(this IServiceProvider services)
@@ -39,6 +41,7 @@ public static class Modules
         services.UseSelectionModule();
         services.UsePracticeModule();
         services.UseAppSettingsModule();
+        services.UseNotificationModule();
         services.InitializeDatabases().Wait();
     }
 }

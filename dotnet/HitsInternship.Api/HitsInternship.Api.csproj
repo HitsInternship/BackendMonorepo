@@ -26,6 +26,7 @@
       <ProjectReference Include="..\CompanyModule.Controllers\CompanyModule.Controllers.csproj" />
       <ProjectReference Include="..\DeanModule.Controllers\DeanModule.Controllers.csproj" />
       <ProjectReference Include="..\DocumentModule.Controllers\DocumentModule.Controllers.csproj" />
+      <ProjectReference Include="..\NotificationModule.Controllers\NotificationModule.Controllers.csproj" />
       <ProjectReference Include="..\SelectionModule.Controllers\SelectionModule.Controllers.csproj" />
       <ProjectReference Include="..\PracticeModule.Controllers\PracticeModule.Controllers.csproj" />
       <ProjectReference Include="..\PracticeModule.Controllers\PracticeModule.Controllers.csproj" />

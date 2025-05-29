@@ -7,10 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NotificationModule.Contracts\NotificationModule.Contracts.csproj" />
-      <ProjectReference Include="..\NotificationModule.Domain\NotificationModule.Domain.csproj" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.5" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\NotificationModule.Infrastructure\NotificationModule.Infrastructure.csproj" />
-      <ProjectReference Include="..\Shared.Persistence\Shared.Persistence.csproj" />
     </ItemGroup>
 
 </Project>
