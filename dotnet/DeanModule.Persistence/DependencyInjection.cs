@@ -12,5 +12,6 @@ public static class DependencyInjection
         services.AddTransient<IApplicationRepository, ApplicationRepository>();
         services.AddTransient<ISemesterRepository, SemesterRepository>();
         services.AddTransient<IStreamSemesterRepository, StreamSemesterRepository>();
+        services.AddTransient<IApplicationCommentRepository, ApplicationCommentRepository>();
     }
 }
