@@ -17,10 +17,36 @@ namespace DeanModule.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("DeanModule.Domain.Entities.ApplicationComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("ParentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("ApplicationComments");
+                });
 
             modelBuilder.Entity("DeanModule.Domain.Entities.ApplicationEntity", b =>
                 {
@@ -127,6 +153,17 @@ namespace DeanModule.Infrastructure.Migrations
                     b.ToTable("StreamSemesters");
                 });
 
+            modelBuilder.Entity("DeanModule.Domain.Entities.ApplicationComment", b =>
+                {
+                    b.HasOne("DeanModule.Domain.Entities.ApplicationEntity", "Application")
+                        .WithMany("Comments")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+                });
+
             modelBuilder.Entity("DeanModule.Domain.Entities.StreamSemesterEntity", b =>
                 {
                     b.HasOne("DeanModule.Domain.Entities.SemesterEntity", "SemesterEntity")
@@ -136,6 +173,11 @@ namespace DeanModule.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("SemesterEntity");
+                });
+
+            modelBuilder.Entity("DeanModule.Domain.Entities.ApplicationEntity", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

@@ -29,4 +29,10 @@ public class ApplicationRepository(DeanModuleDbContext context)
     {
         return await DbSet.Where(a => a.Status == status).ToListAsync();
     }
+
+    public new async Task<ApplicationEntity> GetByIdAsync(Guid id)
+    {
+        return await DbSet.Include(x => x.Comments).FirstOrDefaultAsync(a => a.Id == id)
+               ?? throw new InvalidOperationException();
+    }
 }

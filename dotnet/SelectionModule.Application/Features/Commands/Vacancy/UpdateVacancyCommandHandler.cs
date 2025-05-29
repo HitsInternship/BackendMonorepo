@@ -11,10 +11,10 @@ public class UpdateVacancyCommandHandler : IRequestHandler<UpdateVacancyCommand,
     private readonly IVacancyRepository _vacancyRepository;
     private readonly IPositionRepository _positionRepository;
     private readonly ICompanyRepository _companyRepository;
-    private readonly ICompanyPersonRepository _companyPersonRepository;
+    private readonly ICuratorRepository _companyPersonRepository;
 
     public UpdateVacancyCommandHandler(IVacancyRepository vacancyRepository, ICompanyRepository companyRepository,
-        IPositionRepository positionRepository, ICompanyPersonRepository companyPersonRepository)
+        IPositionRepository positionRepository, ICuratorRepository companyPersonRepository)
     {
         _vacancyRepository = vacancyRepository;
         _companyRepository = companyRepository;
@@ -37,11 +37,11 @@ public class UpdateVacancyCommandHandler : IRequestHandler<UpdateVacancyCommand,
 
         if (request.UserId.HasValue)
         {
-            if (!await _companyPersonRepository.CheckIfUserIsCompanyPerson(request.VacancyRequestDto.CompanyId,
+            if (!await _companyPersonRepository.CheckIfUserIsCurator(request.VacancyRequestDto.CompanyId,
                     request.UserId.Value))
                 throw new Forbidden("You cannot create a vacancy from this company");
 
-            if (!await _companyPersonRepository.CheckIfUserIsCompanyPerson(vacancy.CompanyId,
+            if (!await _companyPersonRepository.CheckIfUserIsCurator(vacancy.CompanyId,
                     request.UserId.Value))
                 throw new Forbidden("You cannot create a vacancy from this company");
         }

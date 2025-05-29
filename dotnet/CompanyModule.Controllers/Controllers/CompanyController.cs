@@ -101,47 +101,46 @@ namespace CompanyModule.Controllers.Controllers
         }
 
         /// <summary>
-        /// Добавить человека от компании.
+        /// Добавить куратора компании.
         /// </summary>
-        /// <param name="createRequest.userId">Если необходимо создать человека от компании на основе уже существующего пользователя.</param>
-        /// <returns>Добавленный человек от компании.</returns>
+        /// <param name="createRequest.userId">Если необходимо создать куратора на основе уже существующего пользователя.</param>
+        /// <returns>Добавленный куратор.</returns>
         [HttpPost]
-        [Route("{companyId}/persons/add")]
-        [ProducesResponseType(typeof(CompanyPersonResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddCompanyPerson(Guid companyId, CompanyPersonRequest createRequest)
+        [Route("{companyId}/curators/add")]
+        [ProducesResponseType(typeof(CuratorResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> AddCurator(Guid companyId, CuratorRequest createRequest)
         {
-            return Ok(_mapper.Map<CompanyPersonResponse>(
-                await _sender.Send(new AddCompanyPersonCommand(companyId, createRequest))));
+            return Ok(_mapper.Map<CuratorResponse>(
+                await _sender.Send(new AddCuratorCommand(companyId, createRequest))));
         }
 
         /// <summary>
-        /// Получить список людей от компаний (CompanyPerson).
+        /// Получить список кураторов.
         /// </summary>
-        /// <returns>Список людей от компании.</returns>
+        /// <returns>Список кураторов.</returns>
         [HttpGet]
-        [Route("{companyId}/persons")]
-        [ProducesResponseType(typeof(List<CompanyPersonResponse>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCompanyPersons(Guid companyId, bool includeCurators,
-            bool includeRepresenters)
+        [Route("{companyId}/curators")]
+        [ProducesResponseType(typeof(List<CuratorResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCurators(Guid companyId)
         {
-            return Ok((await _sender.Send(new GetCompanyPersonsQuery(companyId, includeCurators, includeRepresenters)))
-                .Select(_mapper.Map<CompanyPersonResponse>));
+            return Ok((await _sender.Send(new GetCuratorsQuery(companyId)))
+                .Select(_mapper.Map<CuratorResponse>));
         }
 
         /// <summary>
-        /// Получить информацию о человеке от компании.
+        /// Получить информацию о кураторе.
         /// </summary>
-        /// <returns>Информация о человеке от компании.</returns>
+        /// <returns>Информация о кураторе.</returns>
         [HttpGet]
-        [Authorize(Roles = "Curator, CompanyRepresenter")]
-        [Route("person")]
-        [ProducesResponseType(typeof(CompanyPersonResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetCompanyPersonInfo()
+        [Authorize(Roles = "Curator")]
+        [Route("curator")]
+        [ProducesResponseType(typeof(CuratorResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCuratorInfo()
         {
             var userId = User.Claims.First().Value.ToString();
 
-            return Ok(_mapper.Map<CompanyPersonResponse>(
-                await _sender.Send(new GetCompanyPersonQuery(new Guid(userId)))));
+            return Ok(_mapper.Map<CuratorResponse>(
+                await _sender.Send(new GetCuratorQuery(new Guid(userId)))));
         }
     }
 }

@@ -9,10 +9,7 @@ namespace UserModule.Domain.Enums
     public enum RoleName
     {
         Student,
-        Intern,
         Curator,
-        DeanMember,
-        CompanyRepresenter,
-        Candidate
+        DeanMember
     }
 }

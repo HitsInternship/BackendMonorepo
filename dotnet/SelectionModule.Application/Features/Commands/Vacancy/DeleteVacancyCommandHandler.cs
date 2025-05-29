@@ -9,10 +9,10 @@ namespace SelectionModule.Application.Features.Commands.Vacancy;
 public class DeleteVacancyCommandHandler : IRequestHandler<DeleteVacancyCommand, Unit>
 {
     private readonly IVacancyRepository _vacancyRepository;
-    private readonly ICompanyPersonRepository _companyPersonRepository;
+    private readonly ICuratorRepository _companyPersonRepository;
 
     public DeleteVacancyCommandHandler(IVacancyRepository vacancyRepository,
-        ICompanyPersonRepository companyPersonRepository)
+        ICuratorRepository companyPersonRepository)
     {
         _vacancyRepository = vacancyRepository;
         _companyPersonRepository = companyPersonRepository;
@@ -27,7 +27,7 @@ public class DeleteVacancyCommandHandler : IRequestHandler<DeleteVacancyCommand,
 
         if (request.UserId.HasValue)
         {
-            if (!await _companyPersonRepository.CheckIfUserIsCompanyPerson(vacancy.CompanyId, request.UserId.Value))
+            if (!await _companyPersonRepository.CheckIfUserIsCurator(vacancy.CompanyId, request.UserId.Value))
                 throw new Forbidden("You are not allowed to delete this vacancy");
         }
         

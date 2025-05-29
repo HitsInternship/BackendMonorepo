@@ -26,27 +26,12 @@ namespace UserModule.Infrastructure
                 new Role
                 {
                     Id = Guid.Parse("20000000-0000-0000-0000-000000000000"),
-                    RoleName = RoleName.Intern
-                },
-                new Role
-                {
-                    Id = Guid.Parse("30000000-0000-0000-0000-000000000000"),
                     RoleName = RoleName.Curator
                 },
                 new Role
                 {
-                    Id = Guid.Parse("40000000-0000-0000-0000-000000000000"),
+                    Id = Guid.Parse("30000000-0000-0000-0000-000000000000"),
                     RoleName = RoleName.DeanMember
-                },
-                new Role
-                {
-                    Id = Guid.Parse("50000000-0000-0000-0000-000000000000"),
-                    RoleName = RoleName.CompanyRepresenter
-                },
-                new Role
-                {
-                    Id = Guid.Parse("60000000-0000-0000-0000-000000000000"),
-                    RoleName = RoleName.Candidate
                 }
             );
         }

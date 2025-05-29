@@ -62,6 +62,7 @@ public class UploadExcelHandler : IRequestHandler<UploadExcelDTO, List<ExcelStud
                 Group = group
             });
         }
+        //todo: обращаться к student module
 
         await _context.Students.AddRangeAsync(studentEntities, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

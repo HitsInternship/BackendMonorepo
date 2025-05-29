@@ -49,6 +49,7 @@ namespace StudentModule.Application.Handlers.StudentHandlres
                 Phone = request.Phone,
                 IsHeadMan = request.IsHeadMan,
                 Status = request.Status,
+                InternshipStatus = request.InternshipStatus,
                 GroupId = request.GroupId,
                 Group = group
             };

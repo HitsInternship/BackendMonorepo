@@ -24,7 +24,7 @@ namespace StudentModule.Controllers.Controllers
 
         [HttpPost]
         [Route("create")]
-        //[Authorize(Roles = "Dean")]
+        [Authorize(Roles = "DeanMember")]
         public async Task<IActionResult> CreateStudent(CreateStudentCommand command)
         {
             return Ok(await _mediator.Send(command));
@@ -32,8 +32,24 @@ namespace StudentModule.Controllers.Controllers
 
         [HttpPatch]
         [Route("edit-student-status")]
-        //todo уточнить кто имеет прао менять статус студента
+        [Authorize(Roles = "DeanMember")]
         public async Task<IActionResult> EditStudentStatus(EditStudentStatusCommand command)
+        {
+            return Ok(await _mediator.Send(command));
+        }
+
+        [HttpPatch]
+        [Route("edit-student-internship-status")]
+        [Authorize(Roles = "DeanMember")]
+        public async Task<IActionResult> EditStudentInternshipStatus(EditStudentInternshipStatusCommand command)
+        {
+            return Ok(await _mediator.Send(command));
+        }
+
+        [HttpPut]
+        [Route("edit-student")]
+        [Authorize(Roles = "DeanMember")]
+        public async Task<IActionResult> EditStudent(EditStudentCommand command)
         {
             return Ok(await _mediator.Send(command));
         }

@@ -4,7 +4,7 @@ using UserModule.Domain.Entities;
 
 namespace CompanyModule.Domain.Entities
 {
-    public abstract class CompanyPerson : BaseEntity
+    public class Curator : BaseEntity
     {
         public Guid UserId { get; set; }
         [NotMapped] 
@@ -13,16 +13,6 @@ namespace CompanyModule.Domain.Entities
         public string Phone { get; set; }
         public Company Company { get; set; }
 
-        protected CompanyPerson() {}
-    }
-
-    public class Curator : CompanyPerson
-    {
         public Curator() {}
-    }
-
-    public class CompanyRepresenter : CompanyPerson
-    {
-        public CompanyRepresenter() {}
     }
 }

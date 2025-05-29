@@ -17,7 +17,7 @@ namespace CompanyModule.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -95,7 +95,7 @@ namespace CompanyModule.Infrastructure.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("CompanyModule.Domain.Entities.CompanyPerson", b =>
+            modelBuilder.Entity("CompanyModule.Domain.Entities.Curator", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,11 +103,6 @@ namespace CompanyModule.Infrastructure.Migrations
 
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("character varying(21)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -127,11 +122,7 @@ namespace CompanyModule.Infrastructure.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("CompanyPersons");
-
-                    b.HasDiscriminator().HasValue("CompanyPerson");
-
-                    b.UseTphMappingStrategy();
+                    b.ToTable("Curators");
                 });
 
             modelBuilder.Entity("CompanyModule.Domain.Entities.PartnershipAgreement", b =>
@@ -160,20 +151,6 @@ namespace CompanyModule.Infrastructure.Migrations
                     b.ToTable("Agreements");
                 });
 
-            modelBuilder.Entity("CompanyModule.Domain.Entities.CompanyRepresenter", b =>
-                {
-                    b.HasBaseType("CompanyModule.Domain.Entities.CompanyPerson");
-
-                    b.HasDiscriminator().HasValue("CompanyRepresenter");
-                });
-
-            modelBuilder.Entity("CompanyModule.Domain.Entities.Curator", b =>
-                {
-                    b.HasBaseType("CompanyModule.Domain.Entities.CompanyPerson");
-
-                    b.HasDiscriminator().HasValue("Curator");
-                });
-
             modelBuilder.Entity("CompanyModule.Domain.Entities.Appointment", b =>
                 {
                     b.HasOne("CompanyModule.Domain.Entities.Company", "Company")
@@ -196,7 +173,7 @@ namespace CompanyModule.Infrastructure.Migrations
                     b.Navigation("Appointment");
                 });
 
-            modelBuilder.Entity("CompanyModule.Domain.Entities.CompanyPerson", b =>
+            modelBuilder.Entity("CompanyModule.Domain.Entities.Curator", b =>
                 {
                     b.HasOne("CompanyModule.Domain.Entities.Company", "Company")
                         .WithMany("CompanyPersons")
