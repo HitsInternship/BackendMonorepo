@@ -65,7 +65,7 @@ COPY ["dotnet/AppSettingsModule.Contracts/AppSettingsModule.Contracts.csproj", "
 COPY ["dotnet/AppSettingsModule.Domain/AppSettingsModule.Domain.csproj", "AppSettingsModule.Domain/"]
 COPY ["dotnet/AppSettingsModule.Infrastructure/AppSettingsModule.Infrastructure.csproj", "AppSettingsModule.Infrastructure/"]
 COPY ["dotnet/AppSettingsModule.Persistence/AppSettingsModule.Persistence.csproj", "AppSettingsModule.Persistence/"]
-RUN dotnet restore "dotnet/HitsInternship.Api/HitsInternship.Api.csproj"
+RUN dotnet restore "HitsInternship.Api/HitsInternship.Api.csproj"
 COPY . .
 WORKDIR "/src/dotnet/HitsInternship.Api"
 RUN dotnet build "HitsInternship.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
