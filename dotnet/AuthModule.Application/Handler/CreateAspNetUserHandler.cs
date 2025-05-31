@@ -26,7 +26,7 @@ public class CreateAspNetUserHandler : IRequestHandler<CreateAspNetUserQuery, Cr
         {
             UserId = request.UserId,
             Login = request.Email,
-            Password = Guid.NewGuid().ToString(),
+            Password = request.Password ?? Guid.NewGuid().ToString(),
         };
         using SHA256 sha256Hash = SHA256.Create();
 

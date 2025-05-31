@@ -9,5 +9,5 @@ using UserModule.Domain.Entities;
 
 namespace UserModule.Contracts.Commands
 {
-    public record CreateUserCommand(UserRequest createRequest) : IRequest<User>;
+    public record CreateUserCommand(UserRequest CreateRequest, string? Password = null) : IRequest<User>;
 }

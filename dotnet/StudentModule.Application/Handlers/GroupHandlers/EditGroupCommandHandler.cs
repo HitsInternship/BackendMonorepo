@@ -5,6 +5,7 @@ using StudentModule.Contracts.DTOs;
 using StudentModule.Contracts.Repositories;
 using StudentModule.Domain.Entities;
 using UserModule.Contracts.Repositories;
+using UserModule.Domain.Entities;
 
 namespace StudentModule.Application.Handlers.GroupHandlers
 {

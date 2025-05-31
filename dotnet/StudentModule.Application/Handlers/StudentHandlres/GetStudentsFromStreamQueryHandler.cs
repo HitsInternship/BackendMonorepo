@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserModule.Contracts.Repositories;
+using UserModule.Domain.Entities;
 
 namespace StudentModule.Application.Handlers.StudentHandlres
 {

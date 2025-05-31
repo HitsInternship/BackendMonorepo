@@ -23,100 +23,100 @@ namespace HitsInternship.Api.Extensions.GlobalInitializer
                 var sender = scope.ServiceProvider.GetRequiredService<ISender>();
 
                 Guid? adminId = (await sender.Send(new GetListSearchUserQuery(new SearchUserRequest()
-                {
-                    email = "admin@example.com"
-                }
+                    {
+                        email = "admin@example.com"
+                    }
                 ))).FirstOrDefault()?.Id;
 
                 if (adminId != null) return;
 
                 //Добавление сотрудника деканата
                 await sender.Send(new CreateDeanMemberCommand(new DeanMemberRequestDto()
-                {
-                    Name = "Сотрудник",
-                    Surname = "Деканата",
-                    Email = "dean@example.com"
-                }
+                    {
+                        Name = "Сотрудник",
+                        Surname = "Деканата",
+                        Email = "dean@example.com"
+                    }, null, "string"
                 ));
 
                 //Добавление куратора
                 Guid companyId = (await sender.Send(new AddCompanyCommand(new CompanyRequest()
-                {
-                    name = "Херриот-Ватт",
-                    description = "Описание для компании",
-                    status = CompanyStatus.Partner,
-                }
+                    {
+                        name = "Херриот-Ватт",
+                        description = "Описание для компании",
+                        status = CompanyStatus.Partner,
+                    }
                 ))).Id;
 
                 await sender.Send(new AddCuratorCommand(companyId, new CuratorRequest()
-                {
-                    userRequest = new UserRequest()
                     {
-                        name = "Куратор",
-                        surname = "ХВ",
-                        email = "curator@example.com"
-                    },
-                    telegram = "valera",
-                    phone = "+7 912 493 34 34"
-                }
+                        userRequest = new UserRequest()
+                        {
+                            name = "Куратор",
+                            surname = "ХВ",
+                            email = "curator@example.com"
+                        },
+                        telegram = "valera",
+                        phone = "+7 912 493 34 34",
+                    }, "string"
                 ));
 
 
                 //Добавление студента
                 Guid streamId = (await sender.Send(new CreateStreamCommand()
-                {
-                    StreamNumber = 9722,
-                    Year = 2022,
-                    Status = StreamStatus.Practice,
-                    Course = 3
-                }
+                    {
+                        StreamNumber = 9722,
+                        Year = 2022,
+                        Status = StreamStatus.Practice,
+                        Course = 3
+                    }
                 )).id;
 
                 Guid groupId = (await sender.Send(new CreateGroupCommand()
-                {
-                    GroupNumber = 2,
-                    StreamId = streamId,
-                }
+                    {
+                        GroupNumber = 2,
+                        StreamId = streamId,
+                    }
                 )).Id;
 
-                await sender.Send(new CreateStudentCommand()
-                {
-                    userRequest = new UserRequest()
+                await sender.Send(new CreateStudentCommand("string")
                     {
-                        name = "Студент",
-                        surname = "Хитса",
-                        email = "student@example.com"
-                    },
+                        userRequest = new UserRequest()
+                        {
+                            name = "Студент",
+                            surname = "Хитса",
+                            email = "student@example.com"
+                        },
 
-                    Middlename = "Сергеевич",
-                    Phone = "+7 348 343 83 83",
-                    IsHeadMan = false,
-                    Status = StudentStatus.InProcess,
-                    GroupId = groupId,
-                }
+                        Middlename = "Сергеевич",
+                        Phone = "+7 348 343 83 83",
+                        IsHeadMan = false,
+                        Status = StudentStatus.InProcess,
+                        GroupId = groupId,
+                    }
                 );
 
                 //Добавление админского пользователя со всеми ролями
                 await sender.Send(new CreateDeanMemberCommand(new DeanMemberRequestDto()
-                {
-                    Name = "Админский",
-                    Surname = "Аккаунт",
-                    Email = "admin@example.com"
-                }
+                    {
+                        Name = "Админский",
+                        Surname = "Аккаунт",
+                        Email = "admin@example.com"
+                    }, adminId, "string"
                 ));
 
                 adminId = (await sender.Send(new GetListSearchUserQuery(new SearchUserRequest()
-                {
-                    email = "admin@example.com"
-                }
+                    {
+                        email = "admin@example.com"
+                    }
                 ))).First().Id;
 
                 await sender.Send(new AddCuratorCommand(companyId, new CuratorRequest()
-                {
-                    userId = adminId,
-                    telegram = "admin",
-                    phone = "+7 875 439 54 23"
-                }
+                    {
+                        userId = adminId,
+                        telegram = "admin",
+                        phone = "+7 875 439 54 23"
+                    }
                 ));
                 await sender.Send(new CreateStudentCommand()
                 {

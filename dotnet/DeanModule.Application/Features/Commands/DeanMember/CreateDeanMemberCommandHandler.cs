@@ -1,4 +1,5 @@
 using DeanModule.Contracts.Commands.DeanMember;
+using DeanModule.Contracts.Repositories;
 using MediatR;
 using UserModule.Contracts.Commands;
 using UserModule.Contracts.DTOs.Requests;
@@ -15,6 +16,7 @@ public class CreateDeanMemberCommandHandler : IRequestHandler<CreateDeanMemberCo
         _mediator = mediator;
     }
 
+
     public async Task<Unit> Handle(CreateDeanMemberCommand request, CancellationToken cancellationToken)
     {
         var userRequest = new UserRequest
@@ -24,8 +26,15 @@ public class CreateDeanMemberCommandHandler : IRequestHandler<CreateDeanMemberCo
             email = request.DeanMemberRequestDto.Email,
         };
 
-        var user = await _mediator.Send(new CreateUserCommand(userRequest), cancellationToken);
-        await _mediator.Send(new AddUserRoleCommand(user.Id, RoleName.DeanMember), cancellationToken);
+        if (request.UserId.HasValue)
+        {
+            await _mediator.Send(new AddUserRoleCommand(request.UserId.Value, RoleName.DeanMember), cancellationToken);
+        }
+        else
+        {
+            var user = await _mediator.Send(new CreateUserCommand(userRequest, request.Password), cancellationToken);
+            await _mediator.Send(new AddUserRoleCommand(user.Id, RoleName.DeanMember), cancellationToken);
+        }
 
         return Unit.Value;
     }

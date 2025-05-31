@@ -17,29 +17,33 @@ namespace StudentModule.Application.Handlers.StudentHandlres
         private readonly IStreamRepository _streamRepository;
         private readonly IMediator _mediator;
 
-        public CreateStudentCommandHandler(IStudentRepository studentRepository, IGroupRepository groupRepository, IMediator mediator, IStreamRepository streamRepository)
+        public CreateStudentCommandHandler(IStudentRepository studentRepository, IGroupRepository groupRepository,
+            IMediator mediator, IStreamRepository streamRepository)
         {
             _studentRepository = studentRepository;
             _groupRepository = groupRepository;
             _mediator = mediator;
             _streamRepository = streamRepository;
         }
+
         public async Task<StudentDto> Handle(CreateStudentCommand request, CancellationToken cancellationToken)
         {
-
-            User user = null;
+            User? user = null;
             if (request.userRequest != null)
             {
-                user = await _mediator.Send(new CreateUserCommand(request.userRequest));
+                user = await _mediator.Send(new CreateUserCommand(request.userRequest, request.Password),
+                    cancellationToken);
             }
             else if (request.userId == null)
             {
                 throw new BadRequest("Provide userRequest or userId");
             }
-            user = await _mediator.Send(new AddUserRoleCommand(request.userId ?? user!.Id, RoleName.Student));
+            
+            user = await _mediator.Send(new AddUserRoleCommand(request.userId ?? user.Id, RoleName.Student),
+                cancellationToken);
 
             var group = await _groupRepository.GetByIdAsync(request.GroupId)
-                ?? throw new NotFound("Group not found");
+                        ?? throw new NotFound("Group not found");
 
             StudentEntity student = new StudentEntity()
             {

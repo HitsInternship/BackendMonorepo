@@ -10,7 +10,7 @@ using UserModule.Contracts.DTOs.Requests;
 
 namespace StudentModule.Contracts.Commands.StudentCommands
 {
-    public record CreateStudentCommand : IRequest<StudentDto>
+    public record CreateStudentCommand(string? Password = null) : IRequest<StudentDto>
     {
         public UserRequest? userRequest { get; set; }
         public Guid? userId { get; set; }

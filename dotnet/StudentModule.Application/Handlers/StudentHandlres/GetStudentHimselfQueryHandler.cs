@@ -4,6 +4,7 @@ using StudentModule.Contracts.DTOs;
 using StudentModule.Contracts.Queries.StudentQueries;
 using StudentModule.Contracts.Repositories;
 using UserModule.Contracts.Repositories;
+using UserModule.Domain.Entities;
 
 namespace StudentModule.Application.Handlers.StudentHandlres
 {
@@ -21,7 +22,7 @@ namespace StudentModule.Application.Handlers.StudentHandlres
         public async Task<StudentDto> Handle(GetStudentHimselfQuery request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetByIdAsync(request.userId)
-                ?? throw new NotFound("User not found");
+                       ?? throw new NotFound("User not found");
 
             var student = await _studentRepository.GetStudentByUserIdAsync(request.userId);
 
