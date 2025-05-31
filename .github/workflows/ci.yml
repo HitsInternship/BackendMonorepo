@@ -30,26 +30,19 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
       
-      - name: Notify Telegram (Success)  
-        if: success()  
-        uses: appleboy/telegram-action@master  
-        with:  
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}  
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}  
-          message: |  
-            ✅ **Деплой успешно завершен!**  
-            Репозиторий: `${{ github.repository }}`  
-            Ветка: `${{ github.ref }}`  
-            [Подробнее](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})  
- 
-      - name: Notify Telegram (Failure)  
-        if: failure()  
-        uses: appleboy/telegram-action@master  
-        with:  
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}  
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}  
-          message: |  
-            ❌ **Деплой упал!**  
+      - name: Notify Telegram (Success)
+        if: success()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+          -d "text=✅ Деплой успешен! (${{ github.repository }})"
+
+      - name: Notify Telegram (Failure)
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+          -d "text=❌ Деплой упал! (${{ github.repository }})"
             Репозиторий: `${{ github.repository }}`  
             Ветка: `${{ github.ref }}`  
             [Логи ошибок](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
