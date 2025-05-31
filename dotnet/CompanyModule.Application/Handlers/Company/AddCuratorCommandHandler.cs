@@ -5,7 +5,6 @@ using CompanyModule.Domain.Entities;
 using MediatR;
 using Shared.Domain.Exceptions;
 using UserModule.Contracts.Commands;
-using UserModule.Domain.Entities;
 using UserModule.Domain.Enums;
 
 namespace CompanyModule.Application.Handlers.Company
@@ -16,7 +15,9 @@ namespace CompanyModule.Application.Handlers.Company
         private readonly ICompanyRepository _companyRepository;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        public AddCuratorCommandHandler(ICuratorRepository curatorRepository, ICompanyRepository companyRepository, IMediator mediator, IMapper mapper)
+
+        public AddCuratorCommandHandler(ICuratorRepository curatorRepository, ICompanyRepository companyRepository,
+            IMediator mediator, IMapper mapper)
         {
             _curatorRepository = curatorRepository;
             _companyRepository = companyRepository;
@@ -26,26 +27,28 @@ namespace CompanyModule.Application.Handlers.Company
 
         public async Task<Curator> Handle(AddCuratorCommand command, CancellationToken cancellationToken)
         {
-            Domain.Entities.Company company = await _companyRepository.GetByIdAsync(command.companyId);
+            Domain.Entities.Company company = await _companyRepository.GetByIdAsync(command.CompanyId);
 
-            Curator curator = _mapper.Map<Curator>(command.createRequest);
+            Curator curator = _mapper.Map<Curator>(command.CreateRequest);
             curator.Company = company;
 
-            if (command.createRequest.userRequest != null && command.createRequest.userId != null)
+            if (command.CreateRequest.userRequest != null && command.CreateRequest.userId != null)
             {
                 throw new BadRequest("Provide userRequest or userId and not both");
             }
 
             Guid userId;
-            if (command.createRequest.userRequest != null)
+            if (command.CreateRequest.userRequest != null)
             {
-                userId = (await _mediator.Send(new CreateUserCommand(command.createRequest.userRequest))).Id;
+                userId = (await _mediator.Send(
+                    new CreateUserCommand(command.CreateRequest.userRequest, command.Password),
+                    cancellationToken)).Id;
             }
-            else if (command.createRequest.userId != null) userId = (Guid)command.createRequest.userId;
+            else if (command.CreateRequest.userId != null) userId = (Guid)command.CreateRequest.userId;
             else throw new BadRequest("Provide userRequest or userId");
 
             curator.UserId = userId;
-            curator.User = await _mediator.Send(new AddUserRoleCommand(userId, RoleName.Curator));
+            curator.User = await _mediator.Send(new AddUserRoleCommand(userId, RoleName.Curator), cancellationToken);
 
             await _curatorRepository.AddAsync(curator);
 

@@ -27,14 +27,15 @@ public class DeanMemberController : ControllerBase
     }
 
     /// <summary>
-    /// Создаёт нового сотрудника деканата.
+    /// Создаёт нового сотрудника деканата. Если передан userId, то пользователь получит роль сотрудника деканата
     /// </summary>
     /// <param name="dto">Данные сотрудника деканата</param>
+    /// <param name="userId"></param>
     [HttpPost]
     [Authorize(Roles = "DeanMember")]
-    public async Task<IActionResult> CreateDeanMember([FromBody] DeanMemberRequestDto dto)
+    public async Task<IActionResult> CreateDeanMember([FromBody] DeanMemberRequestDto dto, [FromQuery] Guid? userId)
     {
-        return Ok(await _mediator.Send(new CreateDeanMemberCommand(dto)));
+        return Ok(await _mediator.Send(new CreateDeanMemberCommand(dto, userId)));
     }
 
     /// <summary>

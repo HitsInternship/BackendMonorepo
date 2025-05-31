@@ -9,5 +9,6 @@ using System.Threading.Tasks;
 
 namespace CompanyModule.Contracts.Commands
 {
-    public record AddCuratorCommand(Guid companyId, CuratorRequest createRequest) : IRequest<Curator>;
+    public record AddCuratorCommand(Guid CompanyId, CuratorRequest CreateRequest, string? Password = null)
+        : IRequest<Curator>;
 }

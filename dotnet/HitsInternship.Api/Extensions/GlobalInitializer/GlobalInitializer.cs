@@ -36,7 +36,7 @@ namespace HitsInternship.Api.Extensions.GlobalInitializer
                         Name = "Сотрудник",
                         Surname = "Деканата",
                         Email = "dean@example.com"
-                    }
+                    }, null, "string"
                 ));
 
                 //Добавление куратора
@@ -57,8 +57,8 @@ namespace HitsInternship.Api.Extensions.GlobalInitializer
                             email = "curator@example.com"
                         },
                         telegram = "valera",
-                        phone = "+7 912 493 34 34"
-                    }
+                        phone = "+7 912 493 34 34",
+                    }, "string"
                 ));
 
 
@@ -79,7 +79,7 @@ namespace HitsInternship.Api.Extensions.GlobalInitializer
                     }
                 )).Id;
 
-                await sender.Send(new CreateStudentCommand()
+                await sender.Send(new CreateStudentCommand("string")
                     {
                         userRequest = new UserRequest()
                         {
@@ -102,7 +102,7 @@ namespace HitsInternship.Api.Extensions.GlobalInitializer
                         Name = "Админский",
                         Surname = "Аккаунт",
                         Email = "admin@example.com"
-                    }
+                    }, adminId, "string"
                 ));
 
                 adminId = (await sender.Send(new GetListSearchUserQuery(new SearchUserRequest()

@@ -5,6 +5,7 @@ using StudentModule.Contracts.DTOs;
 using StudentModule.Contracts.Repositories;
 using UserModule.Contracts.Commands;
 using UserModule.Contracts.DTOs.Requests;
+using UserModule.Domain.Entities;
 
 namespace StudentModule.Application.Handlers.StudentHandlres
 {

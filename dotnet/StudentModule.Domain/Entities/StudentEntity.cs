@@ -9,7 +9,7 @@ namespace StudentModule.Domain.Entities
     {
         public Guid UserId { get; set; }
         [NotMapped]
-        public User User { get; set; }
+        public User? User { get; set; }
         public string? Middlename { get; set; }
         public string? Phone { get; set; }
         public bool IsHeadMan { get; set; }
