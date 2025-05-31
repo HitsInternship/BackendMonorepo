@@ -20,6 +20,7 @@ jobs:
           docker-compose down
           docker system prune -af
           docker-compose up -d --build
+          
         env:
           MINIO_ENDPOINT: ${{ vars.MINIO_ENDPOINT }}
           MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
@@ -28,3 +29,27 @@ jobs:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+      
+      - name: Notify Telegram (Success)  
+        if: success()  
+        uses: appleboy/telegram-action@master  
+        with:  
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}  
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}  
+          message: |  
+            ✅ **Деплой успешно завершен!**  
+            Репозиторий: `${{ github.repository }}`  
+            Ветка: `${{ github.ref }}`  
+            [Подробнее](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})  
+ 
+      - name: Notify Telegram (Failure)  
+        if: failure()  
+        uses: appleboy/telegram-action@master  
+        with:  
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}  
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}  
+          message: |  
+            ❌ **Деплой упал!**  
+            Репозиторий: `${{ github.repository }}`  
+            Ветка: `${{ github.ref }}`  
+            [Логи ошибок](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
