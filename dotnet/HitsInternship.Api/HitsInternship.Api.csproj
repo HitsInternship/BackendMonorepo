@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>2ce2a275-dad9-4b84-ba43-d51c9ee33a84</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,6 +17,10 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+
+        <PackageReference Include="NuGet.Protocol" Version="6.14.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -35,12 +40,6 @@
       <ProjectReference Include="..\UserModule.Controllers\UserModule.Controllers.csproj" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
       <ProjectReference Include="..\UserModule.Controllers\UserModule.Controllers.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
     </ItemGroup>
 
 </Project>
