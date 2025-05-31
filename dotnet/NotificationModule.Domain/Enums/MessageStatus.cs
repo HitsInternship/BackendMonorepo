@@ -1,6 +1,6 @@
 namespace NotificationModule.Domain.Enums;
 
-public enum Status
+public enum MessageStatus
 {
     in_progress,
     completed,

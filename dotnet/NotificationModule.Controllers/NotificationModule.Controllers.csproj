@@ -13,6 +13,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\NotificationModule.Infrastructure\NotificationModule.Infrastructure.csproj" />
+      <ProjectReference Include="..\NotificationModule.Kafka\NotificationModule.Kafka.csproj" />
+      <ProjectReference Include="..\NotificationModule.Persistence\NotificationModule.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

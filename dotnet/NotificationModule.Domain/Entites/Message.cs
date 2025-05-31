@@ -18,5 +18,5 @@ public class Message : BaseEntity
         set => DataJson = value.ToJsonString();
     }
 
-    public Status Status { get; set; }
+    public MessageStatus MessageStatus { get; set; }
 }
