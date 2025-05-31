@@ -15,8 +15,9 @@ public static class DependencyInjection
         services.AddKafka(configuration);
     }
     
-    public static void UseNotificationModule(this IServiceProvider services)
+    public static async Task UseNotificationModule(this IServiceProvider services)
     {
         services.UseNotificationModuleInfrastructure();
+        await services.UseKafka();
     }
 }

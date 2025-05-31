@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Confluent.Kafka;
+using NotificationModule.Contracts.Kafka;
+using NotificationModule.Kafka.TopicInitializer;
 
 namespace NotificationModule.Kafka;
 
@@ -9,6 +11,8 @@ public static class DependencyInjection
     public static void AddKafka(this IServiceCollection services, IConfiguration configuration)
     {
         var kafkaSettings = configuration.GetSection("Kafka").Get<KafkaSettings>() ?? throw new ArgumentException();
+
+        services.Configure<KafkaSettings>(configuration.GetSection("Kafka"));
 
         services.AddSingleton<IProducer<Null, string>>(_ =>
         {
@@ -33,6 +37,15 @@ public static class DependencyInjection
         });
 
         services.AddHostedService<MessageConsumer>();
-        services.AddSingleton<MessageProducer>();
+        services.AddSingleton<IMessageProducer, MessageProducer>();
+
+        services.AddTransient<IKafkaTopicInitializer, KafkaTopicInitializer>();
+    }
+
+    public static async Task UseKafka(this IServiceProvider services)
+    {
+        var scope = services.CreateScope();
+        var initializer = scope.ServiceProvider.GetRequiredService<IKafkaTopicInitializer>();
+        await initializer.InitializeTopicsAsync();
     }
 }

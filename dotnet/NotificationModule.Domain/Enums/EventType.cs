@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace NotificationModule.Domain.Enums;
 
 public enum EventType
@@ -7,4 +9,6 @@ public enum EventType
     changing_password,
     deadline,
     admission_internship,
+    rated_for_practise,
+    new_comment
 }

@@ -30,7 +30,7 @@ public static class Modules
         services.AddNotificationModule(configuration);
     }
 
-    public static void UseApplicationModules(this IServiceProvider services)
+    public static async Task UseApplicationModules(this IServiceProvider services)
     {
         services.UseDeanModule();
         services.UseUserModule();
@@ -41,7 +41,7 @@ public static class Modules
         services.UseSelectionModule();
         services.UsePracticeModule();
         services.UseAppSettingsModule();
-        services.UseNotificationModule();
+        await services.UseNotificationModule();
         services.InitializeDatabases().Wait();
     }
 }
