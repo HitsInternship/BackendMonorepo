@@ -11,19 +11,18 @@ using StudentModule.Domain.Enums;
 using UserModule.Contracts.DTOs.Requests;
 using UserModule.Contracts.Queries;
 
-
-namespace Shared.Extensions.GlobalInitializer
+namespace HitsInternship.Api.Extensions.GlobalInitializer
 {
     public static class GlobalInitializer
     {
         public static async Task InitializeDatabases(this IServiceProvider services)
         {
-            ///Добавление тестовых пользователей
+            //Добавление тестовых пользователей
             using (var scope = services.CreateScope())
             {
-                var _sender = scope.ServiceProvider.GetRequiredService<ISender>();
+                var sender = scope.ServiceProvider.GetRequiredService<ISender>();
 
-                Guid? adminId = (await _sender.Send(new GetListSearchUserQuery(new SearchUserRequest()
+                Guid? adminId = (await sender.Send(new GetListSearchUserQuery(new SearchUserRequest()
                 {
                     email = "admin@example.com"
                 }
@@ -31,8 +30,8 @@ namespace Shared.Extensions.GlobalInitializer
 
                 if (adminId != null) return;
 
-                ///Добавление сотрудника деканата
-                await _sender.Send(new CreateDeanMemberCommand(new DeanMemberRequestDto()
+                //Добавление сотрудника деканата
+                await sender.Send(new CreateDeanMemberCommand(new DeanMemberRequestDto()
                 {
                     Name = "Сотрудник",
                     Surname = "Деканата",
@@ -40,8 +39,8 @@ namespace Shared.Extensions.GlobalInitializer
                 }
                 ));
 
-                ///Добавление куратора
-                Guid companyId = (await _sender.Send(new AddCompanyCommand(new CompanyRequest()
+                //Добавление куратора
+                Guid companyId = (await sender.Send(new AddCompanyCommand(new CompanyRequest()
                 {
                     name = "Херриот-Ватт",
                     description = "Описание для компании",
@@ -49,7 +48,7 @@ namespace Shared.Extensions.GlobalInitializer
                 }
                 ))).Id;
 
-                await _sender.Send(new AddCuratorCommand(companyId, new CuratorRequest()
+                await sender.Send(new AddCuratorCommand(companyId, new CuratorRequest()
                 {
                     userRequest = new UserRequest()
                     {
@@ -63,8 +62,8 @@ namespace Shared.Extensions.GlobalInitializer
                 ));
 
 
-                ///Добавление студента
-                Guid streamId = (await _sender.Send(new CreateStreamCommand()
+                //Добавление студента
+                Guid streamId = (await sender.Send(new CreateStreamCommand()
                 {
                     StreamNumber = 9722,
                     Year = 2022,
@@ -73,14 +72,14 @@ namespace Shared.Extensions.GlobalInitializer
                 }
                 )).id;
 
-                Guid groupId = (await _sender.Send(new CreateGroupCommand()
+                Guid groupId = (await sender.Send(new CreateGroupCommand()
                 {
                     GroupNumber = 2,
                     StreamId = streamId,
                 }
                 )).Id;
 
-                await _sender.Send(new CreateStudentCommand()
+                await sender.Send(new CreateStudentCommand()
                 {
                     userRequest = new UserRequest()
                     {
@@ -97,8 +96,8 @@ namespace Shared.Extensions.GlobalInitializer
                 }
                 );
 
-                ///Добавление админского пользователя со всеми ролями
-                await _sender.Send(new CreateDeanMemberCommand(new DeanMemberRequestDto()
+                //Добавление админского пользователя со всеми ролями
+                await sender.Send(new CreateDeanMemberCommand(new DeanMemberRequestDto()
                 {
                     Name = "Админский",
                     Surname = "Аккаунт",
@@ -106,20 +105,20 @@ namespace Shared.Extensions.GlobalInitializer
                 }
                 ));
 
-                adminId = (await _sender.Send(new GetListSearchUserQuery(new SearchUserRequest()
+                adminId = (await sender.Send(new GetListSearchUserQuery(new SearchUserRequest()
                 {
                     email = "admin@example.com"
                 }
                 ))).First().Id;
 
-                await _sender.Send(new AddCuratorCommand(companyId, new CuratorRequest()
+                await sender.Send(new AddCuratorCommand(companyId, new CuratorRequest()
                 {
                     userId = adminId,
                     telegram = "admin",
                     phone = "+7 875 439 54 23"
                 }
                 ));
-                await _sender.Send(new CreateStudentCommand()
+                await sender.Send(new CreateStudentCommand()
                 {
                     userId = adminId,
                     Middlename = "Григорьевич",

@@ -7,6 +7,7 @@ using UserModule.Contracts.Commands;
 using UserModule.Contracts.DTOs.Requests;
 using UserModule.Contracts.DTOs.Responses;
 using UserModule.Contracts.Queries;
+using UserModule.Persistence;
 
 
 namespace UserModule.Controllers.Controllers
@@ -37,11 +38,11 @@ namespace UserModule.Controllers.Controllers
         /// </summary>
         /// <returns>Информация о пользователе.</returns>
         [HttpGet]
-        [Route("{id}/info")]
+        [Route("/info")]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserInfo(Guid id)
+        public async Task<IActionResult> GetUserInfo([FromQuery] Guid? id)
         {
-            return Ok(_mapper.Map<UserResponse>(await _mediator.Send(new GetUserInfoQuery(id))));
+            return Ok(_mapper.Map<UserResponse>(await _mediator.Send(new GetUserInfoQuery(id ?? User.GetUserId()))));
         }
 
         /// <summary>

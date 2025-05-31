@@ -8,7 +8,7 @@ using Shared.Extensions;
 using StudentModule.Controllers;
 using UserModule.Controllers;
 using AppSettingsModule.Controllers;
-using Shared.Extensions.GlobalInitializer;
+using HitsInternship.Api.Extensions.GlobalInitializer;
 
 namespace HitsInternship.Api.Extensions;
 
