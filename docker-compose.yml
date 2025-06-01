@@ -4,12 +4,13 @@ services:
       context: .
       dockerfile: dotnet/HitsInternship.Api/Dockerfile
     environment:
-      DATABASE_CONNECTION_STRING: Server=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      ConnectionStrings__HitsInternship: Server=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
       Kafka__BootstrapServers: kafka:9092
+      ASPNETCORE_ENVIRONMENT: Production
     ports:
       - "8081:8081"
     networks:

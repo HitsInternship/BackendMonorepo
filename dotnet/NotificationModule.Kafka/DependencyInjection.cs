@@ -11,7 +11,8 @@ public static class DependencyInjection
     public static void AddKafka(this IServiceCollection services, IConfiguration configuration)
     {
         var kafkaSettings = configuration.GetSection("Kafka").Get<KafkaSettings>() ?? throw new ArgumentException();
-
+        
+        
         services.Configure<KafkaSettings>(configuration.GetSection("Kafka"));
 
         services.AddSingleton<IProducer<Null, string>>(_ =>

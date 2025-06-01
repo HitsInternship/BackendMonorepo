@@ -10,8 +10,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services.AddDbContext<NotificationModuleDbContext>(options =>
-            options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ??
-                              configuration.GetConnectionString("HitsInternship")));
+            options.UseNpgsql(configuration.GetConnectionString("HitsInternship")));
     }
 
     public static void UseNotificationModuleInfrastructure(this IServiceProvider services)

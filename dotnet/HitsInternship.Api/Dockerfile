@@ -1,9 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8081
-
-ENV ASPNETCORE_ENVIRONMENT=Development
+EXPOSE 8080
 
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
@@ -74,7 +72,7 @@ COPY ["NotificationModule.Contracts/NotificationModule.Contracts.csproj", "Notif
 COPY ["NotificationModule.Persistence/NotificationModule.Persistence.csproj", "NotificationModule.Persistence/"]
 RUN dotnet restore "HitsInternship.Api/HitsInternship.Api.csproj"
 COPY . .
-WORKDIR "/src/HitsInternship.Api"
+WORKDIR "/src/dotnet/HitsInternship.Api"
 RUN dotnet build "HitsInternship.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

@@ -47,11 +47,10 @@ builder.Services.AddApplicationModules(builder.Configuration);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwaggerConfiguration();
-}
+
+app.MapOpenApi();
+app.UseSwaggerConfiguration();
+
 
 app.UseCors("AllowAllOrigins");
 
