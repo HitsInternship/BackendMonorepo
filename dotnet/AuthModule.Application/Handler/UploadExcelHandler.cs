@@ -3,6 +3,7 @@ using AuthModule.Contracts.Model;
 using AuthModule.Domain.Entity;
 using OfficeOpenXml;
 using Shared.Domain.Exceptions;
+using StudentModule.Contracts.Commands.StudentCommands;
 using UserInfrastructure;
 using LicenseContext = OfficeOpenXml.LicenseContext;
 
@@ -13,10 +14,13 @@ using MediatR;
 public class UploadExcelHandler : IRequestHandler<UploadExcelDTO, List<ExcelStudentDTO>>
 {
     private readonly AuthDbContext _context;
+    private readonly IMediator _mediator;
 
-    public UploadExcelHandler(AuthDbContext context)
+
+    public UploadExcelHandler(AuthDbContext context, IMediator mediator)
     {
         _context = context;
+        _mediator = mediator;
     }
 
     public async Task<List<ExcelStudentDTO>> Handle(UploadExcelDTO request, CancellationToken cancellationToken)
@@ -41,28 +45,31 @@ public class UploadExcelHandler : IRequestHandler<UploadExcelDTO, List<ExcelStud
 
         for (int row = 2; row <= rowCount; row++)
         {
-            var fio = worksheet.Cells[row, 1].Text?.Trim();
-            var email = worksheet.Cells[row, 2].Text?.Trim();
-            var group = worksheet.Cells[row, 3].Text?.Trim();
+            var surname = worksheet.Cells[row, 1].Text?.Trim();
+            var name = worksheet.Cells[row, 1].Text?.Trim();
+            var middleName = worksheet.Cells[row, 1].Text?.Trim();
+            var email = worksheet.Cells[row, 4].Text?.Trim();
+            var group = worksheet.Cells[row, 5].Text?.Trim();
 
-            if (string.IsNullOrWhiteSpace(fio) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(group))
+            if (string.IsNullOrWhiteSpace(surname) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(group))
                 continue;
 
             students.Add(new ExcelStudentDTO
             {
-                //FIO = fio,
-                Email = email,
-                Group = group
-            });
-
-            studentEntities.Add(new Student
-            {
-                FIO = fio,
+                Name = name,
+                Surname = surname,
+                Middlename = middleName,
                 Email = email,
                 Group = group
             });
         }
-        //todo: обращаться к student module
+
+        // var command = new CreateStudentFromExelCommand
+        // {
+        //     ExelStudentDto = students
+        // };
+
+       // await _mediator.Send(command, cancellationToken);
 
         await _context.Students.AddRangeAsync(studentEntities, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

@@ -18,6 +18,7 @@
       <ProjectReference Include="..\AuthModule.Infrastructure\AuthModule.Infrastructure.csproj" />
       <ProjectReference Include="..\AuthModule.Contracts\AuthModule.Contracts.csproj" />
       <ProjectReference Include="..\Shared.Extensions\Shared.Extensions.csproj" />
+      <ProjectReference Include="..\StudentModule.Contracts\StudentModule.Contracts.csproj" />
       <ProjectReference Include="..\UserModule.Contracts\UserModule.Contracts.csproj" />
     </ItemGroup>
 
