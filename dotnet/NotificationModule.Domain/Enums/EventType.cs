@@ -1,7 +1,8 @@
-using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace NotificationModule.Domain.Enums;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum EventType
 {
     changing_practise,

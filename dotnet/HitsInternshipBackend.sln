@@ -151,7 +151,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationModule.Persiste
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationModule.Infrastructure", "NotificationModule.Infrastructure\NotificationModule.Infrastructure.csproj", "{CA7841E4-4E5E-442D-A3BC-1095D9EC52A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Application", "NotificationService.Application\NotificationService.Application.csproj", "{42EEDD9C-6467-45FB-986B-B25AB83EBC93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationModule.Application", "NotificationModule.Application\NotificationModule.Application.csproj", "{42EEDD9C-6467-45FB-986B-B25AB83EBC93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationModule.Controllers", "NotificationModule.Controllers\NotificationModule.Controllers.csproj", "{43A034F1-6BE2-46EE-A649-2E566132CDF2}"
 EndProject
