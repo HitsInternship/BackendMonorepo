@@ -55,10 +55,12 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
         {
             dtos.Add(new ListedVacancyDto
             {
+                Id = vacancy.Id,
                 Title = vacancy.Title,
                 Position = _mapper.Map<PositionDto>(vacancy.Position),
                 Company = _mapper.Map<ShortenCompanyDto>(await _companyRepository.GetByIdAsync(vacancy.CompanyId)),
                 IsClosed = vacancy.IsClosed,
+                IsDeleted = vacancy.IsDeleted,
             });
         }
         
