@@ -28,14 +28,19 @@ public class CreateVacancyResponseCommentCommandHandler : IRequestHandler<Create
         if (vacancyResponse.Candidate.UserId != request.UserId && !request.Roles.Contains("DeanMember"))
             throw new Forbidden("You do not have access to leave comment");
 
-        await _vacancyResponseCommentRepository.AddAsync(new VacancyResponseCommentEntity
+        var comment = new VacancyResponseCommentEntity
         {
             Content = request.Comment,
             UserId = request.UserId,
             ParentId = request.VacancyResponseId,
             VacancyResponse = vacancyResponse
-        });
+        };
+        
+        await _vacancyResponseCommentRepository.AddAsync(comment);
 
+        vacancyResponse.Comments.Add(comment);
+        await _vacancyResponseRepository.UpdateAsync(vacancyResponse);
+        
         return Unit.Value;
     }
 }

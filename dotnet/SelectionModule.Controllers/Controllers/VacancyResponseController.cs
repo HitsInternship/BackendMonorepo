@@ -14,7 +14,7 @@ namespace SelectionModule.Controllers.Controllers;
 /// Контроллер для откликов на вакансии.
 /// </summary>
 [Authorize]
-[Route("api")]
+[Route("api/vacancies")]
 [ApiController]
 public class VacancyResponseController : ControllerBase
 {
@@ -51,7 +51,7 @@ public class VacancyResponseController : ControllerBase
 
     /// <summary>
     /// Получение всех откликов на вакансию.
-    /// Только для DeanMember, Curator, CompanyRepresenter.
+    /// Только для DeanMember, Curator.
     /// </summary>
     /// <param name="vacancyId">ID вакансии.</param>
     [HttpGet]

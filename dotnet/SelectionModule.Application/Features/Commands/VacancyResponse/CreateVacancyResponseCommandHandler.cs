@@ -8,22 +8,25 @@ namespace SelectionModule.Application.Features.Commands.VacancyResponse;
 
 public class CreateVacancyResponseCommandHandler : IRequestHandler<CreateVacancyResponseCommand, Unit>
 {
+    private readonly ISelectionRepository _selectionRepository;
     private readonly IVacancyRepository _vacancyRepository;
     private readonly IVacancyResponseRepository _vacancyResponseRepository;
     private readonly ICandidateRepository _candidateRepository;
 
     public CreateVacancyResponseCommandHandler(IVacancyRepository vacancyRepository,
-        ICandidateRepository candidateRepository, IVacancyResponseRepository vacancyResponseRepository)
+        ICandidateRepository candidateRepository, IVacancyResponseRepository vacancyResponseRepository,
+        ISelectionRepository selectionRepository)
     {
         _vacancyRepository = vacancyRepository;
         _candidateRepository = candidateRepository;
         _vacancyResponseRepository = vacancyResponseRepository;
+        _selectionRepository = selectionRepository;
     }
 
     public async Task<Unit> Handle(CreateVacancyResponseCommand request, CancellationToken cancellationToken)
     {
         if (!await _vacancyRepository.CheckIfExistsAsync(request.VacancyId))
-            throw new BadRequest("Vacancy not found");
+            throw new NotFound("Vacancy not found");
 
         var vacancy = await _vacancyRepository.GetByIdAsync(request.VacancyId);
 
@@ -41,10 +44,14 @@ public class CreateVacancyResponseCommandHandler : IRequestHandler<CreateVacancy
             Status = VacancyResponseStatus.Responding,
         };
 
-
         vacancy.Responses.Add(vacancyResponse);
 
-        await _vacancyRepository.UpdateAsync(vacancy);
+        if (candidate.Selection != null)
+        {
+            candidate.Selection.SelectionStatus = SelectionStatus.InProgress;
+            await _selectionRepository.UpdateAsync(candidate.Selection);
+        }
+
         await _vacancyResponseRepository.AddAsync(vacancyResponse);
 
         return Unit.Value;
