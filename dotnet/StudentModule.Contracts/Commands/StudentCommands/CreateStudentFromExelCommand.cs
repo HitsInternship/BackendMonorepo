@@ -4,8 +4,8 @@ using StudentModule.Contracts.DTOs;
 
 namespace StudentModule.Contracts.Commands.StudentCommands
 {
-    public record  CreateStudentFromExelCommand : IRequest<StudentDto>
+    public record  CreateStudentFromExelCommand : IRequest<List<StudentDto>>
     {
-        public ExcelStudentDTO ExelStudentDto { get; set; }
+        public List<ExcelStudentDTO> ExelStudentDto { get; set; }
     }
 }
