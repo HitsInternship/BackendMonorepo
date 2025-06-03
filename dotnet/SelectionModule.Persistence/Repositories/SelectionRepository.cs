@@ -16,4 +16,9 @@ public class SelectionRepository(SelectionDbContext context)
                    .FirstOrDefaultAsync(x => x.Id == id) ??
                throw new InvalidOperationException();
     }
+
+    public async Task<bool> CheckIfStudentHasSelectionAsync(Guid studentId)
+    {
+        return await DbSet.AnyAsync(x => x.Candidate.StudentId == studentId);
+    }
 }
