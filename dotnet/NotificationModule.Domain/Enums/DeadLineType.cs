@@ -5,6 +5,6 @@ namespace NotificationModule.Domain.Enums;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum DeadLineType
 {
-    practice_diary,
+    practise_diary,
     selection
 }
