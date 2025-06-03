@@ -46,8 +46,8 @@ public class UploadExcelHandler : IRequestHandler<UploadExcelDTO, List<ExcelStud
         for (int row = 2; row <= rowCount; row++)
         {
             var surname = worksheet.Cells[row, 1].Text?.Trim();
-            var name = worksheet.Cells[row, 1].Text?.Trim();
-            var middleName = worksheet.Cells[row, 1].Text?.Trim();
+            var name = worksheet.Cells[row, 2].Text?.Trim();
+            var middleName = worksheet.Cells[row, 3].Text?.Trim();
             var email = worksheet.Cells[row, 4].Text?.Trim();
             var group = worksheet.Cells[row, 5].Text?.Trim();
 
@@ -64,12 +64,12 @@ public class UploadExcelHandler : IRequestHandler<UploadExcelDTO, List<ExcelStud
             });
         }
 
-        // var command = new CreateStudentFromExelCommand
-        // {
-        //     ExelStudentDto = students
-        // };
+        var command = new CreateStudentFromExelCommand
+        {
+            ExelStudentDto = students
+        };
 
-       // await _mediator.Send(command, cancellationToken);
+       await _mediator.Send(command, cancellationToken);
 
         await _context.Students.AddRangeAsync(studentEntities, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
