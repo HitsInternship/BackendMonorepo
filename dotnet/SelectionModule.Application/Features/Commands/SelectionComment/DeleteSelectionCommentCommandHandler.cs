@@ -25,7 +25,7 @@ public class DeleteSelectionCommentCommandHandler : IRequestHandler<DeleteSelect
         if (!await _selectionCommentRepository.CheckIfExistsAsync(request.CommentId))
             throw new NotFound("Selection not found");
 
-        var comment = await _selectionCommentRepository.GetByIdAsync(request.SelectionId);
+        var comment = await _selectionCommentRepository.GetByIdAsync(request.CommentId);
 
         if (comment.UserId != request.UserId)
             throw new Forbidden("You do not have access to leave comment");
