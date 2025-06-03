@@ -15,7 +15,7 @@ public class ResendingMessageCommandHandler : IRequestHandler<ResendMessageComma
 
     public async Task<Unit> Handle(ResendMessageCommand request, CancellationToken cancellationToken)
     {
-        await _messageProducer.ProduceAsync(request.Message.DataJson);
+        await _messageProducer.ProduceAsync(request.Message.Data);
 
         return Unit.Value;
     }

@@ -26,16 +26,16 @@ public class SendRatedForPracticeCommandHandler : IRequestHandler<SendRatedForPr
         var message = new RatedForPractice
         {
             Email = request.Email,
-            EventType = EventType.rated_for_practise,
+            EventType = EventType.rated_for_practice,
             Rate = request.Rate,
-            PractiseId = request.PractiseId
+            PracticeId = request.PractiseId
         };
 
         var messageEntity = new Message
         {
             Id = message.Id,
             Email = message.Email,
-            EventType = EventType.rated_for_practise,
+            EventType = EventType.rated_for_practice,
             Data = JsonHelper.Serialize(message),
             MessageStatus = MessageStatus.in_progress
         };

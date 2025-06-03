@@ -29,7 +29,7 @@ public class SendNewCommentMessageCommandHandler : IRequestHandler<SendNewCommen
             EventType = EventType.new_comment,
             CommentType = request.CommentType,
             Message = request.Message,
-            Fullname = request.Fullname,
+            FullName = request.Fullname,
             Typeid = request.Typeid
         };
 

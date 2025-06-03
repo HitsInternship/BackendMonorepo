@@ -10,6 +10,6 @@ public enum EventType
     changing_password,
     deadline,
     admission_internship,
-    rated_for_practise,
+    rated_for_practice,
     new_comment
 }
