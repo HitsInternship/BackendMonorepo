@@ -28,6 +28,9 @@ public class CreateSelectionCommandHandler : IRequestHandler<CreateSelectionComm
         var student = await _studentRepository.GetByIdAsync(request.StudentId) ??
                       throw new BadRequest("Student does not exist");
 
+        if (await _selectionRepository.CheckIfStudentHasSelectionAsync(request.StudentId))
+            throw new BadRequest("Student already has a selection");
+
         var selection = new SelectionEntity
         {
             DeadLine = request.Deadline,

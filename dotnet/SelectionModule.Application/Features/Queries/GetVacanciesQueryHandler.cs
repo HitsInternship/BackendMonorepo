@@ -8,6 +8,7 @@ using SelectionModule.Contracts.Dtos.Responses;
 using SelectionModule.Contracts.Queries;
 using SelectionModule.Contracts.Repositories;
 using Shared.Contracts.Configs;
+using Shared.Domain.Exceptions;
 
 namespace SelectionModule.Application.Features.Queries;
 
@@ -31,6 +32,8 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
 
     public async Task<VacanciesDto> Handle(GetVacanciesQuery request, CancellationToken cancellationToken)
     {
+        if (request.Page <= 0) throw new BadRequest("Page must be greater than 0");
+
         var skip = (request.Page - 1) * _size;
 
         var vacancies = request.IsArchived
@@ -44,6 +47,9 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
         vacancies = vacancies.Where(x => x.IsClosed == request.IsClosed);
 
         var totalCount = await vacancies.CountAsync(cancellationToken);
+        var totalPages = (int)Math.Ceiling((double)totalCount / _size);
+
+        if (request.Page > totalPages) throw new BadRequest("Page must be less than or equal to the number of items");
 
         var pagedVacancies = await vacancies
             .Skip(skip)
@@ -66,6 +72,6 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
             });
         }
 
-        return new VacanciesDto(dtos, _size, totalCount, request.Page);
+        return new VacanciesDto(dtos, _size, totalPages, request.Page);
     }
 }

@@ -6,4 +6,5 @@ namespace SelectionModule.Contracts.Repositories;
 public interface ISelectionRepository : IBaseEntityRepository<SelectionEntity>
 {
     new Task<SelectionEntity> GetByIdAsync(Guid id);
+    Task<bool> CheckIfStudentHasSelectionAsync(Guid studentId);
 }

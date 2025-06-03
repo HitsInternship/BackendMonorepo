@@ -82,11 +82,11 @@ namespace SelectionModule.Controllers.Controllers
 
         /// <summary>
         /// Подтверждение результата отбора.
-        /// Доступно для DeanMember, Curator, CompanyRepresenter.
+        /// Доступно для DeanMember, Curator.
         /// </summary>
         /// <param name="selectionId">ID процедуры отбора.</param>
         [HttpPost]
-        [Authorize(Roles = "DeanMember, Curator, CompanyRepresenter")]
+        [Authorize(Roles = "DeanMember, Curator")]
         [Route("selections/{selectionId}/confirm")]
         public async Task<IActionResult> ConfirmSelection(Guid selectionId)
         {
