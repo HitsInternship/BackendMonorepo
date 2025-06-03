@@ -6,6 +6,7 @@ using SelectionModule.Contracts.Commands.Vacancy;
 using SelectionModule.Contracts.Dtos.Requests;
 using SelectionModule.Contracts.Dtos.Responses;
 using SelectionModule.Contracts.Queries;
+using Shared.Domain.Exceptions;
 using UserModule.Persistence;
 
 namespace SelectionModule.Controllers.Controllers;
@@ -35,14 +36,15 @@ public class VacancyController : ControllerBase
     {
         if (User.IsInRole("DeanMember"))
         {
-            await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto));
-        }
-        else if (User.IsInRole("Curator"))
-        {
-            await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto, User.GetUserId()));
+            return Ok(await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto)));
         }
 
-        return Forbid("You do not have permission to create a vacancy.");
+        if (User.IsInRole("Curator"))
+        {
+            return Ok(await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto, User.GetUserId())));
+        }
+
+        return Forbid();
     }
 
     /// <summary>
@@ -55,14 +57,15 @@ public class VacancyController : ControllerBase
     {
         if (User.IsInRole("DeanMember"))
         {
-            await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto));
-        }
-        else if (User.IsInRole("Curator"))
-        {
-            await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto, User.GetUserId()));
+            return Ok(await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto)));
         }
 
-        return Forbid("You do not have permission to update this vacancy.");
+        if (User.IsInRole("Curator"))
+        {
+            return Ok(await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto, User.GetUserId())));
+        }
+
+        return Forbid();
     }
 
     /// <summary>
@@ -75,14 +78,14 @@ public class VacancyController : ControllerBase
     {
         if (User.IsInRole("DeanMember"))
         {
-            await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive));
+            return Ok(await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive)));
         }
-        else if (User.IsInRole("Curator"))
+        if (User.IsInRole("Curator"))
         {
-            await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive, User.GetUserId()));
+            return Ok(await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive, User.GetUserId())));
         }
 
-        return Forbid("You do not have permission to delete this vacancy.");
+        return Forbid();
     }
 
     /// <summary>
