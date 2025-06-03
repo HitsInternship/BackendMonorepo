@@ -1,11 +1,12 @@
 using CompanyModule.Contracts.DTOs.Responses;
+using Shared.Contracts.Dtos;
 
 namespace SelectionModule.Contracts.Dtos.Responses;
 
 /// <summary>
 /// DTO для краткого отображения информации о вакансии.
 /// </summary>
-public class ListedVacancyDto
+public record ListedVacancyDto : BaseDto
 {
     /// <summary>
     /// Название вакансии.

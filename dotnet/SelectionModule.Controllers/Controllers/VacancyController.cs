@@ -100,13 +100,13 @@ public class VacancyController : ControllerBase
     /// Получение списка вакансий с фильтрацией.
     /// </summary>
     /// <param name="positionId">ID позиции (опционально).</param>
-    /// <param name="companyId">ID компании.</param>
+    /// <param name="companyId">ID компании (опционально).</param>
     /// <param name="page">Номер страницы (по умолчанию 1).</param>
     /// <param name="isClosed">Закрытые вакансии (по умолчанию false).</param>
     /// <param name="isArchived">Архивные вакансии (по умолчанию false).</param>
     [HttpGet]
     [ProducesResponseType(typeof(List<VacanciesDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllVacancies(Guid? positionId, Guid companyId, int page = 1,
+    public async Task<IActionResult> GetAllVacancies(Guid? positionId, Guid? companyId, int page = 1,
         bool isClosed = false,
         bool isArchived = false)
     {
