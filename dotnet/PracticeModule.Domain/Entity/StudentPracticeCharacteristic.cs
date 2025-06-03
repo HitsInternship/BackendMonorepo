@@ -9,5 +9,6 @@ public class StudentPracticeCharacteristic
     public Guid DocumentId { get; set; }
     public Practice Practice { get; set; }
     public Guid PracticeId { get; set; }
+    public List<StudentPracticeCharacteristicComment>? PracticeComment { get; set; }
     
 }

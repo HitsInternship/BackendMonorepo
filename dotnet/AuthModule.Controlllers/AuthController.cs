@@ -7,6 +7,9 @@ using Shared.Domain.Exceptions;
 
 namespace AuthModule.Controlllers;
 
+/// <summary>
+/// Контроллер для аутентификации и управления доступом.
+/// </summary>
 [ApiController]
 [Route("api/auth/")]
 public class AuthController: ControllerBase
@@ -18,6 +21,11 @@ public class AuthController: ControllerBase
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// Вход в аккаунт.
+    /// </summary>
+    /// <param name="loginDTO">Данные для входа: логин и пароль.</param>
+    /// <returns>Токены доступа: accessToken и refreshToken.</returns>
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDTO loginDTO)
     {
@@ -25,6 +33,11 @@ public class AuthController: ControllerBase
         return Ok(new { Token = token });
     }
 
+    /// <summary>
+    /// Изменение пароля текущего пользователя.
+    /// </summary>
+    /// <param name="password">Старый и новый пароли, а также логин.</param>
+    /// <returns>200 OK при успешной смене пароля.</returns>
     [Authorize]
     [HttpPut("edit/pass")]
     public async Task<IActionResult> Login(EditPasswordDTO password)
@@ -43,6 +56,13 @@ public class AuthController: ControllerBase
         return Ok();
     }
     
+    
+    
+    /// <summary>
+    /// Получение роли пользователя по ID.
+    /// </summary>
+    /// <param name="query">Запрос с ID пользователя.</param>
+    /// <returns>Роль пользователя.</returns>
     [Authorize]
     [HttpPost("getRoleById")]
     public async Task<IActionResult> GetMyRole(GetRoleQuery query)
@@ -51,6 +71,12 @@ public class AuthController: ControllerBase
         return Ok(role);
     }
     
+    
+    /// <summary>
+    /// Обновление токена доступа по refresh-токену.
+    /// </summary>
+    /// <param name="dto">Refresh токен.</param>
+    /// <returns>Новые access и refresh токены.</returns>
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] TokenRefreshDTO dto)
     {
@@ -58,6 +84,10 @@ public class AuthController: ControllerBase
         return Ok(tokens);
     }
 
+    /// <summary>
+    /// Выход пользователя из системы.
+    /// </summary>
+    /// <returns>Подтверждение выхода.</returns>
     [Authorize]
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
