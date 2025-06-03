@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Shared.Domain.Entites;
 
 namespace PracticeModule.Domain.Entity;
 
-public class Practice
+public class Practice : BaseEntity
 {
     [Key]
     public Guid Id { get; set; }
@@ -14,6 +15,7 @@ public class Practice
     public List<StudentPracticeCharacteristic> StudentPracticeCharacteristics { get; set; }
     public List<PracticeDiary> PracticeDiaries { get; set; }
     public PracticeType PracticeType { get; set; }
+    public bool IsDeleted { get; set; } =  false;
 }
 
 public enum PracticeType

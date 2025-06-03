@@ -17,13 +17,15 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
     private readonly IMapper _mapper;
     private readonly ICompanyRepository _companyRepository;
     private readonly IVacancyRepository _vacancyRepository;
+    private IPositionRepository _positionRepository;
 
     public GetVacanciesQueryHandler(IMapper mapper, IVacancyRepository vacancyRepository,
-        IOptions<PaginationConfig> config, ICompanyRepository companyRepository)
+        IOptions<PaginationConfig> config, ICompanyRepository companyRepository, IPositionRepository positionRepository)
     {
         _mapper = mapper;
         _vacancyRepository = vacancyRepository;
         _companyRepository = companyRepository;
+        _positionRepository = positionRepository;
         _size = config.Value.PageSize;
     }
 
@@ -55,13 +57,15 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
         {
             dtos.Add(new ListedVacancyDto
             {
+                Id = vacancy.Id,
                 Title = vacancy.Title,
-                Position = _mapper.Map<PositionDto>(vacancy.Position),
+                Position = _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(vacancy.PositionId)),
                 Company = _mapper.Map<ShortenCompanyDto>(await _companyRepository.GetByIdAsync(vacancy.CompanyId)),
                 IsClosed = vacancy.IsClosed,
+                IsDeleted = vacancy.IsDeleted,
             });
         }
-        
+
         return new VacanciesDto(dtos, _size, totalCount, request.Page);
     }
 }

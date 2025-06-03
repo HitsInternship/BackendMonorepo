@@ -27,19 +27,19 @@ public class VacancyController : ControllerBase
 
     /// <summary>
     /// Создание новой вакансии. 
-    /// Только пользователи с ролями DeanMember, Curator, CompanyRepresenter.
+    /// Только пользователи с ролями DeanMember, Curator.
     /// </summary>
     [HttpPost]
-    [Authorize(Roles = "DeanMember, Curator, CompanyRepresenter")]
+    [Authorize(Roles = "DeanMember, Curator")]
     public async Task<IActionResult> CreateVacancy([FromBody] VacancyRequestDto vacancyRequestDto)
     {
         if (User.IsInRole("DeanMember"))
         {
-            return Ok(await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto)));
+            await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto));
         }
-        else if (User.IsInRole("Curator") || User.IsInRole("CompanyRepresenter"))
+        else if (User.IsInRole("Curator"))
         {
-            return Ok(await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto, User.GetUserId())));
+            await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto, User.GetUserId()));
         }
 
         return Forbid("You do not have permission to create a vacancy.");
@@ -50,19 +50,19 @@ public class VacancyController : ControllerBase
     /// </summary>
     [HttpPut]
     [Route("{vacancyId}")]
-    [Authorize(Roles = "DeanMember, Curator, CompanyRepresenter")]
+    [Authorize(Roles = "DeanMember, Curator")]
     public async Task<IActionResult> UpdateVacancy(Guid vacancyId, [FromBody] VacancyRequestDto vacancyRequestDto)
     {
-        if (User.IsInRole("Curator") || User.IsInRole("CompanyRepresenter"))
-        {
-            await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto, User.GetUserId()));
-        }
-        else
+        if (User.IsInRole("DeanMember"))
         {
             await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto));
         }
+        else if (User.IsInRole("Curator"))
+        {
+            await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto, User.GetUserId()));
+        }
 
-        return Ok();
+        return Forbid("You do not have permission to update this vacancy.");
     }
 
     /// <summary>
@@ -70,19 +70,19 @@ public class VacancyController : ControllerBase
     /// </summary>
     [HttpDelete]
     [Route("{vacancyId}")]
-    [Authorize(Roles = "DeanMember, Curator, CompanyRepresenter")]
+    [Authorize(Roles = "DeanMember, Curator")]
     public async Task<IActionResult> DeleteVacancy(Guid vacancyId, bool toArchive = true)
     {
-        if (User.IsInRole("Curator") || User.IsInRole("CompanyRepresenter"))
-        {
-            await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive, User.GetUserId()));
-        }
-        else
+        if (User.IsInRole("DeanMember"))
         {
             await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive));
         }
+        else if (User.IsInRole("Curator"))
+        {
+            await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive, User.GetUserId()));
+        }
 
-        return Ok();
+        return Forbid("You do not have permission to delete this vacancy.");
     }
 
     /// <summary>

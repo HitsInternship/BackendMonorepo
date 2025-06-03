@@ -9,7 +9,7 @@ namespace StudentModule.Controllers.Controllers
 {
     [ApiController]
     [Route("api/groups/")]
-    [Authorize(Roles = "Dean")]
+    [Authorize(Roles = "DeanMember")]
     public class GroupController : ControllerBase
     {
         private readonly IMediator _mediator;
