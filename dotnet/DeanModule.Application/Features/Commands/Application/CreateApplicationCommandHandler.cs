@@ -19,11 +19,13 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
     private readonly IPositionRepository _positionRepository;
 
     public CreateApplicationCommandHandler(IApplicationRepository applicationRepository, IMapper mapper,
-        IStudentRepository studentRepository)
+        IStudentRepository studentRepository, ICompanyRepository companyRepository, IPositionRepository positionRepository)
     {
         _applicationRepository = applicationRepository;
         _mapper = mapper;
         _studentRepository = studentRepository;
+        _companyRepository = companyRepository;
+        _positionRepository = positionRepository;
     }
 
     public async Task<Unit> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
@@ -40,9 +42,9 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
         var application = _mapper.Map<ApplicationEntity>(request.ApplicationRequestDto);
 
         //todo: add document
-
+        
         await _applicationRepository.AddAsync(application);
-
+        
         return Unit.Value;
     }
 }
