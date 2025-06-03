@@ -22,9 +22,7 @@ public class CreateCandidateCommandHandler : IRequestHandler<CreateCandidateComm
             StudentId = request.StudentId,
             Selection = request.SelectionEntity
         };
-
-        await _candidateRepository.AddAsync(candidate);
-
+        
         return candidate;
     }
 }
