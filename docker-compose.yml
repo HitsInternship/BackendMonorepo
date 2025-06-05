@@ -126,8 +126,8 @@ services:
   
   notification-service:
     build:
-      context: .
-      dockerfile: java/Dockerfile
+      context: ./java
+      dockerfile: Dockerfile
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     ports:
