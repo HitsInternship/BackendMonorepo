@@ -125,7 +125,7 @@ public class PracticeController : ControllerBase
         return Ok();
     }
 
-
+    [HttpGet("student-practices")]
     public async Task<IActionResult> GetAllPractice()
     {
         await _mediator.Send(new GetAllPractice());
