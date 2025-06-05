@@ -9,4 +9,5 @@ public class PracticeDiary
     public Practice Practice { get; set; }
     public Guid PracticeId { get; set; }
     public Guid DocumentId { get; set; }
+    public List<PracticeDiaryComment>? Comment { get; set; }
 }

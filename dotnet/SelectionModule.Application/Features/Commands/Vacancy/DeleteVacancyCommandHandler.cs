@@ -24,7 +24,10 @@ public class DeleteVacancyCommandHandler : IRequestHandler<DeleteVacancyCommand,
             throw new NotFound("Vacancy not found");
 
         var vacancy = await _vacancyRepository.GetByIdAsync(request.VacancyId);
-
+        
+        if (vacancy.IsDeleted)
+            throw new BadRequest("Vacancy is already archived or deleted");
+        
         if (request.UserId.HasValue)
         {
             if (!await _companyPersonRepository.CheckIfUserIsCurator(vacancy.CompanyId, request.UserId.Value))

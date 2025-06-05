@@ -37,6 +37,7 @@ namespace StudentModule.Persistence.Repositories
         public async Task<GroupEntity> GetGroupByNumberAsync(int number)
         {
             var group = await context.Groups
+                .Include(g => g.Stream)
                 .FirstOrDefaultAsync(g => g.GroupNumber == number);
 
             return group;

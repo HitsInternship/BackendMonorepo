@@ -6,6 +6,7 @@ using SelectionModule.Contracts.Commands.Vacancy;
 using SelectionModule.Contracts.Dtos.Requests;
 using SelectionModule.Contracts.Dtos.Responses;
 using SelectionModule.Contracts.Queries;
+using Shared.Domain.Exceptions;
 using UserModule.Persistence;
 
 namespace SelectionModule.Controllers.Controllers;
@@ -27,22 +28,23 @@ public class VacancyController : ControllerBase
 
     /// <summary>
     /// Создание новой вакансии. 
-    /// Только пользователи с ролями DeanMember, Curator, CompanyRepresenter.
+    /// Только пользователи с ролями DeanMember, Curator.
     /// </summary>
     [HttpPost]
-    [Authorize(Roles = "DeanMember, Curator, CompanyRepresenter")]
+    [Authorize(Roles = "DeanMember, Curator")]
     public async Task<IActionResult> CreateVacancy([FromBody] VacancyRequestDto vacancyRequestDto)
     {
-        if (User.IsInRole("Curator") || User.IsInRole("CompanyRepresenter"))
+        if (User.IsInRole("DeanMember"))
         {
-            await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto, User.GetUserId()));
-        }
-        else
-        {
-            await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto));
+            return Ok(await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto)));
         }
 
-        return Ok();
+        if (User.IsInRole("Curator"))
+        {
+            return Ok(await _mediator.Send(new CreateVacancyCommand(vacancyRequestDto, User.GetUserId())));
+        }
+
+        return Forbid();
     }
 
     /// <summary>
@@ -50,19 +52,20 @@ public class VacancyController : ControllerBase
     /// </summary>
     [HttpPut]
     [Route("{vacancyId}")]
-    [Authorize(Roles = "DeanMember, Curator, CompanyRepresenter")]
+    [Authorize(Roles = "DeanMember, Curator")]
     public async Task<IActionResult> UpdateVacancy(Guid vacancyId, [FromBody] VacancyRequestDto vacancyRequestDto)
     {
-        if (User.IsInRole("Curator") || User.IsInRole("CompanyRepresenter"))
+        if (User.IsInRole("DeanMember"))
         {
-            await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto, User.GetUserId()));
-        }
-        else
-        {
-            await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto));
+            return Ok(await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto)));
         }
 
-        return Ok();
+        if (User.IsInRole("Curator"))
+        {
+            return Ok(await _mediator.Send(new UpdateVacancyCommand(vacancyId, vacancyRequestDto, User.GetUserId())));
+        }
+
+        return Forbid();
     }
 
     /// <summary>
@@ -70,19 +73,19 @@ public class VacancyController : ControllerBase
     /// </summary>
     [HttpDelete]
     [Route("{vacancyId}")]
-    [Authorize(Roles = "DeanMember, Curator, CompanyRepresenter")]
+    [Authorize(Roles = "DeanMember, Curator")]
     public async Task<IActionResult> DeleteVacancy(Guid vacancyId, bool toArchive = true)
     {
-        if (User.IsInRole("Curator") || User.IsInRole("CompanyRepresenter"))
+        if (User.IsInRole("DeanMember"))
         {
-            await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive, User.GetUserId()));
+            return Ok(await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive)));
         }
-        else
+        if (User.IsInRole("Curator"))
         {
-            await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive));
+            return Ok(await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive, User.GetUserId())));
         }
 
-        return Ok();
+        return Forbid();
     }
 
     /// <summary>
@@ -100,13 +103,13 @@ public class VacancyController : ControllerBase
     /// Получение списка вакансий с фильтрацией.
     /// </summary>
     /// <param name="positionId">ID позиции (опционально).</param>
-    /// <param name="companyId">ID компании.</param>
+    /// <param name="companyId">ID компании (опционально).</param>
     /// <param name="page">Номер страницы (по умолчанию 1).</param>
     /// <param name="isClosed">Закрытые вакансии (по умолчанию false).</param>
     /// <param name="isArchived">Архивные вакансии (по умолчанию false).</param>
     [HttpGet]
     [ProducesResponseType(typeof(List<VacanciesDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllVacancies(Guid? positionId, Guid companyId, int page = 1,
+    public async Task<IActionResult> GetAllVacancies(Guid? positionId, Guid? companyId, int page = 1,
         bool isClosed = false,
         bool isArchived = false)
     {

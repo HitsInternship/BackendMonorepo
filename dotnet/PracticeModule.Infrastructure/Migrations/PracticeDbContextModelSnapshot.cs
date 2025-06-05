@@ -31,6 +31,9 @@ namespace PracticeModule.Infrastructure.Migrations
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("Mark")
                         .HasColumnType("integer");
 
@@ -70,6 +73,26 @@ namespace PracticeModule.Infrastructure.Migrations
                     b.ToTable("PracticeDiary");
                 });
 
+            modelBuilder.Entity("PracticeModule.Domain.Entity.PracticeDiaryComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("DiaryId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiaryId");
+
+                    b.ToTable("PracticeDiaryComment");
+                });
+
             modelBuilder.Entity("PracticeModule.Domain.Entity.StudentPracticeCharacteristic", b =>
                 {
                     b.Property<Guid>("Id")
@@ -89,6 +112,26 @@ namespace PracticeModule.Infrastructure.Migrations
                     b.ToTable("StudentPracticeCharacteristic");
                 });
 
+            modelBuilder.Entity("PracticeModule.Domain.Entity.StudentPracticeCharacteristicComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("PracticeCharacteristicId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PracticeCharacteristicId");
+
+                    b.ToTable("StudentPracticeCharacteristicComment");
+                });
+
             modelBuilder.Entity("PracticeModule.Domain.Entity.PracticeDiary", b =>
                 {
                     b.HasOne("PracticeModule.Domain.Entity.Practice", "Practice")
@@ -98,6 +141,15 @@ namespace PracticeModule.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Practice");
+                });
+
+            modelBuilder.Entity("PracticeModule.Domain.Entity.PracticeDiaryComment", b =>
+                {
+                    b.HasOne("PracticeModule.Domain.Entity.PracticeDiary", "Diary")
+                        .WithMany("Comment")
+                        .HasForeignKey("DiaryId");
+
+                    b.Navigation("Diary");
                 });
 
             modelBuilder.Entity("PracticeModule.Domain.Entity.StudentPracticeCharacteristic", b =>
@@ -111,11 +163,30 @@ namespace PracticeModule.Infrastructure.Migrations
                     b.Navigation("Practice");
                 });
 
+            modelBuilder.Entity("PracticeModule.Domain.Entity.StudentPracticeCharacteristicComment", b =>
+                {
+                    b.HasOne("PracticeModule.Domain.Entity.StudentPracticeCharacteristic", "PracticeCharacteristic")
+                        .WithMany("PracticeComment")
+                        .HasForeignKey("PracticeCharacteristicId");
+
+                    b.Navigation("PracticeCharacteristic");
+                });
+
             modelBuilder.Entity("PracticeModule.Domain.Entity.Practice", b =>
                 {
                     b.Navigation("PracticeDiaries");
 
                     b.Navigation("StudentPracticeCharacteristics");
+                });
+
+            modelBuilder.Entity("PracticeModule.Domain.Entity.PracticeDiary", b =>
+                {
+                    b.Navigation("Comment");
+                });
+
+            modelBuilder.Entity("PracticeModule.Domain.Entity.StudentPracticeCharacteristic", b =>
+                {
+                    b.Navigation("PracticeComment");
                 });
 #pragma warning restore 612, 618
         }

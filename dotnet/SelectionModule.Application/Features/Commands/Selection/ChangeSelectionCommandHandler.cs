@@ -21,7 +21,7 @@ public class ChangeSelectionCommandHandler : IRequestHandler<ChangeSelectionComm
 
         var selection = await _selectionRepository.GetByIdAsync(request.SelectionId);
 
-        if (selection.Candidate.UserId != request.UserId || !request.Roles.Contains("DeanMember"))
+        if (selection.Candidate.UserId != request.UserId && !request.Roles.Contains("DeanMember"))
             throw new Forbidden("This user is not allowed to change the selection");
 
         selection.SelectionStatus = request.Status;

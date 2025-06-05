@@ -38,11 +38,35 @@ public class NotificationService {
                 case changing_password -> parsingChangingPassword(message);
                 case changing_practise -> parsingChangingPractise(message);
                 case admission_internship -> parsingAdmissionInternship(message);
+                case rated_for_practice -> parsingRatedForPractice(message);
+                case new_comment -> parsingNewComment(message);
                 default -> sendError(message);
             }
         } catch (Exception ex) {
             log.error("Failed to extract eventType from malformed message: {}", message);
             sendError(message);
+        }
+    }
+
+    private void parsingNewComment(String message) {
+        try {
+            NewComment newComment = objectMapper.readValue(message, NewComment.class);
+            emailService.createNewComment(newComment);
+        } catch (JsonProcessingException e) {
+            log.error("Error parsing the message: {}", message);
+            sendError(message);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void parsingRatedForPractice(String message) {
+        try {
+            RatedForPractice ratedForPractice = objectMapper.readValue(message, RatedForPractice.class);
+            emailService.createRatedForPractice(ratedForPractice);
+        } catch (JsonProcessingException e) {
+            log.error("Error parsing the message: {}", message);
+            sendError(message);
+            throw new RuntimeException(e);
         }
     }
 

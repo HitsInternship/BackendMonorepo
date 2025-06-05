@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Reflection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PracticeModule.Application;
+using PracticeModule.Controllers.PracticeControllers;
 using PracticeModule.Infrastructure;
 
 namespace PracticeModule.Controllers
@@ -11,6 +13,14 @@ namespace PracticeModule.Controllers
         {
             services.AddPracticeModuleInfrastructure(configuration);
             services.AddPracticeModuleApplication();
+            
+          
+            // services.AddSwaggerGen(options =>
+            // {
+            //     var assemblyName = Assembly.GetAssembly(typeof(PracticeController))?.GetName().Name;
+            //     var xmlFilename = $"{assemblyName}.xml";
+            //     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            // });
 
         }
 

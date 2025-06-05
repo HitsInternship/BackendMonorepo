@@ -7,10 +7,11 @@ namespace StudentModule.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static void AddStudentModuleInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static void AddStudentModuleInfrastructure(this IServiceCollection services,
+            IConfiguration configuration)
         {
             services.AddDbContext<StudentModuleDbContext>(options =>
-                options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? configuration.GetConnectionString("HitsInternship")));
+                options.UseNpgsql(configuration.GetConnectionString("HitsInternship")));
         }
 
         public static void AddStudentModuleInfrastructure(this IServiceProvider services)
