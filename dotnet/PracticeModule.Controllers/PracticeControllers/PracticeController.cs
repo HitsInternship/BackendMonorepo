@@ -124,4 +124,11 @@ public class PracticeController : ControllerBase
         });
         return Ok();
     }
+
+
+    public async Task<IActionResult> GetAllPractice()
+    {
+        await _mediator.Send(new GetAllPractice());
+        return Ok();
+    }
 }
