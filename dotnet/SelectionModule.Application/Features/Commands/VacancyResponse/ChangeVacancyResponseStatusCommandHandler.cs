@@ -1,6 +1,7 @@
 using MediatR;
 using SelectionModule.Contracts.Commands.VacancyResponse;
 using SelectionModule.Contracts.Repositories;
+using SelectionModule.Domain.Enums;
 using Shared.Domain.Exceptions;
 
 namespace SelectionModule.Application.Features.Commands.VacancyResponse;
@@ -8,10 +9,13 @@ namespace SelectionModule.Application.Features.Commands.VacancyResponse;
 public class ChangeVacancyResponseStatusCommandHandler : IRequestHandler<ChangeVacancyResponseStatusCommand, Unit>
 {
     private readonly IVacancyResponseRepository _vacancyResponseRepository;
+    private readonly ISelectionRepository _selectionRepository;
 
-    public ChangeVacancyResponseStatusCommandHandler(IVacancyResponseRepository vacancyResponseRepository)
+    public ChangeVacancyResponseStatusCommandHandler(IVacancyResponseRepository vacancyResponseRepository,
+        ISelectionRepository selectionRepository)
     {
         _vacancyResponseRepository = vacancyResponseRepository;
+        _selectionRepository = selectionRepository;
     }
 
 
@@ -26,6 +30,18 @@ public class ChangeVacancyResponseStatusCommandHandler : IRequestHandler<ChangeV
             throw new Forbidden("You cannot change the status of this vacancy response");
 
         vacancyResponse.Status = request.Status;
+
+        if (vacancyResponse.Status == VacancyResponseStatus.OfferAccepted)
+        {
+            var selection = vacancyResponse.Candidate.Selection;
+
+            if (selection != null)
+            {
+                selection.SelectionStatus = SelectionStatus.OffersAccepted;
+                selection.Offer = vacancyResponse.Id;
+                await _selectionRepository.UpdateAsync(selection);
+            }
+        }
 
         await _vacancyResponseRepository.UpdateAsync(vacancyResponse);
 

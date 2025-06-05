@@ -11,7 +11,7 @@ namespace AppSettingsModule.Infrastructure
         public static void AddAppSettingsModuleInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<AppSettingsDbContext>(options =>
-                options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? configuration.GetConnectionString("HitsInternship")));
+                options.UseNpgsql(configuration.GetConnectionString("HitsInternship")));
         }
 
         public static void AddAppSettingsModuleInfrastructure(this IServiceProvider services)

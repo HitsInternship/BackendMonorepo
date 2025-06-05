@@ -9,7 +9,7 @@ public static class DependencyInjection
     public static void AddSelectionModuleInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<SelectionDbContext>(options =>
-            options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? configuration.GetConnectionString("HitsInternship")));
+            options.UseNpgsql(configuration.GetConnectionString("HitsInternship")));
     }
 
     public static void AddSelectionModuleInfrastructure(this IServiceProvider services)

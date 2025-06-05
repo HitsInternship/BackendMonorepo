@@ -10,7 +10,7 @@ namespace CompanyModule.Infrastructure
         public static void AddCompanyModuleInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<CompanyModuleDbContext>(options =>
-                options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? configuration.GetConnectionString("HitsInternship")));
+                options.UseNpgsql(configuration.GetConnectionString("HitsInternship")));
         }
 
         public static void AddCompanyModuleInfrastructure(this IServiceProvider services)
