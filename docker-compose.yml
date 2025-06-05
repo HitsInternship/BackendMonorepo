@@ -4,15 +4,15 @@ services:
       context: .
       dockerfile: dotnet/HitsInternship.Api/Dockerfile
     environment:
-      ConnectionStrings__HitsInternship: Server=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      ConnectionStrings__HitsInternship: Server=db;Port=5434;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
-      Kafka__BootstrapServers: kafka:29092
+      Kafka__BootstrapServers: kafka:29094
       ASPNETCORE_ENVIRONMENT: Testing
     ports:
-      - "8081:8081"
+      - "1011:1011"
     networks:
       - network
     depends_on:
@@ -25,7 +25,7 @@ services:
     image: postgres:latest
     container_name: postgres
     expose:
-      - "5432"
+      - "5434"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -44,8 +44,8 @@ services:
     image: minio/minio
     container_name: minio
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "7000:7000"
+      - "7001:7001"
     volumes:
       - minio_data:/data
     environment:
@@ -63,7 +63,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "1234:80"
+      - "1235:80"
     networks:
       - network
     depends_on:
@@ -74,7 +74,7 @@ services:
     image: confluentinc/cp-zookeeper:7.5.0
     platform: linux/amd64
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_CLIENT_PORT: 3456
       ZOOKEEPER_TICK_TIME: 2000
     healthcheck:
       test: [ "CMD", "echo", "ruok", "|", "nc", "localhost", "2181" ]
@@ -82,7 +82,7 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - "2181:2181"
+      - "3456:3456"
     networks:
       - network
 
@@ -93,12 +93,12 @@ services:
       zookeeper:
         condition: service_healthy
     ports:
-      - "9092:9092"
+      - "9094:9094"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:3456
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29094,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
@@ -116,11 +116,11 @@ services:
     depends_on:
       - kafka
     ports:
-      - "8085:8080"
+      - "8086:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
-      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29094
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:3456
     networks:
       - network
   
@@ -129,9 +129,9 @@ services:
       context: .
       dockerfile: java/Dockerfile
     environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29094
     ports:
-      - "8082:8082"
+      - "5678:5678"
     depends_on:
       kafka:
         condition: service_healthy
