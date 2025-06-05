@@ -18,4 +18,9 @@ public record SelectionVacancyResponseDto : BaseDto
     /// Статус отклика на вакансию.
     /// </summary>
     public required VacancyResponseStatus Status { get; set; }
+
+    /// <summary>
+    ///   Позиция, на которую подан отклик.
+    /// </summary>
+    public required string Position { get; set; }
 }

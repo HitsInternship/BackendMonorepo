@@ -39,9 +39,9 @@ public class GetSelectionQueryHandler : IRequestHandler<GetSelectionQuery, Selec
 
         var selection = candidate.Selection ?? throw new BadRequest("No selection .");
 
-        var vacancyResponses = await _vacancyResponseRepository.FindAsync(x => x.CandidateId == candidate.Id);
+        var vacancyResponses = await _vacancyResponseRepository.GetByCandidateIdAsync(candidate.Id);
 
-        var student = await _studentRepository.GetByIdAsync(candidate.StudentId);
+        var student = await _studentRepository.GetStudentByIdAsync(candidate.StudentId);
 
         var user = await _userRepository.GetByIdAsync(candidate.UserId);
 
@@ -68,11 +68,13 @@ public class GetSelectionQueryHandler : IRequestHandler<GetSelectionQuery, Selec
                 Company = _mapper.Map<ShortenCompanyDto>(
                     await _companyRepository.GetByIdAsync(vacancy.Vacancy.CompanyId)),
                 Status = vacancy.Status,
+                Position = vacancy.Vacancy.Position.Name
             });
         }
 
         return new SelectionDto
         {
+            Id = selection.Id,
             IsDeleted = selection.IsDeleted,
             DeadLine = selection.DeadLine,
             SelectionStatus = selection.SelectionStatus,

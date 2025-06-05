@@ -18,7 +18,7 @@ public class LogoutHandler : IRequestHandler<LogoutDTO, Unit>
     public async Task<Unit> Handle(LogoutDTO request, CancellationToken cancellationToken)
     {
         var user = await _context.AspNetUsers
-            .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
+            .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
 
         if (user == null)
         {
