@@ -36,6 +36,21 @@ public class EmailService {
     @Value("${notification.topic.response}")
     private String responseTopic;
 
+    @Value("${url.selection}")
+    private String baseUrlSelection;
+
+    @Value("${url.application}")
+    private String baseUrlApplication;
+
+    @Value("${url.profile}")
+    private String baseUrlProfile;
+
+    @Value("${url.practice-diary}")
+    private String baseUrlPracticeDiary;
+
+    @Value("${url.practice}")
+    private String baseUrlPractice;
+
     @Async
     public void sendEmailWithThymeLeaf(Mail mail) {
         try {
@@ -112,6 +127,54 @@ public class EmailService {
 
         String process = templateEngine.process("Admission-internship", context);
         Mail mail = new Mail(admissionInternship.getId(), admissionInternship.getEmail(), "Зачисление на практику", process);
+        sendEmailWithThymeLeaf(mail);
+    }
+
+    public void createNewComment(NewComment newComment) {
+        Context context = new Context();
+        context.setVariable("fullName", newComment.getFullName());
+        context.setVariable("message", newComment.getMessage());
+
+        String theme = null;
+        String url = null;
+
+        switch (newComment.getCommentType()) {
+            case practice_diary -> {
+                context.setVariable("typeName", "дневнику практики");
+                theme = "дневнику практики";
+                url = baseUrlPracticeDiary;
+            }
+            case application -> {
+                context.setVariable("typeName", "заявке на практику");
+                theme = "заявке на практику";
+                url = baseUrlApplication;
+            }
+            case characteristic -> {
+                context.setVariable("typeName", "характеристике");
+                theme = "характеристике";
+                url = baseUrlProfile;
+            }
+            case selection -> {
+                context.setVariable("typeName", "отбору на практику");
+                theme = "отбору на практику";
+                url = baseUrlSelection;
+            }
+        }
+
+        context.setVariable("url", url + "/" + newComment.getTypeId());
+
+        String process = templateEngine.process("New-comment", context);
+        Mail mail = new Mail(newComment.getId(), newComment.getEmail(), "Новый комментарий к " + theme, process);
+        sendEmailWithThymeLeaf(mail);
+    }
+
+    public void createRatedForPractice(RatedForPractice ratedForPractice) {
+        Context context = new Context();
+        context.setVariable("rate", ratedForPractice.getRate());
+        context.setVariable("url", baseUrlPractice + "/" + ratedForPractice.getPracticeId().toString());
+
+        String process = templateEngine.process("Rated-for-practice", context);
+        Mail mail = new Mail(ratedForPractice.getId(), ratedForPractice.getEmail(), "Оценка за практику", process);
         sendEmailWithThymeLeaf(mail);
     }
 }

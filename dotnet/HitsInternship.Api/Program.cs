@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(AuthSettings.PrivateKey))
+                Encoding.UTF8.GetBytes(AuthSettings.PrivateKey ?? throw new InvalidOperationException()))
         };
     });
 builder.Services.AddControllers()
@@ -43,19 +43,18 @@ builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
         options.InvalidModelStateResponseFactory = FailedAnnotationValidationResponse.MakeValidationResponse);
 
-builder.Services.AddApplicationModules(builder.Configuration);
+builder.Services.AddApplicationModules(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwaggerConfiguration();
-}
+
+app.MapOpenApi();
+app.UseSwaggerConfiguration();
+
 
 app.UseCors("AllowAllOrigins");
 
-app.Services.UseApplicationModules();
+await app.Services.UseApplicationModules();
 app.UseAuthentication();
 app.UseAuthorization();
 

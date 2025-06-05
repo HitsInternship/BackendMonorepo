@@ -9,7 +9,7 @@ public static class DependencyInjection
     public static void AddPracticeModuleInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<PracticeDbContext>(options =>
-            options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? configuration.GetConnectionString("HitsInternship")));
+            options.UseNpgsql( configuration.GetConnectionString("HitsInternship")));
     }
 
     public static void AddPracticeModuleInfrastructure(this IServiceProvider services)
