@@ -94,6 +94,7 @@ services:
         condition: service_healthy
     ports:
       - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -106,7 +107,7 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list || exit 1" ]
       interval: 10s
-      timeout: 10s
+      timeout: 15s
       retries: 5
     networks:
       - network
@@ -114,7 +115,8 @@ services:
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     ports:
       - "8085:8080"
     environment:
