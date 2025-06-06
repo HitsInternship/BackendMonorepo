@@ -12,7 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NotificationModule.Contracts\NotificationModule.Contracts.csproj" />
       <ProjectReference Include="..\SelectionModule.Contracts\SelectionModule.Contracts.csproj" />
       <ProjectReference Include="..\StudentModule.Contracts\StudentModule.Contracts.csproj" />
     </ItemGroup>

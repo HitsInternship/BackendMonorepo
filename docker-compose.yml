@@ -4,22 +4,17 @@ services:
       context: .
       dockerfile: dotnet/HitsInternship.Api/Dockerfile
     environment:
-      ConnectionStrings__HitsInternship: Server=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      DATABASE_CONNECTION_STRING: Server=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
-      Kafka__BootstrapServers: kafka:29092
-      ASPNETCORE_ENVIRONMENT: Testing
     ports:
-      - "8081:8081"
+      - "8080:8080"
     networks:
       - network
     depends_on:
-      db:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
+      - db
   
   db:
     image: postgres:latest
@@ -30,11 +25,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -67,20 +57,14 @@ services:
     networks:
       - network
     depends_on:
-      db:
-        condition: service_healthy
-        
+      - db
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     platform: linux/amd64
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    healthcheck:
-      test: [ "CMD", "echo", "ruok", "|", "nc", "localhost", "2181" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     ports:
       - "2181:2181"
     networks:
@@ -90,8 +74,7 @@ services:
     image: confluentinc/cp-kafka:7.5.0
     platform: linux/amd64
     depends_on:
-      zookeeper:
-        condition: service_healthy
+      - zookeeper
     ports:
       - "9092:9092"
     environment:
@@ -103,11 +86,6 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    healthcheck:
-      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list || exit 1" ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
     networks:
       - network
 
@@ -121,20 +99,6 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
-    networks:
-      - network
-  
-  notification-service:
-    build:
-      context: .
-      dockerfile: java/Dockerfile
-    environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-    ports:
-      - "8082:8082"
-    depends_on:
-      kafka:
-        condition: service_healthy
     networks:
       - network
 

@@ -9,7 +9,8 @@ namespace UserModule.Infrastructure
         public static void AddUserModuleInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<UserModuleDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("HitsInternship")));
+                options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ??
+                                  configuration.GetConnectionString("HitsInternship")));
         }
 
         public static void AddUserModuleInfrastructure(this IServiceProvider services)
