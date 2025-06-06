@@ -1,6 +1,6 @@
 FROM gradle:8.5-jdk21 AS build
 WORKDIR /app
-COPY . .
+COPY /java .
 RUN gradle bootJar -x test && ls -lah build/libs && cp $(ls build/libs/*.jar | head -n 1) app.jar
 
 FROM eclipse-temurin:21-jdk-jammy
