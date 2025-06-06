@@ -1,7 +1,7 @@
 FROM gradle:8.5-jdk21 AS build
 WORKDIR /app
-COPY java/ .
-RUN gradle build -x test && cp build/libs/*.jar app.jar
+COPY . .
+RUN gradle build -x test && cp $(find build/libs -name "*.jar" | head -n 1) app.jar
 
 FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app

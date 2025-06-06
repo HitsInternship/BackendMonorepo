@@ -1,14 +1,14 @@
 services:
   web:
     build:
-      context: .
-      dockerfile: dotnet/HitsInternship.Api/Dockerfile
+      context: dotnet/
+      dockerfile: HitsInternship.Api/Dockerfile
     environment:
-      ConnectionStrings__HitsInternship: Server=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      ConnectionStrings__HitsInternship: Server=db;Port=5432;Database=HitsInternshipDb;Username=postgres;Password=postgres
+      MINIO_ENDPOINT: minio
+      MINIO_ACCESS_KEY: OysgCyOPVJrilvQVQSl6
+      MINIO_SECRET_KEY: jUq8jd7pOfX1wyq0txQe4IlL2qo4XEdOgFNFy2d0
+      ACCESS_TOKEN_SECRET: mYGh8lG8d6W7wC1cK2fR3sT4aP5eN9dE0dK8iS6eY3VmON5gTD5hMGtWmxEsmTfu3JL0LjDe8Rfdu46w5qjX5jyDwU0ygJPqXJPRmHOQW0WN8oLIaDBxIQQJBAN66qMS2GtcgTqECjnZuuP
       Kafka__BootstrapServers: kafka:29092
       ASPNETCORE_ENVIRONMENT: Testing
     ports:
@@ -27,9 +27,9 @@ services:
     expose:
       - "5432"
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: HitsInternshipDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER" ]
       interval: 10s
@@ -49,9 +49,9 @@ services:
     volumes:
       - minio_data:/data
     environment:
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+      MINIO_ENDPOINT: minio
+      MINIO_ROOT_USER:  OysgCyOPVJrilvQVQSl6
+      MINIO_ROOT_PASSWORD: jUq8jd7pOfX1wyq0txQe4IlL2qo4XEdOgFNFy2d0
     command: server /data --console-address ":9001"
     networks:
       - network
@@ -61,7 +61,7 @@ services:
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: ${POSTGRES_PASSWORD}
+      PGADMIN_DEFAULT_PASSWORD: postgres
     ports:
       - "1234:80"
     networks:
@@ -126,8 +126,8 @@ services:
   
   notification-service:
     build:
-      context: .
-      dockerfile: java/Dockerfile
+      context: java/
+      dockerfile: Dockerfile
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     ports:
