@@ -3,7 +3,7 @@ using CompanyModule.Contracts.Commands;
 using CompanyModule.Contracts.Repositories;
 using MediatR;
 
-namespace CompanyModule.Application.Handlers.Company
+namespace CompanyModule.Application.Handlers.CompanyPart
 {
     public class EditCompanyCommandHandler : IRequestHandler<EditCompanyCommand, Domain.Entities.Company>
     {

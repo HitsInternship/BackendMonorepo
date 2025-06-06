@@ -5,7 +5,5 @@ public enum EventType {
     registration,
     changing_password,
     deadline,
-    admission_internship,
-    rated_for_practice,
-    new_comment
+    admission_internship
 }

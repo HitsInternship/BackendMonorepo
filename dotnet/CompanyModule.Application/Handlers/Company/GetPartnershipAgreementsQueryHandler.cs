@@ -3,7 +3,7 @@ using CompanyModule.Contracts.Repositories;
 using CompanyModule.Domain.Entities;
 using MediatR;
 
-namespace CompanyModule.Application.Handlers.Company
+namespace CompanyModule.Application.Handlers.CompanyPart
 {
     public class GetPartnershipAgreementsQueryHandler : IRequestHandler<GetPartnershipAgreementsQuery, List<PartnershipAgreement>>
     {

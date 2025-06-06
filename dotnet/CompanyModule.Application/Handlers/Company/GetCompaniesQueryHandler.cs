@@ -2,7 +2,7 @@
 using CompanyModule.Contracts.Repositories;
 using MediatR;
 
-namespace CompanyModule.Application.Handlers.Company
+namespace CompanyModule.Application.Handlers.CompanyPart
 {
     public class GetCompaniesQueryHandler : IRequestHandler<GetCompaniesQuery, List<Domain.Entities.Company>>
     {

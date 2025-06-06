@@ -9,8 +9,8 @@ namespace CompanyModule.Domain.Entities
 {
     public class Appointment : BaseEntity
     {
-        public DateTime Date { get; set; }
         public string Description { get; set; }
+        public Timeslot Timeslot { get; set; }
         public Company Company { get; set; }
         public List<Attachment> Attachments { get; set; } = new List<Attachment>();
 

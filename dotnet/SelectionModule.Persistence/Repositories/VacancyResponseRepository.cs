@@ -27,7 +27,6 @@ public class VacancyResponseRepository(SelectionDbContext context)
     {
         return await DbSet
                    .Include(x => x.Candidate)
-                   .ThenInclude(x => x.Selection)
                    .Include(x => x.Vacancy)
                    .Include(x=>x.Comments)
                    .FirstOrDefaultAsync(x => x.Id == id)

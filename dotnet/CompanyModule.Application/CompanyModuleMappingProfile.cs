@@ -26,10 +26,15 @@ public class CompanyModuleMappingProfile : Profile
             .ForMember(dest => dest.surname, opt => opt.MapFrom(src => src.User.Surname))
             .ForMember(dest => dest.email, opt => opt.MapFrom(src => src.User.Email));
 
-        CreateMap<AppointmentRequest, Appointment>()
-            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.date.ToUniversalTime()));
+        CreateMap<AppointmentRequest, Appointment>();
         CreateMap<Appointment, AppointmentResponse>()
             .ForMember(dest => dest.documentIds, opt => opt.MapFrom(src => src.Attachments.Select(attachment => attachment.DocumentId)))
-            .ForMember(dest => dest.date, opt => opt.MapFrom(src => src.Date.ToLocalTime()));
+            .ForMember(dest => dest.date, opt => opt.MapFrom(src => src.Timeslot.Date.ToLocalTime()))
+            .ForMember(dest => dest.periodNumber, opt => opt.MapFrom(src => src.Timeslot.PeriodNumber));
+        CreateMap<Appointment, ShortenAppointmentResponse>()
+            .ForMember(dest => dest.companyName, opt => opt.MapFrom(src => src.Company.Name));
+
+        CreateMap<TimeslotRequest, Timeslot>();
+        CreateMap<Timeslot, TimeslotResponse>();
     }
 }
