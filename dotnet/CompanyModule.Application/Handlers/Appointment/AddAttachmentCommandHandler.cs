@@ -5,7 +5,7 @@ using DocumentModule.Contracts.Repositories;
 using DocumentModule.Domain.Enums;
 using MediatR;
 
-namespace CompanyModule.Application.Handlers.Appointment
+namespace CompanyModule.Application.Handlers.AppointmentPart
 {
     public class AddAttachmentCommandHandler : IRequestHandler<AddAttachmentCommand, Guid>
     {
@@ -21,7 +21,7 @@ namespace CompanyModule.Application.Handlers.Appointment
 
         public async Task<Guid> Handle(AddAttachmentCommand command, CancellationToken cancellationToken)
         {
-            Domain.Entities.Appointment appointment = await _appointmentRepository.GetByIdAsync(command.appointmentId);
+            Appointment appointment = await _appointmentRepository.GetByIdAsync(command.appointmentId);
 
             Attachment attachment = new Attachment() { DocumentId = Guid.NewGuid(), Appointment = appointment };
             await _attachmentRepository.AddAsync(attachment);

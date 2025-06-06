@@ -5,7 +5,7 @@ using DocumentModule.Contracts.Repositories;
 using DocumentModule.Domain.Enums;
 using MediatR;
 
-namespace CompanyModule.Application.Handlers.Appointment
+namespace CompanyModule.Application.Handlers.AppointmentPart
 {
     public class RemoveAttachmentCommandHandler : IRequestHandler<RemoveAttachmentCommand, Unit>
     {

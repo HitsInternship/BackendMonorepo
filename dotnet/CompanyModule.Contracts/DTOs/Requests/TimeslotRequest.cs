@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace CompanyModule.Contracts.DTOs.Requests
 {
-    public class AppointmentRequest
+    public class TimeslotRequest
     {
-        public Guid timeslotId { get; set; }
-        public string description { get; set; }
+        public DateTime date { get; set; }
+        public int periodNumber { get; set; }
 
-        public AppointmentRequest() {}
+        public TimeslotRequest() {}
     }
 }

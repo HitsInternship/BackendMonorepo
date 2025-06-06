@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace CompanyModule.Contracts.Queries
 {
-    public record GetCuratorQuery(Guid curatorId) : IRequest<Curator>;
+    public record GetAppointmentQuery(Guid appointmentId) : IRequest<Appointment>;
 }

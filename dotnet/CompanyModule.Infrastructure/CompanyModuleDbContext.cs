@@ -10,6 +10,7 @@ namespace CompanyModule.Infrastructure
         public DbSet<Company> Companies { get; set; }
         public DbSet<Curator> Curators { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Timeslot> Timeslots { get; set; }
 
         public DbSet<Attachment> Attachments { get; set; }
 
@@ -18,6 +19,8 @@ namespace CompanyModule.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Appointment>().HasOne(appointment => appointment.Timeslot).WithOne(timeslot => timeslot.Appointment).HasForeignKey<Appointment>("timeslotId");
         }
     }
 }

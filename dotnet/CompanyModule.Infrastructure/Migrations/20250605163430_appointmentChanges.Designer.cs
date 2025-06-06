@@ -3,6 +3,7 @@ using System;
 using CompanyModule.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CompanyModule.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyModuleDbContext))]
-    partial class CompanyModuleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250605163430_appointmentChanges")]
+    partial class appointmentChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,6 +34,9 @@ namespace CompanyModule.Infrastructure.Migrations
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -38,15 +44,12 @@ namespace CompanyModule.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("timeslotId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("TimeSlotNumber")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("timeslotId")
-                        .IsUnique();
 
                     b.ToTable("Appointments");
                 });
@@ -154,26 +157,6 @@ namespace CompanyModule.Infrastructure.Migrations
                     b.ToTable("Agreements");
                 });
 
-            modelBuilder.Entity("CompanyModule.Domain.Entities.Timeslot", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("PeriodNumber")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Timeslots");
-                });
-
             modelBuilder.Entity("CompanyModule.Domain.Entities.Appointment", b =>
                 {
                     b.HasOne("CompanyModule.Domain.Entities.Company", "Company")
@@ -182,15 +165,7 @@ namespace CompanyModule.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CompanyModule.Domain.Entities.Timeslot", "Timeslot")
-                        .WithOne("Appointment")
-                        .HasForeignKey("CompanyModule.Domain.Entities.Appointment", "timeslotId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Company");
-
-                    b.Navigation("Timeslot");
                 });
 
             modelBuilder.Entity("CompanyModule.Domain.Entities.Attachment", b =>
@@ -238,11 +213,6 @@ namespace CompanyModule.Infrastructure.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Curators");
-                });
-
-            modelBuilder.Entity("CompanyModule.Domain.Entities.Timeslot", b =>
-                {
-                    b.Navigation("Appointment");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,5 +9,5 @@ using System.Threading.Tasks;
 
 namespace CompanyModule.Contracts.Commands
 {
-    public record EditAppointmentCommand(Guid appointmentId, AppointmentRequest editRequest) : IRequest<Appointment>;
+    public record RemoveTimeslotCommand(Guid timeslotId) : IRequest<Unit>;
 }

@@ -42,6 +42,7 @@ namespace CompanyModule.Controllers.Controllers
         /// </summary>
         /// <returns>Добавленная компания.</returns>
         [HttpPost]
+        [Authorize(Roles = "DeanMember")]
         [Route("add")]
         [ProducesResponseType(typeof(CompanyResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddCompany(CompanyRequest createRequest)
@@ -53,6 +54,7 @@ namespace CompanyModule.Controllers.Controllers
         /// Изменяет информацию о компании-партнере.
         /// </summary>
         [HttpPut]
+        [Authorize(Roles = "DeanMember")]
         [Route("{companyId}")]
         [ProducesResponseType(typeof(CompanyResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> EditCompany(Guid companyId, EditCompanyRequest editRequest)
@@ -65,6 +67,7 @@ namespace CompanyModule.Controllers.Controllers
         /// </summary>
         /// <returns>Добавленный документ.</returns>
         [HttpPost]
+        [Authorize(Roles = "DeanMember")]
         [Route("{companyId}/agreements/add")]
         [ProducesResponseType(typeof(PartnershipAgreementResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddPartnershipAgreement(Guid companyId,
@@ -79,6 +82,7 @@ namespace CompanyModule.Controllers.Controllers
         /// </summary>
         /// <returns>Документ о партнерстве.</returns>
         [HttpGet]
+        [Authorize(Roles = "DeanMember")]
         [Route("{companyId}/agreements")]
         [ProducesResponseType(typeof(List<PartnershipAgreementResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetPartnershipAgreements(Guid companyId)
@@ -91,6 +95,7 @@ namespace CompanyModule.Controllers.Controllers
         /// Изменяет статус компании-партнера.
         /// </summary>
         [HttpPut]
+        [Authorize(Roles = "DeanMember")]
         [Route("{companyId}/status")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ChangeCompanyStatus(Guid companyId, CompanyStatus companyStatus)
@@ -106,6 +111,7 @@ namespace CompanyModule.Controllers.Controllers
         /// <param name="createRequest.userId">Если необходимо создать куратора на основе уже существующего пользователя.</param>
         /// <returns>Добавленный куратор.</returns>
         [HttpPost]
+        [Authorize(Roles = "DeanMember")]
         [Route("{companyId}/curators/add")]
         [ProducesResponseType(typeof(CuratorResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddCurator(Guid companyId, CuratorRequest createRequest)
@@ -119,6 +125,7 @@ namespace CompanyModule.Controllers.Controllers
         /// </summary>
         /// <returns>Список кураторов.</returns>
         [HttpGet]
+        [Authorize(Roles = "Curator, DeanMember")]
         [Route("{companyId}/curators")]
         [ProducesResponseType(typeof(List<CuratorResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetCurators(Guid companyId)

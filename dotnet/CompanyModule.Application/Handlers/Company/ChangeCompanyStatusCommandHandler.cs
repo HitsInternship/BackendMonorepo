@@ -2,7 +2,7 @@
 using CompanyModule.Contracts.Repositories;
 using MediatR;
 
-namespace CompanyModule.Application.Handlers.Company
+namespace CompanyModule.Application.Handlers.CompanyPart
 {
     public class ChangeCompanyStatusCommandHandler : IRequestHandler<ChangeCompanyStatusCommand, Unit>
     {
