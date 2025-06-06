@@ -16,6 +16,4 @@ public class SelectionEntity : BaseEntity
     public required SelectionStatus SelectionStatus { get; set; }
 
     public ICollection<SelectionCommentEntity> Comments { get; set; } = [];
-    
-    public Guid? Offer { get; set; }
 }

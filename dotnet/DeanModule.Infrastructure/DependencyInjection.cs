@@ -9,7 +9,7 @@ public static class DependencyInjection
     public static void AddDeanModuleInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<DeanModuleDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("HitsInternship")));
+            options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING") ?? configuration.GetConnectionString("HitsInternship")));
     }
 
     public static void AddDeanModuleInfrastructure(this IServiceProvider services)
