@@ -13,6 +13,7 @@ namespace CompanyModule.Persistence
             services.AddTransient<IAppointmentRepository, AppointmentRepository>();
             services.AddTransient<IPartnershipAgreementRepository, PartnershipAgreementRepository>();
             services.AddTransient<ICuratorRepository, CuratorRepository>();
+            services.AddTransient<ITimeslotRepository, TimeslotRepository>();
         }
     }
 }

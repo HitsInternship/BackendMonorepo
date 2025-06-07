@@ -27,9 +27,18 @@ public class VacancyResponseRepository(SelectionDbContext context)
     {
         return await DbSet
                    .Include(x => x.Candidate)
-                   .ThenInclude(x => x.Selection)
                    .Include(x => x.Vacancy)
+                   .Include(x=>x.Comments)
                    .FirstOrDefaultAsync(x => x.Id == id)
                ?? throw new InvalidOperationException();
+    }
+
+    public async Task<List<VacancyResponseEntity>> GetByCandidateIdAsync(Guid candidateId)
+    {
+        return await DbSet.Include(x => x.Vacancy)
+            .ThenInclude(x => x.Position)
+            .Include(x => x.Candidate)
+            .Where(x => x.CandidateId == candidateId)
+            .ToListAsync();
     }
 }

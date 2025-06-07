@@ -31,9 +31,6 @@ namespace CompanyModule.Infrastructure.Migrations
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -41,9 +38,15 @@ namespace CompanyModule.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid>("timeslotId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("timeslotId")
+                        .IsUnique();
 
                     b.ToTable("Appointments");
                 });
@@ -151,6 +154,26 @@ namespace CompanyModule.Infrastructure.Migrations
                     b.ToTable("Agreements");
                 });
 
+            modelBuilder.Entity("CompanyModule.Domain.Entities.Timeslot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("PeriodNumber")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Timeslots");
+                });
+
             modelBuilder.Entity("CompanyModule.Domain.Entities.Appointment", b =>
                 {
                     b.HasOne("CompanyModule.Domain.Entities.Company", "Company")
@@ -159,7 +182,15 @@ namespace CompanyModule.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CompanyModule.Domain.Entities.Timeslot", "Timeslot")
+                        .WithOne("Appointment")
+                        .HasForeignKey("CompanyModule.Domain.Entities.Appointment", "timeslotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Company");
+
+                    b.Navigation("Timeslot");
                 });
 
             modelBuilder.Entity("CompanyModule.Domain.Entities.Attachment", b =>
@@ -176,7 +207,7 @@ namespace CompanyModule.Infrastructure.Migrations
             modelBuilder.Entity("CompanyModule.Domain.Entities.Curator", b =>
                 {
                     b.HasOne("CompanyModule.Domain.Entities.Company", "Company")
-                        .WithMany("CompanyPersons")
+                        .WithMany("Curators")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -206,7 +237,12 @@ namespace CompanyModule.Infrastructure.Migrations
 
                     b.Navigation("Appointments");
 
-                    b.Navigation("CompanyPersons");
+                    b.Navigation("Curators");
+                });
+
+            modelBuilder.Entity("CompanyModule.Domain.Entities.Timeslot", b =>
+                {
+                    b.Navigation("Appointment");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,7 +9,7 @@ namespace CompanyModule.Contracts.DTOs.Requests
 {
     public class AppointmentRequest
     {
-        public DateTime date { get; set; }
+        public Guid timeslotId { get; set; }
         public string description { get; set; }
 
         public AppointmentRequest() {}

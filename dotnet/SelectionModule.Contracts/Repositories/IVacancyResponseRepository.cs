@@ -7,4 +7,5 @@ public interface IVacancyResponseRepository : IBaseEntityRepository<VacancyRespo
 {
     Task SoftDeleteByCandidateAsync(Guid candidateId);
     new Task<VacancyResponseEntity> GetByIdAsync(Guid id);
+    Task<List<VacancyResponseEntity>> GetByCandidateIdAsync(Guid candidateId);
 }

@@ -25,8 +25,10 @@ public class CreateSelectionCommandHandler : IRequestHandler<CreateSelectionComm
 
     public async Task<Unit> Handle(CreateSelectionCommand request, CancellationToken cancellationToken)
     {
-        var student = await _studentRepository.GetByIdAsync(request.StudentId) ??
-                      throw new BadRequest("Student does not exist");
+        if (!await _studentRepository.CheckIfExistsAsync(request.StudentId))
+            throw new NotFound("Student does not exist");
+
+        var student = await _studentRepository.GetByIdAsync(request.StudentId);
 
         if (await _selectionRepository.CheckIfStudentHasSelectionAsync(request.StudentId))
             throw new BadRequest("Student already has a selection");

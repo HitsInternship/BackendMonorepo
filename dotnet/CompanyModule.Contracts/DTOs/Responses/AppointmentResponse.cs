@@ -10,6 +10,7 @@ namespace CompanyModule.Contracts.DTOs.Responses
     public class AppointmentResponse
     {
         public Guid id { get; set; }
+        public int periodNumber { get; set; }
         public DateTime date { get; set; }
         public string description { get; set; }
         public List<string> documentIds { get; set; }

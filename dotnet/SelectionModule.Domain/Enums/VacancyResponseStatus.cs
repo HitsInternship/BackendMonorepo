@@ -5,6 +5,5 @@ public enum VacancyResponseStatus
     Responding,
     Rejected,
     GotOffer,
-    Interview, 
-    OfferAccepted
+    Interview
 }

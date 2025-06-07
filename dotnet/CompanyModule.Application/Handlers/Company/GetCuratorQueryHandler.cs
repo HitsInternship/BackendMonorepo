@@ -2,12 +2,13 @@
 using CompanyModule.Contracts.Repositories;
 using CompanyModule.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Exceptions;
 using UserModule.Contracts.Queries;
 using UserModule.Contracts.Repositories;
 using UserModule.Domain.Entities;
 
-namespace CompanyModule.Application.Handlers.Company
+namespace CompanyModule.Application.Handlers.CompanyPart
 {
     public class GetCuratorQueryHandler : IRequestHandler<GetCuratorQuery, Curator>
     {
@@ -21,10 +22,10 @@ namespace CompanyModule.Application.Handlers.Company
 
         public async Task<Curator> Handle(GetCuratorQuery query, CancellationToken cancellationToken)
         {
-            Curator? curator = (await _curatorRepository.ListAllAsync()).Where(person => person.UserId == query.personId).FirstOrDefault();
-            if (curator == null) throw new NotFound("No company with such user Id");
+            Curator? curator = (await _curatorRepository.ListAllAsync()).Where(curator => curator.UserId == query.curatorId).Include(curator => curator.Company).FirstOrDefault();
+            if (curator == null) throw new NotFound("No curator with such user Id");
 
-            curator.User = await _mediator.Send(new GetUserInfoQuery(query.personId));
+            curator.User = await _mediator.Send(new GetUserInfoQuery(query.curatorId));
             
             return curator;
         }

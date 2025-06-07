@@ -104,9 +104,6 @@ namespace SelectionModule.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid?>("Offer")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("SelectionStatus")
                         .HasColumnType("integer");
 
@@ -151,7 +148,7 @@ namespace SelectionModule.Infrastructure.Migrations
                     b.ToTable("Vacancies");
                 });
 
-            modelBuilder.Entity("SelectionModule.Domain.Entites.VacancyResponseCommentEntity", b =>
+            modelBuilder.Entity("SelectionModule.Domain.Entites.VacancyResponseComment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -237,7 +234,7 @@ namespace SelectionModule.Infrastructure.Migrations
                     b.Navigation("Position");
                 });
 
-            modelBuilder.Entity("SelectionModule.Domain.Entites.VacancyResponseCommentEntity", b =>
+            modelBuilder.Entity("SelectionModule.Domain.Entites.VacancyResponseComment", b =>
                 {
                     b.HasOne("SelectionModule.Domain.Entites.VacancyResponseEntity", "VacancyResponse")
                         .WithMany("Comments")
