@@ -125,20 +125,20 @@ services:
     networks:
       - network
   
-  notification-service:
-    build:
-      context: .
-      dockerfile: java/Dockerfile
-    environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      SERVER_PORT: 8082
-    ports:
-      - "8082:8082"
-    depends_on:
-      kafka:
-        condition: service_healthy
-    networks:
-      - network
+  #notification-service:
+    #build:
+      #context: .
+      #dockerfile: java/Dockerfile
+    #environment:
+      #SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      #SERVER_PORT: 8082
+    #ports:
+     # - "8082:8082"
+    #depends_on:
+      #kafka:
+        #condition: service_healthy
+    #networks:
+      #- network
 
 networks:
   network:
