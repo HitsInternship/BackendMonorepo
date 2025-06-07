@@ -105,7 +105,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     healthcheck:
-      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list || exit 1" ]
+      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server kafka:29092 --list || exit 1" ]
       interval: 10s
       timeout: 10s
       retries: 5
