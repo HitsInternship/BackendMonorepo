@@ -43,5 +43,6 @@ public static class Modules
         services.UsePracticeModule();
         services.UseAppSettingsModule();
         services.InitializeDatabases().Wait();
+        services.UseNotificationModule().Wait();
     }
 }
