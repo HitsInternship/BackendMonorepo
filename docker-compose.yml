@@ -104,14 +104,11 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    command: >
-      sh -c "sleep 10 && kafka-topics --create --topic notification.request --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1 || true && /etc/confluent/docker/run"
     healthcheck:
-      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server kafka:29092 --list | grep -q notification.request || exit 1" ]
+      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server kafka:29092 --list || exit 1" ]
       interval: 10s
-      timeout: 20s
-      retries: 10
-      start_period: 20s
+      timeout: 10s
+      retries: 5
     networks:
       - network
 
