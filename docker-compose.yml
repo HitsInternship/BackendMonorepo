@@ -107,10 +107,11 @@ services:
     command: >
       sh -c "sleep 10 && kafka-topics --create --topic notification.request --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1 || true && /etc/confluent/docker/run"
     healthcheck:
-      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server kafka:29092 --list || exit 1" ]
-      interval: 30s
-      timeout: 10s
+      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server kafka:29092 --list | grep -q notification.request || exit 1" ]
+      interval: 10s
+      timeout: 20s
       retries: 10
+      start_period: 20s
     networks:
       - network
 
@@ -133,6 +134,7 @@ services:
       dockerfile: java/Dockerfile
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SERVER_PORT: 8082
     ports:
       - "8082:8082"
     depends_on:
