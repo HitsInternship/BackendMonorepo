@@ -45,13 +45,12 @@ builder.Services.AddControllers()
 
 builder.Services.AddApplicationModules(builder.Configuration);
 
+Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING"));
+
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwaggerConfiguration();
-}
+app.MapOpenApi();
+app.UseSwaggerConfiguration();
 
 app.UseCors("AllowAllOrigins");
 
