@@ -15,10 +15,12 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - network  
+      - postgres_postgres-network
+      - docker_kafka-network 
 
 networks:
-  network:
+  docker_kafka-network:
+  postgres_postgres-network:
     driver: bridge
 
 volumes:
