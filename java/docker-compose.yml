@@ -1,0 +1,15 @@
+services:
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    ports:
+      - "8082:8082"
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
