@@ -20,8 +20,11 @@ services:
 
 networks:
   docker_kafka-network:
+    driver: bridge
+    external: true
   postgres_postgres-network:
     driver: bridge
+    external: true
 
 volumes:
   minio_data:
