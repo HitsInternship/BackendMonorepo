@@ -21,6 +21,8 @@ public class KafkaTopicInitializer : IKafkaTopicInitializer
         var bootstrapServers = _settings.BootstrapServers;
         var topics = new List<string> { _settings.ConsumerTopic, _settings.ProducerTopic };
 
+        Console.WriteLine($"Topics: {topics}");
+        
         using var adminClient =
             new AdminClientBuilder(new AdminClientConfig { BootstrapServers = bootstrapServers }).Build();
 
