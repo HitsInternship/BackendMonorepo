@@ -3,6 +3,7 @@ using System;
 using DeanModule.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeanModule.Infrastructure.Migrations
 {
     [DbContext(typeof(DeanModuleDbContext))]
-    partial class DeanModuleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250607200150_documentID")]
+    partial class documentID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,7 +66,7 @@ namespace DeanModule.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("DocumentId")
+                    b.Property<Guid>("DocumentId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")

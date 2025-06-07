@@ -6,7 +6,7 @@ using DocumentModule.Contracts.Repositories;
 using DocumentModule.Domain.Enums;
 using MediatR;
 
-namespace CompanyModule.Application.Handlers.CompanyPart
+namespace CompanyModule.Application.Handlers.Company
 {
     public class AddPartnershipAgreementCommandHandler : IRequestHandler<AddPartnershipAgreementCommand, PartnershipAgreement>
     {

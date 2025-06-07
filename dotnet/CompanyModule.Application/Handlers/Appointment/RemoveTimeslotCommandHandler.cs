@@ -1,11 +1,9 @@
-﻿using AutoMapper;
-using CompanyModule.Contracts.Commands;
+﻿using CompanyModule.Contracts.Commands;
 using CompanyModule.Contracts.Repositories;
 using CompanyModule.Domain.Entities;
 using MediatR;
-using Shared.Domain.Exceptions;
 
-namespace CompanyModule.Application.Handlers.AppointmentPart
+namespace CompanyModule.Application.Handlers.Appointment
 {
     public class RemoveTimeslotCommandHandler : IRequestHandler<RemoveTimeslotCommand, Unit>
     {

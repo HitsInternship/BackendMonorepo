@@ -1,12 +1,11 @@
 ﻿using CompanyModule.Contracts.Queries;
 using CompanyModule.Contracts.Repositories;
-using CompanyModule.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CompanyModule.Application.Handlers.AppointmentPart
+namespace CompanyModule.Application.Handlers.Appointment
 {
-    public class GetAppointmentQueryHandler : IRequestHandler<GetAppointmentQuery, Appointment>
+    public class GetAppointmentQueryHandler : IRequestHandler<GetAppointmentQuery, Domain.Entities.Appointment>
     {
         private readonly IAppointmentRepository _appointmentRepository;
         public GetAppointmentQueryHandler(IAppointmentRepository appointmentRepository)
@@ -14,7 +13,7 @@ namespace CompanyModule.Application.Handlers.AppointmentPart
             _appointmentRepository = appointmentRepository;
         }
 
-        public async Task<Appointment> Handle(GetAppointmentQuery query, CancellationToken cancellationToken)
+        public async Task<Domain.Entities.Appointment> Handle(GetAppointmentQuery query, CancellationToken cancellationToken)
         {
             return (await _appointmentRepository.ListAllAsync()).Where(appointment => appointment.Id == query.appointmentId).Include(appointment => appointment.Company).FirstOrDefault();
         }

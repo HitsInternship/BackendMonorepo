@@ -3,6 +3,7 @@ using DeanModule.Contracts.Commands.Application;
 using DeanModule.Contracts.Dtos.Requests;
 using DeanModule.Contracts.Repositories;
 using DeanModule.Domain.Entities;
+using DeanModule.Domain.Enums;
 using MediatR;
 using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
@@ -14,7 +15,8 @@ public class UpdateApplicationCommandHandler : IRequestHandler<UpdateApplication
     private readonly IStudentRepository _studentRepository;
     private readonly IApplicationRepository _applicationRepository;
 
-    public UpdateApplicationCommandHandler(IApplicationRepository applicationRepository, IStudentRepository studentRepository)
+    public UpdateApplicationCommandHandler(IApplicationRepository applicationRepository,
+        IStudentRepository studentRepository)
     {
         _applicationRepository = applicationRepository;
         _studentRepository = studentRepository;
@@ -26,10 +28,13 @@ public class UpdateApplicationCommandHandler : IRequestHandler<UpdateApplication
             throw new ApplicationNotFound(request.ApplicationId);
 
         var application = await _applicationRepository.GetByIdAsync(request.ApplicationId);
+
+        if (application.Status is ApplicationStatus.Rejected or ApplicationStatus.Accepted)
+            throw new BadRequest("You cannot update a rejected or accepted application");
+
         var student = await _studentRepository.GetByIdAsync(application.StudentId);
-        
-        //todo: add role check
-        if (student.UserId != request.UserId)
+
+        if (student.UserId != request.UserId && !request.Roles.Contains("DeanMember"))
             throw new Forbidden("You cannot update this application.");
 
         UpdateApplication(application, request.ApplicationRequestDto);
@@ -39,12 +44,11 @@ public class UpdateApplicationCommandHandler : IRequestHandler<UpdateApplication
         return Unit.Value;
     }
 
-    private static void UpdateApplication(ApplicationEntity application, ApplicationRequestDto dto)
+    private void UpdateApplication(ApplicationEntity application, ApplicationRequestDto dto)
     {
         application.Date = dto.Date;
         application.Description = dto.Description;
         application.PositionId = dto.PositionId;
         application.CompanyId = dto.CompanyId;
-        //todo: add document
     }
 }
