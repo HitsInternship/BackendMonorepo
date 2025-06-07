@@ -14,6 +14,7 @@ public class ChangeSelectionCommandHandler : IRequestHandler<ChangeSelectionComm
         _selectionRepository = selectionRepository;
     }
 
+
     public async Task<Unit> Handle(ChangeSelectionCommand request, CancellationToken cancellationToken)
     {
         if (!await _selectionRepository.CheckIfExistsAsync(request.SelectionId))

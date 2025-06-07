@@ -6,6 +6,7 @@ using SelectionModule.Domain.Entites;
 using SelectionModule.Domain.Enums;
 using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
+using UserModule.Contracts.Repositories;
 
 namespace SelectionModule.Application.Features.Commands.Selection;
 

@@ -17,4 +17,8 @@ public record ListedSelectionDto : BaseDto
     /// Данные кандидата, связанного с этим отбором.
     /// </summary>
     public required CandidateDto Candidate { get; set; }
+    /// <summary>
+    /// Данные оффера студента.
+    /// </summary>
+    public OfferDto? Offer { get; set; }
 }

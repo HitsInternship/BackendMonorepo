@@ -81,8 +81,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelectionModule.Application
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelectionModule.Controllers", "SelectionModule.Controllers\SelectionModule.Controllers.csproj", "{5FD004E8-F814-49B0-90B1-0724D4B4C0D6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DictionaryModule", "DictionaryModule", "{1D7AB845-9D22-4D4D-906C-C920FE98D907}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyModule.Domain", "CompanyModule.Domain\CompanyModule.Domain.csproj", "{998DDD9D-AF16-4C35-988A-095CB64EF71C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyModule.Infrastructure", "CompanyModule.Infrastructure\CompanyModule.Infrastructure.csproj", "{37D226F7-FD20-4835-8180-CCB2CF710DB0}"

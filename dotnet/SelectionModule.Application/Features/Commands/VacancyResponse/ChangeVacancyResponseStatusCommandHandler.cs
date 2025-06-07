@@ -7,11 +7,14 @@ namespace SelectionModule.Application.Features.Commands.VacancyResponse;
 
 public class ChangeVacancyResponseStatusCommandHandler : IRequestHandler<ChangeVacancyResponseStatusCommand, Unit>
 {
+    private readonly ICandidateRepository _candidateRepository;
     private readonly IVacancyResponseRepository _vacancyResponseRepository;
 
-    public ChangeVacancyResponseStatusCommandHandler(IVacancyResponseRepository vacancyResponseRepository)
+    public ChangeVacancyResponseStatusCommandHandler(IVacancyResponseRepository vacancyResponseRepository,
+        ICandidateRepository candidateRepository)
     {
         _vacancyResponseRepository = vacancyResponseRepository;
+        _candidateRepository = candidateRepository;
     }
 
 
@@ -28,6 +31,13 @@ public class ChangeVacancyResponseStatusCommandHandler : IRequestHandler<ChangeV
         vacancyResponse.Status = request.Status;
 
         await _vacancyResponseRepository.UpdateAsync(vacancyResponse);
+
+        var candidate = await _candidateRepository.GetCandidateByUsrIdAsync(request.UserId) ??
+                        throw new BadRequest("There is no candidate for this user");
+
+        if (candidate.Selection != null) candidate.Selection.Offer = vacancyResponse.Vacancy.Id;
+
+        await _candidateRepository.UpdateAsync(candidate);
 
         return Unit.Value;
     }

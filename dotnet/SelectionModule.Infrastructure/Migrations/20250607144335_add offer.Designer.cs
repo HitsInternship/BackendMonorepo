@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SelectionModule.Infrastructure;
@@ -11,9 +12,11 @@ using SelectionModule.Infrastructure;
 namespace SelectionModule.Infrastructure.Migrations
 {
     [DbContext(typeof(SelectionDbContext))]
-    partial class SelectionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250607144335_add offer")]
+    partial class addoffer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,8 +101,8 @@ namespace SelectionModule.Infrastructure.Migrations
                     b.Property<Guid>("CandidateId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateOnly>("DeadLine")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("DeadLine")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");

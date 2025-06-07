@@ -27,6 +27,8 @@ public class UpdateSelectionCommentCommandHandler : IRequestHandler<UpdateSelect
 
         var comment = await _selectionCommentRepository.GetByIdAsync(request.CommentId);
 
+        if (comment.Selection.Id != request.SelectionId) throw new NotFound("Comment for this selection not found");
+
         if (comment.UserId != request.UserId)
             throw new Forbidden("You do not have access to leave comment");
 
