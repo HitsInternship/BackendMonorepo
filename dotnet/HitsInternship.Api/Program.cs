@@ -43,7 +43,7 @@ builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
         options.InvalidModelStateResponseFactory = FailedAnnotationValidationResponse.MakeValidationResponse);
 
-builder.Services.AddApplicationModules(builder.Configuration);
+builder.Services.AddApplicationModules(builder.Configuration, builder.Environment);
 
 Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING"));
 
