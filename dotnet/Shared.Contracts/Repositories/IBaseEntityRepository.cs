@@ -9,6 +9,7 @@ public interface IBaseEntityRepository<TEntity> : IGenericRepository<TEntity> wh
     Task<IQueryable<TEntity>> ListAllAsync();
     Task<IQueryable<TEntity>> ListAllActiveAsync();
     Task<IQueryable<TEntity>> ListAllArchivedAsync();
-    Task SoftDeleteAsync(Guid id);    
+    Task SoftDeleteAsync(Guid id);
     Task<int> CountAsync();
+
 }

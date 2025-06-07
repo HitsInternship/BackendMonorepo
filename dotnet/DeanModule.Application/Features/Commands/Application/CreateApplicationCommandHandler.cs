@@ -19,11 +19,13 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
     private readonly IPositionRepository _positionRepository;
 
     public CreateApplicationCommandHandler(IApplicationRepository applicationRepository, IMapper mapper,
-        IStudentRepository studentRepository)
+        IStudentRepository studentRepository, IPositionRepository positionRepository, ICompanyRepository companyRepository)
     {
         _applicationRepository = applicationRepository;
         _mapper = mapper;
         _studentRepository = studentRepository;
+        _positionRepository = positionRepository;
+        _companyRepository = companyRepository;
     }
 
     public async Task<Unit> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
