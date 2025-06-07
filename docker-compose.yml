@@ -105,7 +105,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     healthcheck:
-      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list || exit 1" ]
+      test: [ "CMD-SHELL", "kafka-topics --bootstrap-server kafka:29092 --list || exit 1" ]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -117,7 +117,7 @@ services:
     depends_on:
       - kafka
     ports:
-      - "8085:8080"
+      - "8085:8085"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
@@ -125,19 +125,20 @@ services:
     networks:
       - network
   
-  notification-service:
-    build:
-      context: .
-      dockerfile: java/Dockerfile
-    environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-    ports:
-      - "8082:8082"
-    depends_on:
-      kafka:
-        condition: service_healthy
-    networks:
-      - network
+  #notification-service:
+    #build:
+      #context: .
+      #dockerfile: java/Dockerfile
+    #environment:
+      #SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      #SERVER_PORT: 8082
+    #ports:
+     # - "8082:8082"
+    #depends_on:
+      #kafka:
+        #condition: service_healthy
+    #networks:
+      #- network
 
 networks:
   network:
