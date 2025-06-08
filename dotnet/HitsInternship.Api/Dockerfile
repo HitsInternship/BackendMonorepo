@@ -70,7 +70,7 @@ COPY ["dotnet/NotificationModule.Infrastructure/NotificationModule.Infrastructur
 COPY ["dotnet/NotificationModule.Persistence/NotificationModule.Persistence.csproj", "NotificationModule.Persistence/"]
 COPY ["dotnet/NotificationModule.Application/NotificationModule.Application.csproj", "NotificationModule.Application/"]
 COPY ["dotnet/NotificationModule.Controllers/NotificationModule.Controllers.csproj", "NotificationModule.Controllers/"]
-RUN dotnet restore "HitsInternship.Api/HitsInternship.Api.csproj"
+RUN dotnet restore "./HitsInternship.Api/HitsInternship.Api.csproj"
 COPY . .
 WORKDIR "/src/dotnet/HitsInternship.Api"
 RUN dotnet build "./HitsInternship.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
