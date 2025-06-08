@@ -72,8 +72,8 @@ COPY ["dotnet/NotificationModule.Application/NotificationModule.Application.cspr
 COPY ["dotnet/NotificationModule.Controllers/NotificationModule.Controllers.csproj", "NotificationModule.Controllers/"]
 RUN dotnet restore "dotnet/HitsInternship.Api/HitsInternship.Api.csproj"
 COPY . .
-WORKDIR "/src/HitsInternship.Api"
-RUN dotnet build "HitsInternship.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/dotnet/HitsInternship.Api"
+RUN dotnet build "./HitsInternship.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
