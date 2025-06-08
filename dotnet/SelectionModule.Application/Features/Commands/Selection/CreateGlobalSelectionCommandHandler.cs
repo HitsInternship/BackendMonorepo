@@ -34,7 +34,7 @@ public class CreateGlobalSelectionCommandHandler : IRequestHandler<CreateGlobalS
         if (!await _semesterRepository.CheckIfExistsAsync(request.SelectionRequestDto.SemesterId))
             throw new BadRequest("Invalid semester");
 
-        if (!await _streamRepository.CheckIfExistsAsync(request.SelectionRequestDto.SemesterId))
+        if (!await _streamRepository.CheckIfExistsAsync(request.SelectionRequestDto.StreamId))
             throw new BadRequest("Invalid stream");
 
         var stream = await _streamRepository.GetStreamByIdAsync(request.SelectionRequestDto.StreamId);
