@@ -64,7 +64,7 @@ public class ApplicationsController : ControllerBase
     /// <returns>Результат загрузки файла.</returns>
     [HttpPost, Route("{applicationId}/file")]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> UploadFile([FromRoute] Guid applicationId, [FromForm] UploadFileRequestDto file)
+    public async Task<IActionResult> UploadFile([FromRoute] Guid applicationId, [FromForm] UploadFileRequest file)
     {
         return Ok(await _sender.Send(new UploadApplicationFileCommand(applicationId, file, User.GetUserId())));
     }
@@ -142,7 +142,7 @@ public class ApplicationsController : ControllerBase
     /// <returns>Результат загрузки шаблона.</returns>
     [HttpPost, Route("template")]
     [Authorize(Roles = "DeanMember")]
-    public async Task<IActionResult> UploadTemplate([FromForm] UploadFileRequestDto template)
+    public async Task<IActionResult> UploadTemplate([FromForm] UploadFileRequest template)
     {
         return Ok(await _sender.Send(new UploadApplicationTemplateCommand(template)));
     }
