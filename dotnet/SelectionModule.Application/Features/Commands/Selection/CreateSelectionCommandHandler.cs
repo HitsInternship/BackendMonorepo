@@ -39,6 +39,8 @@ public class CreateSelectionCommandHandler : IRequestHandler<CreateSelectionComm
 
             selection.CandidateId = candidate.Id;
             selection.Candidate = candidate;
+
+            selections.Add(selection);
         }
 
         await _selectionRepository.AddRangeAsync(selections);
