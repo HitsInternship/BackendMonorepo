@@ -51,9 +51,9 @@ public class GetSelectionsQueryHandler : IRequestHandler<GetSelectionsQuery, Lis
             selectionsEntity = selectionsEntity.Where(x => x.SelectionStatus == request.Status.Value);
         }
 
-        if (request.IsArchive.HasValue)
+        if (request.SemesterId.HasValue)
         {
-            selectionsEntity = selectionsEntity.Where(x => x.IsDeleted == false);
+            selectionsEntity = selectionsEntity.Where(x => x.GlobalSelection.SemesterId == request.SemesterId);
         }
 
         var selections = new List<ListedSelectionDto>();

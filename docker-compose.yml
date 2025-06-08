@@ -9,7 +9,7 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
-      Kafka__KafkaEnabled: true
+      Kafka__KafkaEnabled: false
       Kafka__BootstrapServers: kafka:29092
       ASPNETCORE_ENVIRONMENT: Testing
       ASPNETCORE_URLS: http://+:8080

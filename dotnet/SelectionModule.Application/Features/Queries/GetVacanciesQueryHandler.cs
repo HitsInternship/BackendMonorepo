@@ -47,7 +47,7 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
         vacancies = vacancies.Where(x => x.IsClosed == request.IsClosed);
 
         var totalCount = await vacancies.CountAsync(cancellationToken);
-        var totalPages = (int)Math.Ceiling((double)totalCount / _size);
+        var totalPages = Math.Max(1, (int)Math.Ceiling((double)totalCount / _size));
 
         if (request.Page > totalPages) throw new BadRequest("Page must be less than or equal to the number of items");
 
