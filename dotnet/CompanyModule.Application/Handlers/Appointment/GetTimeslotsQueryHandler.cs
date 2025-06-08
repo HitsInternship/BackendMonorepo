@@ -3,9 +3,8 @@ using CompanyModule.Contracts.Repositories;
 using CompanyModule.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Web.WebPages;
 
-namespace CompanyModule.Application.Handlers.AppointmentPart
+namespace CompanyModule.Application.Handlers.Appointment
 {
     public class GetTimeslotsQueryHandler : IRequestHandler<GetTimeslotsQuery, List<Timeslot>>
     {

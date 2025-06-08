@@ -16,23 +16,24 @@ namespace DocumentModule.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<string> AddFileAsync(Guid fileId, DocumentType documentType, IFormFile file)
+        public async Task<string> AddFileAsync(Guid fileId, DocumentType documentType, IFormFile file,
+            string? fileName)
         {
             var args = new PutObjectArgs()
                 .WithBucket(documentType.ToString().ToLower())
-                .WithObject(fileId.ToString())
+                .WithObject(fileName ?? fileId.ToString())
                 .WithStreamData(file.OpenReadStream())
                 .WithObjectSize(file.Length)
                 .WithContentType(file.ContentType)
                 .WithHeaders(new Dictionary<string, string> { { "Name", Uri.EscapeDataString(file.FileName) } });
 
-            await _context._client.PutObjectAsync(args);
+            await _context.Client.PutObjectAsync(args);
             return file.ContentType;
         }
 
         public async Task<string?> GetFileNameAsync(Guid fileId, DocumentType documentType)
         {
-            var metadata = await _context._client.StatObjectAsync(
+            var metadata = await _context.Client.StatObjectAsync(
                 new StatObjectArgs()
                     .WithBucket(documentType.ToString().ToLower())
                     .WithObject(fileId.ToString())
@@ -46,7 +47,7 @@ namespace DocumentModule.Persistence.Repositories
         {
             using var memoryStream = new MemoryStream();
 
-            var metadata = await _context._client.GetObjectAsync(
+            var metadata = await _context.Client.GetObjectAsync(
                 new GetObjectArgs()
                     .WithBucket(documentType.ToString().ToLower())
                     .WithObject(fileId.ToString())
@@ -62,7 +63,7 @@ namespace DocumentModule.Persistence.Repositories
 
         public async Task DeleteFileAsync(Guid fileId, DocumentType documentType)
         {
-            await _context._client.RemoveObjectAsync(
+            await _context.Client.RemoveObjectAsync(
                 new RemoveObjectArgs()
                     .WithBucket(documentType.ToString().ToLower())
                     .WithObject(fileId.ToString()));

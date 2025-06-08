@@ -1,6 +1,8 @@
 using DeanModule.Application.Exceptions;
 using DeanModule.Contracts.Commands.Application;
 using DeanModule.Contracts.Repositories;
+using DocumentModule.Contracts.Commands;
+using DocumentModule.Domain.Enums;
 using MediatR;
 using Shared.Domain.Exceptions;
 
@@ -8,11 +10,13 @@ namespace DeanModule.Application.Features.Commands.Application;
 
 public class DeleteApplicationCommandHandler : IRequestHandler<DeleteApplicationCommand, Unit>
 {
+    private readonly ISender _mediator;
     private readonly IApplicationRepository _applicationRepository;
 
-    public DeleteApplicationCommandHandler(IApplicationRepository applicationRepository)
+    public DeleteApplicationCommandHandler(IApplicationRepository applicationRepository, ISender mediator)
     {
         _applicationRepository = applicationRepository;
+        _mediator = mediator;
     }
 
     public async Task<Unit> Handle(DeleteApplicationCommand request, CancellationToken cancellationToken)
@@ -21,12 +25,12 @@ public class DeleteApplicationCommandHandler : IRequestHandler<DeleteApplication
             throw new ApplicationNotFound(request.ApplicationId);
 
         var application = await _applicationRepository.GetByIdAsync(request.ApplicationId);
-        
+
         if (!request.roles.Contains("DeanMember"))
         {
             if (application.StudentId != request.UserId)
                 throw new Forbidden("You cannot delete this application.");
-            
+
             if (application.StudentId == request.UserId && request.IsArchive)
                 throw new BadRequest("You cannot archive application.");
         }
@@ -34,7 +38,14 @@ public class DeleteApplicationCommandHandler : IRequestHandler<DeleteApplication
         if (request.IsArchive)
             await _applicationRepository.SoftDeleteAsync(application.Id);
         else
+        {
             await _applicationRepository.DeleteAsync(application);
+            if (application.DocumentId.HasValue)
+            {
+                await _mediator.Send(new RemoveDocumentCommand(application.DocumentId.Value, DocumentType.Attachement),
+                    cancellationToken);
+            }
+        }
 
         return Unit.Value;
     }

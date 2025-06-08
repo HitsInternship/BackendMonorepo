@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SelectionModule.Contracts.Commands.SelectionComment;
+using SelectionModule.Contracts.Dtos.Requests;
 using SelectionModule.Contracts.Queries;
 using Shared.Contracts.Dtos;
 using UserModule.Persistence;
@@ -70,5 +71,11 @@ public class SelectionCommentController : ControllerBase
     {
         return Ok(await _mediator.Send(
             new UpdateSelectionCommentCommand(selectionId, commentId, User.GetUserId(), comment)));
+    }
+
+    [HttpPost, Route("comments"), Authorize(Roles = "DeanMember")]
+    public async Task<IActionResult> AddComment([FromBody] CommentRequestDto comment)
+    {
+        return Ok(await _mediator.Send(new SendSelectionCommentToAllCommand(comment, User.GetUserId())));
     }
 }

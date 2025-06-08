@@ -1,21 +1,31 @@
 using MediatR;
+using NotificationModule.Contracts.Commands;
+using NotificationModule.Domain.Enums;
 using SelectionModule.Contracts.Commands.VacancyResponseComment;
 using SelectionModule.Contracts.Repositories;
 using SelectionModule.Domain.Entites;
 using Shared.Domain.Exceptions;
+using UserModule.Contracts.Repositories;
 
 namespace SelectionModule.Application.Features.Commands.VacancyResponseComment;
 
 public class CreateVacancyResponseCommentCommandHandler : IRequestHandler<CreateVacancyResponseCommentCommand, Unit>
 {
+    private readonly ISender _mediator;
+    private readonly ICandidateRepository _candidateRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IVacancyResponseRepository _vacancyResponseRepository;
     private readonly IVacancyResponseCommentRepository _vacancyResponseCommentRepository;
 
     public CreateVacancyResponseCommentCommandHandler(IVacancyResponseRepository vacancyResponseRepository,
-        IVacancyResponseCommentRepository vacancyResponseCommentRepository)
+        IVacancyResponseCommentRepository vacancyResponseCommentRepository, IUserRepository userRepository,
+        ISender mediator, ICandidateRepository candidateRepository)
     {
         _vacancyResponseRepository = vacancyResponseRepository;
         _vacancyResponseCommentRepository = vacancyResponseCommentRepository;
+        _userRepository = userRepository;
+        _mediator = mediator;
+        _candidateRepository = candidateRepository;
     }
 
     public async Task<Unit> Handle(CreateVacancyResponseCommentCommand request, CancellationToken cancellationToken)
@@ -35,12 +45,23 @@ public class CreateVacancyResponseCommentCommandHandler : IRequestHandler<Create
             ParentId = request.VacancyResponseId,
             VacancyResponse = vacancyResponse
         };
-        
+
         await _vacancyResponseCommentRepository.AddAsync(comment);
 
         vacancyResponse.Comments.Add(comment);
         await _vacancyResponseRepository.UpdateAsync(vacancyResponse);
-        
+
+        var candidate = await _candidateRepository.GetByIdAsync(request.UserId);
+
+        if (request.UserId != candidate.UserId)
+        {
+            var userToSend = await _userRepository.GetByIdAsync(candidate.UserId);
+            var userFromSend = await _userRepository.GetByIdAsync(request.UserId);
+
+            await _mediator.Send(new SendNewCommentMessageCommand(userToSend.Email, CommentType.vacancy_response,
+                request.Comment, userFromSend.Surname + " " + userFromSend.Name, candidate.Selection.Id), cancellationToken);
+        }
+
         return Unit.Value;
     }
 }

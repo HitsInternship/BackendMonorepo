@@ -3,4 +3,4 @@ using MediatR;
 
 namespace DeanModule.Contracts.Queries;
 
-public record GetApplicationQuery(Guid ApplicationId, Guid UserId, List<string> roles) : IRequest<ApplicationResponseDto>;
+public record GetApplicationQuery(Guid ApplicationId, Guid UserId, List<string> Roles) : IRequest<ApplicationResponseDto>;

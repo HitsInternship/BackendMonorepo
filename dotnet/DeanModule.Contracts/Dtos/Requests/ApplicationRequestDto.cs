@@ -31,9 +31,4 @@ public class ApplicationRequestDto
     /// Идентификатор позиции.
     /// </summary>
     public Guid PositionId { get; set; }
-
-    /// <summary>
-    /// Прикреплённый файл.
-    /// </summary>
-    public IFormFile? File { get; set; }
 }

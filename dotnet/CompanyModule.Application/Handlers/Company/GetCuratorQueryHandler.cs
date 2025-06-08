@@ -5,10 +5,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Exceptions;
 using UserModule.Contracts.Queries;
-using UserModule.Contracts.Repositories;
-using UserModule.Domain.Entities;
 
-namespace CompanyModule.Application.Handlers.CompanyPart
+namespace CompanyModule.Application.Handlers.Company
 {
     public class GetCuratorQueryHandler : IRequestHandler<GetCuratorQuery, Curator>
     {

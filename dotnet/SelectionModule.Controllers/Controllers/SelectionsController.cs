@@ -34,7 +34,7 @@ namespace SelectionModule.Controllers.Controllers
         [HttpPost]
         [Authorize(Roles = "DeanMember")]
         [Route("{studentId}/selection/add")]
-        public async Task<IActionResult> CreateSelection(Guid studentId, [FromBody] DateTime deadline)
+        public async Task<IActionResult> CreateSelection(Guid studentId, [FromBody] DateOnly deadline)
         {
             return Ok(await _sender.Send(new CreateSelectionCommand(studentId, deadline)));
         }
@@ -61,7 +61,7 @@ namespace SelectionModule.Controllers.Controllers
         [ProducesResponseType(typeof(SelectionDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetSelection(Guid studentId)
         {
-            return Ok(await _sender.Send(new GetSelectionQuery(studentId)));
+            return Ok(await _sender.Send(new GetSelectionQuery(studentId, User.GetUserId(), User.GetRoles())));
         }
 
         /// <summary>

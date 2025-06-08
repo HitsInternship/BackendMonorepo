@@ -15,6 +15,8 @@
     <ItemGroup>
       <ProjectReference Include="..\CompanyModule.Contracts\CompanyModule.Contracts.csproj" />
       <ProjectReference Include="..\DeanModule.Contracts\DeanModule.Contracts.csproj" />
+      <ProjectReference Include="..\DocumentModule.Contracts\DocumentModule.Contracts.csproj" />
+      <ProjectReference Include="..\NotificationModule.Contracts\NotificationModule.Contracts.csproj" />
       <ProjectReference Include="..\SelectionModule.Contracts\SelectionModule.Contracts.csproj" />
       <ProjectReference Include="..\StudentModule.Contracts\StudentModule.Contracts.csproj" />
       <ProjectReference Include="..\UserModule.Contracts\UserModule.Contracts.csproj" />

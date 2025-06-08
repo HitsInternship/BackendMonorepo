@@ -11,7 +11,7 @@ public record SelectionDto : BaseDto
     /// <summary>
     /// Крайний срок завершения отбора.
     /// </summary>
-    public required DateTime DeadLine { get; set; }
+    public required DateOnly DeadLine { get; set; }
 
     /// <summary>
     /// Текущий статус отбора.
