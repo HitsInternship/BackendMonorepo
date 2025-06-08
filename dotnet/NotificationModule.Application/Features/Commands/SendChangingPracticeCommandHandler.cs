@@ -31,7 +31,7 @@ public class SendChangingPracticeCommandHandler : IRequestHandler<SendChangingPr
             NewCompanyName = request.NewCompanyName,
             OldPosition = request.OldPosition,
             NewPosition = request.NewPosition,
-            NewStatus = ChangingPracticeStatusType.in_progress
+            NewStatus = request.StatusType
         };
 
         var messageEntity = new Message

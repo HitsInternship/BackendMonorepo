@@ -20,7 +20,6 @@ public class GenericRepository<T>(DbContext context) : IGenericRepository<T>
     {
         DbSet.Add(entity);
         await Context.SaveChangesAsync();
-
     }
 
     public async Task UpdateAsync(T entity)
@@ -34,9 +33,21 @@ public class GenericRepository<T>(DbContext context) : IGenericRepository<T>
         DbSet.Remove(entity);
         await Context.SaveChangesAsync();
     }
-    
+
     public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
     {
         return await DbSet.AsNoTracking().Where(predicate).ToListAsync();
+    }
+
+    public async Task UpdateRangeAsync(IEnumerable<T> entities)
+    {
+        DbSet.UpdateRange(entities);
+        await Context.SaveChangesAsync();
+    }
+
+    public async Task AddRangeAsync(IEnumerable<T> entities)
+    {
+        await DbSet.AddRangeAsync(entities);
+        await Context.SaveChangesAsync();
     }
 }

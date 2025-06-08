@@ -10,7 +10,7 @@ public class ApplicationEntity : BaseEntity
     public DateTime Date { get; set; }
     public Guid CompanyId { get; set; }
     public Guid PositionId { get; set; }
-    public string? DocumentUrl { get; set; }
+    public Guid? DocumentId { get; set; }
     public ApplicationStatus Status { get; set; } = ApplicationStatus.Created;
     public ICollection<ApplicationComment> Comments { get; set; } = [];
 }

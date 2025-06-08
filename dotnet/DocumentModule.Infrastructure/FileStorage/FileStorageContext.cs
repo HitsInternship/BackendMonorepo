@@ -7,11 +7,11 @@ namespace DocumentModule.Infrastructure.FileStorage
 {
     public class FileStorageContext : IDisposable
     {
-        public readonly IMinioClient _client;
+        public readonly IMinioClient Client;
 
         public FileStorageContext(FileStorageSettings settings)
         {
-            _client = new MinioClient()
+            Client = new MinioClient()
                 .WithEndpoint(settings.Endpoint, 9000)
                 .WithCredentials(settings.AccessKey, settings.SecretKey)
                 .Build();
@@ -23,16 +23,16 @@ namespace DocumentModule.Infrastructure.FileStorage
         {
             foreach (DocumentType documentType in Enum.GetValues(typeof(DocumentType)))
             {
-                if (!await _client.BucketExistsAsync(new BucketExistsArgs().WithBucket(documentType.ToString().ToLower())))
+                if (!await Client.BucketExistsAsync(new BucketExistsArgs().WithBucket(documentType.ToString().ToLower())))
                 {
-                    await _client.MakeBucketAsync(new MakeBucketArgs().WithBucket(documentType.ToString().ToLower()));
+                    await Client.MakeBucketAsync(new MakeBucketArgs().WithBucket(documentType.ToString().ToLower()));
                 }
             }
         }
 
         public void Dispose()
         {
-            _client?.Dispose();
+            Client?.Dispose();
         }
     }
 }

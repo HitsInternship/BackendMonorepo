@@ -7,7 +7,7 @@ using Shared.Domain.Exceptions;
 using UserModule.Contracts.Commands;
 using UserModule.Domain.Enums;
 
-namespace CompanyModule.Application.Handlers.CompanyPart
+namespace CompanyModule.Application.Handlers.Company
 {
     public class AddCuratorCommandHandler : IRequestHandler<AddCuratorCommand, Curator>
     {

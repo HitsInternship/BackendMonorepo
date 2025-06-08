@@ -4,7 +4,7 @@ using CompanyModule.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CompanyModule.Application.Handlers.AppointmentPart
+namespace CompanyModule.Application.Handlers.Appointment
 {
     public class GetAttachmentQueryHandler : IRequestHandler<GetAttachmentQuery, Attachment>
     {

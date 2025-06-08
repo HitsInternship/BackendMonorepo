@@ -6,9 +6,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Exceptions;
 
-namespace CompanyModule.Application.Handlers.AppointmentPart
+namespace CompanyModule.Application.Handlers.Appointment
 {
-    public class AddAppointmentCommandHandler : IRequestHandler<AddAppointmentCommand, Appointment>
+    public class AddAppointmentCommandHandler : IRequestHandler<AddAppointmentCommand, Domain.Entities.Appointment>
     {
         private readonly IAppointmentRepository _appointmentRepository;
         private readonly ITimeslotRepository _timeslotRepository;
@@ -22,14 +22,14 @@ namespace CompanyModule.Application.Handlers.AppointmentPart
             _mapper = mapper;
         }
 
-        public async Task<Appointment> Handle(AddAppointmentCommand command, CancellationToken cancellationToken)
+        public async Task<Domain.Entities.Appointment> Handle(AddAppointmentCommand command, CancellationToken cancellationToken)
         {
             Timeslot timeslot = (await _timeslotRepository.ListAllAsync()).Where(timeslot => timeslot.Id == command.createRequest.timeslotId).Include(timeslot => timeslot.Appointment).FirstOrDefault();
 
-            Appointment? appointment = timeslot.Appointment;
+            Domain.Entities.Appointment? appointment = timeslot.Appointment;
             if (appointment != null) throw new Conflict("This date and time is already taken");
 
-            appointment = _mapper.Map<Appointment>(command.createRequest);
+            appointment = _mapper.Map<Domain.Entities.Appointment>(command.createRequest);
             appointment.Company = await _companyRepository.GetByIdAsync(command.companyId);
             appointment.Timeslot = timeslot;
 

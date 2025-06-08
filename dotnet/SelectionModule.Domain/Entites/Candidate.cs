@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using Shared.Domain.Entites;
 
 namespace SelectionModule.Domain.Entites;

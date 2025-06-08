@@ -35,13 +35,16 @@ public class GetSelectionQueryHandler : IRequestHandler<GetSelectionQuery, Selec
     public async Task<SelectionDto> Handle(GetSelectionQuery request, CancellationToken cancellationToken)
     {
         var candidate = await _candidateRepository.GetCandidateByStudentIdAsync(request.StudentId) ??
-                        throw new BadRequest("User does not have selection.");
+                        throw new NotFound("User does not have selection.");
 
         var selection = candidate.Selection ?? throw new BadRequest("No selection .");
 
         var vacancyResponses = await _vacancyResponseRepository.GetByCandidateIdAsync(candidate.Id);
 
         var student = await _studentRepository.GetStudentByIdAsync(candidate.StudentId);
+
+        if (student.UserId != request.UserId && !request.Roles.Contains("DeanMember"))
+            throw new Forbidden("You do not have access to this candidate.");
 
         var user = await _userRepository.GetByIdAsync(candidate.UserId);
 

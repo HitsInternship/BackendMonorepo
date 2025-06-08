@@ -63,8 +63,8 @@ namespace DeanModule.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("DocumentUrl")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("DocumentId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");

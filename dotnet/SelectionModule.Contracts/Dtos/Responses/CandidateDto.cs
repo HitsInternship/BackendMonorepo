@@ -35,8 +35,7 @@ public record CandidateDto : BaseDto
     /// <summary>
     /// Номер телефона кандидата.
     /// </summary>
-    [Required]
-    public string Phone { get; set; }
+    public string? Phone { get; set; }
 
     /// <summary>
     /// Номер группы, к которой относится кандидат.

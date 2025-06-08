@@ -5,7 +5,7 @@ using MediatR;
 using UserModule.Contracts.Queries;
 using UserModule.Domain.Entities;
 
-namespace CompanyModule.Application.Handlers.CompanyPart
+namespace CompanyModule.Application.Handlers.Company
 {
     public class GetCuratorsQueryHandler : IRequestHandler<GetCuratorsQuery, List<Curator>>
     {
