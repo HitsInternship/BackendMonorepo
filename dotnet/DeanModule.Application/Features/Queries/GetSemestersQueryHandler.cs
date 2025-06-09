@@ -3,6 +3,7 @@ using DeanModule.Contracts.Dtos.Responses;
 using DeanModule.Contracts.Queries;
 using DeanModule.Contracts.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeanModule.Application.Features.Queries;
 
@@ -21,11 +22,13 @@ public class GetSemestersQueryHandler : IRequestHandler<GetSemestersQuery, List<
     {
         if (request.IsArchive)
         {
-            return _mapper.Map<List<SemesterResponseDto>>(
-                await _semesterRepository.ListAllArchivedAsync());
+            var archivedSemesters = await _semesterRepository.ListAllArchivedAsync();
+            var archivedSemesterList = await archivedSemesters.ToListAsync(cancellationToken: cancellationToken);
+            return _mapper.Map<List<SemesterResponseDto>>(archivedSemesterList);
         }
 
-        return _mapper.Map<List<SemesterResponseDto>>(
-            await _semesterRepository.ListAllAsync());
+        var semesters = await _semesterRepository.ListAllActiveAsync();
+        var semesterList = await semesters.ToListAsync(cancellationToken: cancellationToken);
+        return _mapper.Map<List<SemesterResponseDto>>(semesterList);
     }
 }
