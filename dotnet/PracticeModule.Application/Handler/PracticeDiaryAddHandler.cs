@@ -3,14 +3,14 @@ using DocumentModule.Contracts.Queries;
 using DocumentModule.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using PracticeModule.Contracts.CQRS;
+using PracticeModule.Contracts.Commands;
 using PracticeModule.Domain.Entity;
 using PracticeModule.Infrastructure;
 using Shared.Domain.Exceptions;
 
 namespace PracticeModule.Application.Handler;
 
-public class PracticeDiaryAddHandler :  IRequestHandler<PracticeDiaryAddQuery>
+public class PracticeDiaryAddHandler :  IRequestHandler<PracticeDiaryAddCommand>
 {
     
     private readonly PracticeDbContext _context;
@@ -21,7 +21,7 @@ public class PracticeDiaryAddHandler :  IRequestHandler<PracticeDiaryAddQuery>
         _mediator = mediator;
     }
     
-    public async Task Handle(PracticeDiaryAddQuery request, CancellationToken cancellationToken)
+    public async Task Handle(PracticeDiaryAddCommand request, CancellationToken cancellationToken)
     {
         var getPractice = await _context.Practice.FirstOrDefaultAsync(x => x.Id == request.IdPractice, cancellationToken);
         if (getPractice == null)

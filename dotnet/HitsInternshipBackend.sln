@@ -156,6 +156,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationModule.Applicat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationModule.Controllers", "NotificationModule.Controllers\NotificationModule.Controllers.csproj", "{01EE5817-FA4B-4AC1-B5A8-A8DA4A112C0C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticeModule.Persistence", "PracticeModule.Persistence\PracticeModule.Persistence.csproj", "{F6649847-EE71-4F06-8042-351225CD13C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -417,6 +419,10 @@ Global
 		{01EE5817-FA4B-4AC1-B5A8-A8DA4A112C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01EE5817-FA4B-4AC1-B5A8-A8DA4A112C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01EE5817-FA4B-4AC1-B5A8-A8DA4A112C0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6649847-EE71-4F06-8042-351225CD13C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6649847-EE71-4F06-8042-351225CD13C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6649847-EE71-4F06-8042-351225CD13C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6649847-EE71-4F06-8042-351225CD13C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -485,6 +491,7 @@ Global
 		{CA7841E4-4E5E-442D-A3BC-1095D9EC52A4} = {FF87A8B7-DE35-4BBC-8077-FECB09DE4446}
 		{2067A1C0-D49D-4A5C-ACA5-9F01BE22D7D0} = {FF87A8B7-DE35-4BBC-8077-FECB09DE4446}
 		{01EE5817-FA4B-4AC1-B5A8-A8DA4A112C0C} = {FF87A8B7-DE35-4BBC-8077-FECB09DE4446}
+		{F6649847-EE71-4F06-8042-351225CD13C1} = {11212E98-8FB3-4AA2-A285-7DA1C886D168}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B04B4040-F6FE-4D62-8D98-07CAF461ED14}

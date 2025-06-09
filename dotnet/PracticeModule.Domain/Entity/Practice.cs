@@ -1,24 +1,36 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Shared.Domain.Entites;
+using StudentModule.Contracts.DTOs;
+using StudentModule.Domain.Entities;
+using CompanyModule.Domain.Entities;
+using SelectionModule.Domain.Entites;
 
 namespace PracticeModule.Domain.Entity;
 
 public class Practice : BaseEntity
 {
-    [Key]
-    public Guid Id { get; set; }
-    public Guid StudentId { get; set; }
-    public Guid CompanyId { get; set; }
-    public Guid SemesterId { get; set; }
-    public Guid PositionId { get; set; }
-    public int Mark { get; set; }
-    public List<StudentPracticeCharacteristic> StudentPracticeCharacteristics { get; set; }
-    public List<PracticeDiary> PracticeDiaries { get; set; }
-    public PracticeType PracticeType { get; set; }
-    public bool IsDeleted { get; set; } =  false;
-}
+    public GlobalPractice GlobalPractice { get; set; }
 
-public enum PracticeType
-{
-    Technological
+    public Guid StudentId { get; set; }
+    [NotMapped]
+    public StudentEntity Student { get; set; }
+
+    public Guid CompanyId { get; set; }
+    [NotMapped]
+    public Company Company { get; set; }
+    [NotMapped]
+    public Company NewCompany { get; set; }
+
+    public Guid PositionId { get; set; }
+    [NotMapped]
+    public PositionEntity Position { get; set; }
+    [NotMapped]
+    public PositionEntity NewPosition { get; set; }
+
+    public int? Mark { get; set; }
+    public StudentPracticeCharacteristic? StudentPracticeCharacteristics { get; set; }
+    public PracticeDiary? PracticeDiary { get; set; }
+
+    public Practice() {}
 }

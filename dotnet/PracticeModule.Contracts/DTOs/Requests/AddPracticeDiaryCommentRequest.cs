@@ -1,4 +1,4 @@
-namespace PracticeModule.Contracts.Model;
+namespace PracticeModule.Contracts.DTOs.Requests;
 
 public class AddPracticeDiaryCommentRequest
 {

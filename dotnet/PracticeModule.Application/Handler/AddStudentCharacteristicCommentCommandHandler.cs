@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using PracticeModule.Contracts.CQRS;
+using PracticeModule.Contracts.Commands;
 using PracticeModule.Domain.Entity;
 using PracticeModule.Infrastructure;
 
