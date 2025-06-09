@@ -1,10 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
-namespace PracticeModule.Contracts.CQRS;
+namespace PracticeModule.Contracts.Commands;
 
-public class PracticeDiaryAddQuery: IRequest
-{ 
+public class StudentCharacteristicsAddCommand : IRequest
+{
     public Guid IdPractice { get; set; }
     public IFormFile? FormPhoto { get; set; }
 }

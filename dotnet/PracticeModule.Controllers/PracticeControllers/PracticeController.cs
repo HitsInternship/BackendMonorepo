@@ -1,134 +1,80 @@
+﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PracticeModule.Contracts.CQRS;
-using PracticeModule.Contracts.Model;
+using PracticeModule.Contracts.Commands;
+using PracticeModule.Contracts.DTOs.Requests;
+using PracticeModule.Contracts.DTOs.Responses;
+using PracticeModule.Contracts.Queries;
 
-namespace PracticeModule.Controllers.PracticeControllers;
-
-[ApiController]
-[Route("api/practice/")]
-public class PracticeController : ControllerBase
+namespace PracticeModule.Controllers.PracticeControllers
 {
-    private readonly IMediator _mediator;
+    [ApiController]
+    [Route("api/practice/")]
+    public class PracticeController : ControllerBase
+    {
+        private readonly ISender _sender;
+        private readonly IMapper _mapper;
 
-    public PracticeController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
+        public PracticeController(ISender sender, IMapper mapper)
+        {
+            _sender = sender;
+            _mapper = mapper;
+        }
 
-    /// <summary>
-    /// Добавить характеристику студента
-    /// </summary>
-    /// <param name="dto">Данные характеристики</param>
-    /// <returns>Ничего</returns>
-    [HttpPost("student-characteristics")]
-    public async Task<IActionResult> StudentCharacteristics([FromForm] StudentCharacteristicsAddQuery dto)
-    {
-        await _mediator.Send(dto);
-        return Ok();
-    }
+        /// <summary>
+        /// Получить практики студентов с фильтрами.
+        /// </summary>
+        /// <returns>Практики студентов.</returns>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("search")]
+        [ProducesResponseType(typeof(List<PracticeResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> SearchPractice([FromQuery] SearchPracticeRequest searchRequest)
+        {
+            return Ok((await _sender.Send(new SearchPracticeQuery(searchRequest))).Select(_mapper.Map<PracticeResponse>));
+        }
 
-    /// <summary>
-    /// Добавить дневник практики студента
-    /// </summary>
-    /// <param name="dto">Данные дневника практики</param>
-    /// <returns>Ничего</returns>
-    [HttpPost("student-practice-diary")]
-    public async Task<IActionResult> StudentPracticeDiary([FromForm] PracticeDiaryAddQuery dto)
-    {
-        await _mediator.Send(dto);
-        return Ok();
-    }
-    
-    /// <summary>
-    /// Получить характеристику студента по ID
-    /// </summary>
-    /// <param name="id">ID характеристики</param>
-    /// <returns>Характеристика студента</returns>
-    [HttpGet("student-characteristics/{id}")]
-    public async Task<IActionResult> GetStudentCharacteristic(Guid id)
-    {
-        var result = await _mediator.Send(new GetStudentCharacteristicByIdQuery { Id = id });
-        return Ok(result);
-    }
+        /// <summary>
+        /// Получить потенциальные практики студентов на следующий семестр.
+        /// </summary>
+        /// <returns>Потенциальные практики студентов.</returns>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("potential")]
+        [ProducesResponseType(typeof(List<PotentialPracticeResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> SearchPotentialPractice([FromQuery] SearchPotentialPracticeRequest searchRequest)
+        {
+            return Ok((await _sender.Send(new SearchPotentialPracticeQuery(searchRequest))).Select(_mapper.Map<PotentialPracticeResponse>));
+        }
 
-    /// <summary>
-    /// Получить все характеристики студентов
-    /// </summary>
-    /// <returns>Список характеристик</returns>
-    [HttpGet("student-characteristics")]
-    public async Task<IActionResult> GetAllStudentCharacteristics()
-    {
-        var result = await _mediator.Send(new GetAllStudentCharacteristicsQuery());
-        return Ok(result);
-    }
+        /// <summary>
+        /// Создать новую глобальную практику.
+        /// </summary>
+        /// <returns>Глобальная практика.</returns>
+        [HttpPost]
+        [Authorize(Roles = "DeanMember")]
+        [Consumes("multipart/form-data")]
+        [Route("global/add")]
+        [ProducesResponseType(typeof(GlobalPracticeResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CreateGlobalPractice(CreateGlobalPracticeRequest createRequest)
+        {
+             return Ok(_mapper.Map<GlobalPracticeResponse>(await _sender.Send(new CreateGlobalPracticeCommand(createRequest))));
+        }
 
-    /// <summary>
-    /// Получить дневник практики по ID
-    /// </summary>
-    /// <param name="id">ID дневника</param>
-    /// <returns>Дневник практики</returns>
-    [HttpGet("student-practice-diary/{id}")]
-    public async Task<IActionResult> GetPracticeDiary(Guid id)
-    {
-        var result = await _mediator.Send(new GetPracticeDiaryByIdQuery { Id = id });
-        return Ok(result);
-    }
+        /// <summary>
+        /// Поставить оценку за практику.
+        /// </summary>
+        [HttpPut]
+        [Authorize(Roles = "DeanMember")]
+        [Route("{practiceId}/mark")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> MarkPractices(Guid practiceId, int mark)
+        {
+            await _sender.Send(new MarkPracticesCommand(practiceId, mark));
 
-    /// <summary>
-    /// Получить все дневники практик
-    /// </summary>
-    /// <returns>Список дневников</returns>
-    [HttpGet("student-practice-diary")]
-    public async Task<IActionResult> GetAllPracticeDiaries()
-    {
-        var result = await _mediator.Send(new GetAllPracticeDiariesQuery());
-        return Ok(result);
-    }
-    
-    /// <summary>
-    /// Добавить комментарий к дневнику практики
-    /// </summary>
-    /// <param name="diaryId">ID дневника</param>
-    /// <param name="request">Данные комментария</param>
-    /// <returns>Ничего</returns>
-    [HttpPost("practice-diary/{diaryId}/comments")]
-    public async Task<IActionResult> AddPracticeDiaryComment(
-        Guid diaryId, 
-        [FromBody] AddPracticeDiaryCommentRequest request)
-    {
-        await _mediator.Send(new AddPracticeDiaryCommentCommand 
-        { 
-            DiaryId = diaryId,
-            Comment = request.Comment
-        });
-        return Ok();
-    }
-
-    /// <summary>
-    /// Добавить комментарий к характеристике студента
-    /// </summary>
-    /// <param name="characteristicId">ID характеристики</param>
-    /// <param name="request">Данные комментария</param>
-    /// <returns>Ничего</returns>
-    [HttpPost("student-characteristic/{characteristicId}/comments")]
-    public async Task<IActionResult> AddStudentCharacteristicComment(
-        Guid characteristicId, 
-        [FromBody] AddStudentCharacteristicCommentRequest request)
-    {
-        await _mediator.Send(new AddStudentCharacteristicCommentCommand 
-        { 
-            CharacteristicId = characteristicId,
-            Comment = request.Comment
-        });
-        return Ok();
-    }
-
-    [HttpGet("student-practices")]
-    public async Task<IActionResult> GetAllPractice()
-    {
-        await _mediator.Send(new GetAllPractice());
-        return Ok();
+            return Ok();
+        }
     }
 }

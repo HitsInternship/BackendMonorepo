@@ -22,6 +22,35 @@ namespace PracticeModule.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("PracticeModule.Domain.Entity.GlobalPractice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CharacteristicsPatternDocumentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DiaryPatternDocumentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("PracticeType")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("SemesterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("StreamId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GlobalPractice");
+                });
+
             modelBuilder.Entity("PracticeModule.Domain.Entity.Practice", b =>
                 {
                     b.Property<Guid>("Id")
@@ -31,25 +60,24 @@ namespace PracticeModule.Infrastructure.Migrations
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("GlobalPracticeId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("Mark")
+                    b.Property<int?>("Mark")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("PositionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("PracticeType")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("SemesterId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GlobalPracticeId");
 
                     b.ToTable("Practice");
                 });
@@ -63,12 +91,16 @@ namespace PracticeModule.Infrastructure.Migrations
                     b.Property<Guid>("DocumentId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("PracticeId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PracticeId");
+                    b.HasIndex("PracticeId")
+                        .IsUnique();
 
                     b.ToTable("PracticeDiary");
                 });
@@ -86,6 +118,9 @@ namespace PracticeModule.Infrastructure.Migrations
                     b.Property<Guid?>("DiaryId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DiaryId");
@@ -102,12 +137,16 @@ namespace PracticeModule.Infrastructure.Migrations
                     b.Property<Guid>("DocumentId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("PracticeId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PracticeId");
+                    b.HasIndex("PracticeId")
+                        .IsUnique();
 
                     b.ToTable("StudentPracticeCharacteristic");
                 });
@@ -122,6 +161,9 @@ namespace PracticeModule.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid?>("PracticeCharacteristicId")
                         .HasColumnType("uuid");
 
@@ -132,11 +174,22 @@ namespace PracticeModule.Infrastructure.Migrations
                     b.ToTable("StudentPracticeCharacteristicComment");
                 });
 
+            modelBuilder.Entity("PracticeModule.Domain.Entity.Practice", b =>
+                {
+                    b.HasOne("PracticeModule.Domain.Entity.GlobalPractice", "GlobalPractice")
+                        .WithMany("Practices")
+                        .HasForeignKey("GlobalPracticeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GlobalPractice");
+                });
+
             modelBuilder.Entity("PracticeModule.Domain.Entity.PracticeDiary", b =>
                 {
                     b.HasOne("PracticeModule.Domain.Entity.Practice", "Practice")
-                        .WithMany("PracticeDiaries")
-                        .HasForeignKey("PracticeId")
+                        .WithOne("PracticeDiary")
+                        .HasForeignKey("PracticeModule.Domain.Entity.PracticeDiary", "PracticeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -155,8 +208,8 @@ namespace PracticeModule.Infrastructure.Migrations
             modelBuilder.Entity("PracticeModule.Domain.Entity.StudentPracticeCharacteristic", b =>
                 {
                     b.HasOne("PracticeModule.Domain.Entity.Practice", "Practice")
-                        .WithMany("StudentPracticeCharacteristics")
-                        .HasForeignKey("PracticeId")
+                        .WithOne("StudentPracticeCharacteristics")
+                        .HasForeignKey("PracticeModule.Domain.Entity.StudentPracticeCharacteristic", "PracticeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -172,9 +225,14 @@ namespace PracticeModule.Infrastructure.Migrations
                     b.Navigation("PracticeCharacteristic");
                 });
 
+            modelBuilder.Entity("PracticeModule.Domain.Entity.GlobalPractice", b =>
+                {
+                    b.Navigation("Practices");
+                });
+
             modelBuilder.Entity("PracticeModule.Domain.Entity.Practice", b =>
                 {
-                    b.Navigation("PracticeDiaries");
+                    b.Navigation("PracticeDiary");
 
                     b.Navigation("StudentPracticeCharacteristics");
                 });

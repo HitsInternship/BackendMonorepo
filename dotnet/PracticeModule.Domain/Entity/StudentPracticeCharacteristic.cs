@@ -1,11 +1,10 @@
+using Shared.Domain.Entites;
 using System.ComponentModel.DataAnnotations;
 
 namespace PracticeModule.Domain.Entity;
 
-public class StudentPracticeCharacteristic
+public class StudentPracticeCharacteristic : BaseEntity
 {
-    [Key]
-    public Guid Id { get; set; }
     public Guid DocumentId { get; set; }
     public Practice Practice { get; set; }
     public Guid PracticeId { get; set; }

@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace PracticeModule.Contracts.CQRS;
+namespace PracticeModule.Contracts.Commands;
 
 public class AddStudentCharacteristicCommentCommand : IRequest
 {

@@ -17,10 +17,10 @@ public class PracticeDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<StudentPracticeCharacteristic>().HasOne(x => x.Practice)
-            .WithMany(x => x.StudentPracticeCharacteristics);
+        //modelBuilder.Entity<StudentPracticeCharacteristic>().HasOne(x => x.Practice)
+        //    .WithOne(x => x.StudentPracticeCharacteristics);
         
-        modelBuilder.Entity<PracticeDiary>().HasOne(x => x.Practice).WithMany(x => x.PracticeDiaries);
+        //modelBuilder.Entity<PracticeDiary>().HasOne(x => x.Practice).WithMany(x => x.PracticeDiaries);
 
         modelBuilder.Entity<PracticeDiaryComment>().HasOne(x => x.Diary).WithMany(x => x.Comment);
         modelBuilder.Entity<StudentPracticeCharacteristicComment>().HasOne(x => x.PracticeCharacteristic).WithMany(x => x.PracticeComment);

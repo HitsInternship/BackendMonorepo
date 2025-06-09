@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PracticeModule.Application;
 using PracticeModule.Controllers.PracticeControllers;
 using PracticeModule.Infrastructure;
+using PracticeModule.Persistence;
 
 namespace PracticeModule.Controllers
 {
@@ -12,6 +13,7 @@ namespace PracticeModule.Controllers
         public static void AddPracticeModule(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddPracticeModuleInfrastructure(configuration);
+            services.AddPracticeModulePersistence();
             services.AddPracticeModuleApplication();
             
           
