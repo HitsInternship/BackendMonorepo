@@ -1,27 +1,33 @@
+using AutoMapper;
 using MediatR;
 using SelectionModule.Contracts.Commands.Position;
+using SelectionModule.Contracts.Dtos.Responses;
 using SelectionModule.Contracts.Repositories;
 using SelectionModule.Domain.Entites;
 
 namespace SelectionModule.Application.Features.Commands.Position;
 
-public class CreatePositionCommandHandler : IRequestHandler<CreatePositionCommand, Unit>
+public class CreatePositionCommandHandler : IRequestHandler<CreatePositionCommand, PositionDto>
 {
+    private readonly IMapper _mapper;
     private readonly IPositionRepository _positionRepository;
 
-    public CreatePositionCommandHandler(IPositionRepository positionRepository)
+    public CreatePositionCommandHandler(IPositionRepository positionRepository, IMapper mapper)
     {
         _positionRepository = positionRepository;
+        _mapper = mapper;
     }
 
-    public async Task<Unit> Handle(CreatePositionCommand request, CancellationToken cancellationToken)
+    public async Task<PositionDto> Handle(CreatePositionCommand request, CancellationToken cancellationToken)
     {
-        await _positionRepository.AddAsync(new PositionEntity
+        var position = new PositionEntity
         {
             Name = request.PositionRequestDto.Name,
             Description = request.PositionRequestDto.Description,
-        });
+        };
         
-        return Unit.Value;
+        await _positionRepository.AddAsync(position);
+        
+        return _mapper.Map<PositionDto>(position);
     }
 }

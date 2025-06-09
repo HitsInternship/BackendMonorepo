@@ -15,5 +15,6 @@ public static class DependencyInjection
         services.AddTransient<IVacancyRepository, VacancyRepository>();
         services.AddTransient<ISelectionCommentRepository, SelectionCommentRepository>();
         services.AddTransient<IVacancyResponseCommentRepository, VacancyResponseCommentRepository>();
+        services.AddTransient<IGlobalSelectionRepository, GlobalSelectionRepository>();
     }
 }

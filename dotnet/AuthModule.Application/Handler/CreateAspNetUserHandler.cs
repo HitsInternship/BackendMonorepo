@@ -4,19 +4,22 @@ using AuthModule.Contracts.CQRS;
 using AuthModule.Contracts.Model;
 using AuthModule.Domain.Entity;
 using MediatR;
+using NotificationModule.Contracts.Commands;
 using UserInfrastructure;
 
 namespace AuthModel.Service.Handler;
 
 public class CreateAspNetUserHandler : IRequestHandler<CreateAspNetUserQuery, CredInfoDTO>
 {
+    private readonly ISender _mediator;
     private readonly IHashService _hashService;
     private readonly AuthDbContext _context;
 
-    public CreateAspNetUserHandler(IHashService hashService, AuthDbContext context)
+    public CreateAspNetUserHandler(IHashService hashService, AuthDbContext context, IMediator mediator)
     {
         _hashService = hashService;
         _context = context;
+        _mediator = mediator;
     }
 
 
@@ -38,6 +41,10 @@ public class CreateAspNetUserHandler : IRequestHandler<CreateAspNetUserQuery, Cr
             UserId = genNewAspNetUserDto.UserId
         });
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _mediator.Send(
+            new SendRegistrationMessageCommand(genNewAspNetUserDto.Login, genNewAspNetUserDto.Password),
+            cancellationToken);
 
         return genNewAspNetUserDto;
     }

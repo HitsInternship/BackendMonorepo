@@ -4,8 +4,6 @@ using SelectionModule.Contracts.Commands.Selection;
 using SelectionModule.Contracts.Repositories;
 using SelectionModule.Domain.Entites;
 using SelectionModule.Domain.Enums;
-using Shared.Domain.Exceptions;
-using StudentModule.Contracts.Repositories;
 
 namespace SelectionModule.Application.Features.Commands.Selection;
 
@@ -13,41 +11,39 @@ public class CreateSelectionCommandHandler : IRequestHandler<CreateSelectionComm
 {
     private readonly IMediator _mediator;
     private readonly ISelectionRepository _selectionRepository;
-    private readonly IStudentRepository _studentRepository;
 
-    public CreateSelectionCommandHandler(IMediator mediator, ISelectionRepository selectionRepository,
-        IStudentRepository studentRepository)
+    public CreateSelectionCommandHandler(IMediator mediator, ISelectionRepository selectionRepository)
     {
         _mediator = mediator;
         _selectionRepository = selectionRepository;
-        _studentRepository = studentRepository;
     }
 
     public async Task<Unit> Handle(CreateSelectionCommand request, CancellationToken cancellationToken)
     {
-        if (!await _studentRepository.CheckIfExistsAsync(request.StudentId))
-            throw new NotFound("Student does not exist");
+        var selections = new List<SelectionEntity>();
 
-        var student = await _studentRepository.GetByIdAsync(request.StudentId);
-
-        if (await _selectionRepository.CheckIfStudentHasSelectionAsync(request.StudentId))
-            throw new BadRequest("Student already has a selection");
-
-        var selection = new SelectionEntity
+        foreach (var student in request.Students)
         {
-            DeadLine = request.Deadline,
-            SelectionStatus = SelectionStatus.Inactive,
-            CandidateId = default,
-            Candidate = null
-        };
+            var selection = new SelectionEntity
+            {
+                DeadLine = request.GlobalSelection.EndDate,
+                SelectionStatus = SelectionStatus.Inactive,
+                CandidateId = default,
+                Candidate = null,
+                GlobalSelectionId = request.GlobalSelection.Id,
+                GlobalSelection = request.GlobalSelection,
+            };
 
-        var candidate = await _mediator.Send(new CreateCandidateCommand(student.UserId, student.Id, selection),
-            cancellationToken);
+            var candidate = await _mediator.Send(new CreateCandidateCommand(student.UserId, student.Id, selection),
+                cancellationToken);
 
-        selection.CandidateId = candidate.Id;
-        selection.Candidate = candidate;
+            selection.CandidateId = candidate.Id;
+            selection.Candidate = candidate;
 
-        await _selectionRepository.AddAsync(selection);
+            selections.Add(selection);
+        }
+
+        await _selectionRepository.AddRangeAsync(selections);
 
         return Unit.Value;
     }

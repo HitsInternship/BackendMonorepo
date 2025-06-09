@@ -1,6 +1,7 @@
 using MediatR;
 using SelectionModule.Contracts.Commands.Selection;
 using SelectionModule.Contracts.Repositories;
+using SelectionModule.Domain.Enums;
 using Shared.Domain.Exceptions;
 
 namespace SelectionModule.Application.Features.Commands.Selection;
@@ -14,12 +15,15 @@ public class ChangeSelectionCommandHandler : IRequestHandler<ChangeSelectionComm
         _selectionRepository = selectionRepository;
     }
 
+
     public async Task<Unit> Handle(ChangeSelectionCommand request, CancellationToken cancellationToken)
     {
         if (!await _selectionRepository.CheckIfExistsAsync(request.SelectionId))
             throw new NotFound("Selection not found");
 
         var selection = await _selectionRepository.GetByIdAsync(request.SelectionId);
+
+        if (selection.IsConfirmed) throw new BadRequest("You cannot edit this selection, it is confirmed");
 
         if (selection.Candidate.UserId != request.UserId && !request.Roles.Contains("DeanMember"))
             throw new Forbidden("This user is not allowed to change the selection");

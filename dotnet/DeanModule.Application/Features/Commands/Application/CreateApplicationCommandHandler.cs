@@ -3,6 +3,8 @@ using CompanyModule.Contracts.Repositories;
 using DeanModule.Contracts.Commands.Application;
 using DeanModule.Contracts.Repositories;
 using DeanModule.Domain.Entities;
+using DocumentModule.Contracts.Commands;
+using DocumentModule.Domain.Enums;
 using MediatR;
 using SelectionModule.Contracts.Repositories;
 using Shared.Domain.Exceptions;
@@ -13,17 +15,22 @@ namespace DeanModule.Application.Features.Commands.Application;
 public class CreateApplicationCommandHandler : IRequestHandler<CreateApplicationCommand, Unit>
 {
     private readonly IMapper _mapper;
+    private readonly ISender _mediator;
     private readonly IApplicationRepository _applicationRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly ICompanyRepository _companyRepository;
     private readonly IPositionRepository _positionRepository;
 
     public CreateApplicationCommandHandler(IApplicationRepository applicationRepository, IMapper mapper,
-        IStudentRepository studentRepository)
+        IStudentRepository studentRepository, IPositionRepository positionRepository,
+        ICompanyRepository companyRepository, ISender mediator)
     {
         _applicationRepository = applicationRepository;
         _mapper = mapper;
         _studentRepository = studentRepository;
+        _positionRepository = positionRepository;
+        _companyRepository = companyRepository;
+        _mediator = mediator;
     }
 
     public async Task<Unit> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
@@ -38,8 +45,6 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
             throw new NotFound("Position not found");
 
         var application = _mapper.Map<ApplicationEntity>(request.ApplicationRequestDto);
-
-        //todo: add document
 
         await _applicationRepository.AddAsync(application);
 

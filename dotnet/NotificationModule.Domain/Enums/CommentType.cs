@@ -8,5 +8,6 @@ public enum CommentType
     selection,
     practice_diary,
     characteristic,
-    application
+    application,
+    vacancy_response
 }

@@ -1,5 +1,7 @@
 using CompanyModule.Contracts.DTOs.Responses;
 using DeanModule.Domain.Enums;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SelectionModule.Contracts.Dtos.Responses;
 using StudentModule.Contracts.DTOs;
 

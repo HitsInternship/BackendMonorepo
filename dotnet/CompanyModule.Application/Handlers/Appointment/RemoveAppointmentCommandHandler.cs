@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using CompanyModule.Contracts.Commands;
 using CompanyModule.Contracts.Repositories;
-using CompanyModule.Domain.Entities;
 using MediatR;
 
-namespace CompanyModule.Application.Handlers.AppointmentPart
+namespace CompanyModule.Application.Handlers.Appointment
 {
     public class RemoveAppointmentCommandHandler : IRequestHandler<RemoveAppointmentCommand, Unit>
     {
@@ -16,7 +15,7 @@ namespace CompanyModule.Application.Handlers.AppointmentPart
 
         public async Task<Unit> Handle(RemoveAppointmentCommand command, CancellationToken cancellationToken)
         {
-            Appointment appointment = await _appointmentRepository.GetByIdAsync(command.appointmentId);
+            Domain.Entities.Appointment appointment = await _appointmentRepository.GetByIdAsync(command.appointmentId);
 
             await _appointmentRepository.DeleteAsync(appointment);
 

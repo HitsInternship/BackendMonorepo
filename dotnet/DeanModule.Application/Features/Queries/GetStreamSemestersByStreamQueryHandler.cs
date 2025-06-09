@@ -31,12 +31,12 @@ public class
         if (!await _streamRepository.CheckIfExistsAsync(request.StreamId))
             throw new NotFound("Stream does not exist");
 
-        var semesters = (await _streamSemesterRepository.GetByStreamIdAsync(request.StreamId)).ToList();
+        var semesters = (await _streamSemesterRepository.GetByStreamIdAsync(request.StreamId)).ToList().AsReadOnly();
 
         var stream = await _streamRepository.GetStreamByIdAsync(request.StreamId);
 
         var streamDto = _mapper.Map<StreamDto>(stream);
-        
+
         var result = new List<StreamSemesterResponseDto>();
 
         foreach (var dto in semesters.Select(semester => _mapper.Map<StreamSemesterResponseDto>(semester)))

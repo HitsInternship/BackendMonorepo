@@ -23,7 +23,8 @@ public class GetApplicationQueryHandler : IRequestHandler<GetApplicationQuery, A
     private readonly IApplicationRepository _applicationRepository;
 
     public GetApplicationQueryHandler(IMapper mapper, IApplicationRepository applicationRepository,
-        ICompanyRepository companyRepository, IPositionRepository positionRepository, IStudentRepository studentRepository)
+        ICompanyRepository companyRepository, IPositionRepository positionRepository,
+        IStudentRepository studentRepository)
     {
         _mapper = mapper;
         _applicationRepository = applicationRepository;
@@ -38,10 +39,11 @@ public class GetApplicationQueryHandler : IRequestHandler<GetApplicationQuery, A
             throw new ApplicationNotFound(request.ApplicationId);
 
         var application = await _applicationRepository.GetByIdAsync(request.ApplicationId);
+        var student = await _studentRepository.GetByIdAsync(application.StudentId);
 
-        if (!request.roles.Contains("DeanMember"))
+        if (!request.Roles.Contains("DeanMember"))
         {
-            if (application.StudentId != request.UserId)
+            if (student.UserId != request.UserId)
                 throw new Forbidden("You are not allowed to access this page");
 
             if (application.IsDeleted)
@@ -53,7 +55,7 @@ public class GetApplicationQueryHandler : IRequestHandler<GetApplicationQuery, A
         dto.Company = _mapper.Map<CompanyResponse>(await _companyRepository.GetByIdAsync(application.CompanyId));
         dto.Position = _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(application.PositionId));
         dto.Student = _mapper.Map<StudentDto>(await _studentRepository.GetByIdAsync(application.StudentId));
-        
+
         return dto;
     }
 }

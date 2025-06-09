@@ -5,7 +5,7 @@ using CompanyModule.Domain.Entities;
 using MediatR;
 using Shared.Domain.Exceptions;
 
-namespace CompanyModule.Application.Handlers.AppointmentPart
+namespace CompanyModule.Application.Handlers.Appointment
 {
     public class AddTimeslotCommandHandler : IRequestHandler<AddTimeslotCommand, Timeslot>
     {

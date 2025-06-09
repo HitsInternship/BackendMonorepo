@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NotificationModule.Contracts.Kafka;
 
-namespace NotificationModule.Kafka;
+namespace NotificationModule.Kafka.Producers;
 
 public class MessageProducer : IMessageProducer
 {

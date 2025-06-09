@@ -14,10 +14,10 @@ public record SemesterRequestDto
     /// <summary>
     /// Дата начала семестра.
     /// </summary>
-    public DateTime StartDate { get; set; }
+    public DateOnly StartDate { get; set; }
 
     /// <summary>
     /// Дата окончания семестра.
     /// </summary>
-    public DateTime EndDate { get; set; }
+    public DateOnly EndDate { get; set; }
 }

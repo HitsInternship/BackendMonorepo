@@ -5,7 +5,6 @@ using StudentModule.Contracts.Repositories;
 using StudentModule.Domain.Entities;
 using StudentModule.Contracts.Commands.StreamCommands;
 using UserModule.Contracts.Repositories;
-using UserModule.Domain.Entities;
 
 namespace StudentModule.Application.Handlers.StreamHandlers
 {
@@ -28,6 +27,8 @@ namespace StudentModule.Application.Handlers.StreamHandlers
 
             stream.Status = request.Status;
 
+            //todo: create selection or practice
+            
             await _streamRepository.UpdateAsync(stream);
 
             return await GetStream(stream);

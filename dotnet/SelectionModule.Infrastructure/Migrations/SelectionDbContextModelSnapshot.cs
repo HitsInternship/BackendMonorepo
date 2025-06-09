@@ -42,6 +42,32 @@ namespace SelectionModule.Infrastructure.Migrations
                     b.ToTable("Candidates");
                 });
 
+            modelBuilder.Entity("SelectionModule.Domain.Entites.GlobalSelection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("SemesterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("StreamId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GlobalSelections");
+                });
+
             modelBuilder.Entity("SelectionModule.Domain.Entites.PositionEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -98,11 +124,20 @@ namespace SelectionModule.Infrastructure.Migrations
                     b.Property<Guid>("CandidateId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("DeadLine")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DeadLine")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("GlobalSelectionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<Guid?>("Offer")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("SelectionStatus")
                         .HasColumnType("integer");
@@ -111,6 +146,8 @@ namespace SelectionModule.Infrastructure.Migrations
 
                     b.HasIndex("CandidateId")
                         .IsUnique();
+
+                    b.HasIndex("GlobalSelectionId");
 
                     b.ToTable("Selections");
                 });
@@ -148,7 +185,7 @@ namespace SelectionModule.Infrastructure.Migrations
                     b.ToTable("Vacancies");
                 });
 
-            modelBuilder.Entity("SelectionModule.Domain.Entites.VacancyResponseComment", b =>
+            modelBuilder.Entity("SelectionModule.Domain.Entites.VacancyResponseCommentEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -220,7 +257,15 @@ namespace SelectionModule.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SelectionModule.Domain.Entites.GlobalSelection", "GlobalSelection")
+                        .WithMany("Selections")
+                        .HasForeignKey("GlobalSelectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Candidate");
+
+                    b.Navigation("GlobalSelection");
                 });
 
             modelBuilder.Entity("SelectionModule.Domain.Entites.VacancyEntity", b =>
@@ -234,7 +279,7 @@ namespace SelectionModule.Infrastructure.Migrations
                     b.Navigation("Position");
                 });
 
-            modelBuilder.Entity("SelectionModule.Domain.Entites.VacancyResponseComment", b =>
+            modelBuilder.Entity("SelectionModule.Domain.Entites.VacancyResponseCommentEntity", b =>
                 {
                     b.HasOne("SelectionModule.Domain.Entites.VacancyResponseEntity", "VacancyResponse")
                         .WithMany("Comments")
@@ -269,6 +314,11 @@ namespace SelectionModule.Infrastructure.Migrations
                     b.Navigation("Responses");
 
                     b.Navigation("Selection");
+                });
+
+            modelBuilder.Entity("SelectionModule.Domain.Entites.GlobalSelection", b =>
+                {
+                    b.Navigation("Selections");
                 });
 
             modelBuilder.Entity("SelectionModule.Domain.Entites.SelectionEntity", b =>

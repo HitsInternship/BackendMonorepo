@@ -12,6 +12,7 @@ public class SelectionDbContext(DbContextOptions<SelectionDbContext> options) : 
     private DbSet<VacancyEntity> Vacancies { get; set; }
     private DbSet<SelectionCommentEntity> SelectionComments { get; set; }
     private DbSet<VacancyResponseCommentEntity> VacancyResponseComments { get; set; }
+    private DbSet<GlobalSelection> GlobalSelections { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -38,11 +39,15 @@ public class SelectionDbContext(DbContextOptions<SelectionDbContext> options) : 
             .HasMany(x => x.Comments)
             .WithOne(s => s.Selection)
             .HasForeignKey(c => c.ParentId);
-        
+
         modelBuilder.Entity<VacancyResponseEntity>()
             .HasMany(x => x.Comments)
             .WithOne(s => s.VacancyResponse)
             .HasForeignKey(c => c.ParentId);
-        
+
+        modelBuilder.Entity<GlobalSelection>()
+            .HasMany(x => x.Selections)
+            .WithOne(s => s.GlobalSelection)
+            .HasForeignKey(x => x.GlobalSelectionId);
     }
 }
