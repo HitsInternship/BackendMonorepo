@@ -8,6 +8,7 @@ namespace UserModule.Domain.Entities
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
+        public string? Key { get; set; } = null;
 
         public List<Role> Roles { get; set; } = new List<Role>();
 
