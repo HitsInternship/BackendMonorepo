@@ -8,11 +8,6 @@ namespace DeanModule.Contracts.Dtos.Requests;
 public class ApplicationRequestDto
 {
     /// <summary>
-    /// Идентификатор студента.
-    /// </summary>
-    public Guid StudentId { get; set; }
-
-    /// <summary>
     /// Описание заявки.
     /// </summary>
     public string? Description { get; set; }
@@ -20,7 +15,7 @@ public class ApplicationRequestDto
     /// <summary>
     /// Дата подачи заявки.
     /// </summary>
-    public DateTime Date { get; set; }
+    public DateOnly Date { get; set; }
 
     /// <summary>
     /// Идентификатор компании.

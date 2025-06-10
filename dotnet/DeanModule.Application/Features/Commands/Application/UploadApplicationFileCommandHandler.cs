@@ -30,6 +30,8 @@ public class UploadApplicationFileCommandHandler : IRequestHandler<UploadApplica
         if (application.Status is ApplicationStatus.Rejected or ApplicationStatus.Accepted)
             throw new BadRequest("You cannot update a rejected or accepted application");
 
+        if(application.IsDeleted) throw new BadRequest("You cannot upload a file a deleted application");
+        
         var student = await _studentRepository.GetByIdAsync(application.StudentId);
 
         if (student.UserId != request.UserId)
@@ -39,7 +41,7 @@ public class UploadApplicationFileCommandHandler : IRequestHandler<UploadApplica
             await _mediator.Send(new RemoveDocumentCommand(application.DocumentId.Value, DocumentType.Attachement),
                 cancellationToken);
 
-        return await _mediator.Send(new LoadDocumentCommand(DocumentType.Attachement, request.File.File),
+        return await _mediator.Send(new LoadDocumentCommand(DocumentType.ChangePracticeApplication, request.File.File),
             cancellationToken);
     }
 }

@@ -8,7 +8,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Contracts.Dtos;
 using UserModule.Persistence;
 
 namespace DeanModule.Controllers.Controllers;
@@ -30,7 +29,8 @@ public class ApplicationsController : ControllerBase
     }
 
     /// <summary>
-    /// Получает список заявок с возможностью фильтрации по статусу, студенту и архивности.
+    ///  Сотрудник деканата получает список заявок с возможностью фильтрации по статусу, студенту и архивности.
+    /// Студент получает свои заявки.
     /// </summary>
     /// <param name="status">Статус заявки для фильтрации (опционально).</param>
     /// <param name="studentId">Идентификатор студента (опционально).</param>
@@ -42,7 +42,8 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> GetApplications([FromQuery] ApplicationStatus? status, [FromQuery] Guid? studentId,
         bool isArchived = false, int page = 1)
     {
-        return Ok(await _sender.Send(new GetApplicationsQuery(status, studentId, isArchived, page)));
+        return Ok(await _sender.Send(new GetApplicationsQuery(status, studentId, isArchived, page, User.GetUserId(),
+            User.GetRoles())));
     }
 
     /// <summary>
@@ -50,10 +51,10 @@ public class ApplicationsController : ControllerBase
     /// </summary>
     /// <param name="applicationRequestDto">Данные заявки.</param>
     /// <returns>Созданная заявка.</returns>
-    [HttpPost]
+    [HttpPost, Authorize(Roles = "Student")]
     public async Task<IActionResult> CreateApplication([FromBody] ApplicationRequestDto applicationRequestDto)
     {
-        return Ok(await _sender.Send(new CreateApplicationCommand(applicationRequestDto)));
+        return Ok(await _sender.Send(new CreateApplicationCommand(applicationRequestDto, User.GetUserId())));
     }
 
     /// <summary>
@@ -62,7 +63,7 @@ public class ApplicationsController : ControllerBase
     /// <param name="applicationId">Идентификатор заявки.</param>
     /// <param name="file">Файл для загрузки.</param>
     /// <returns>Результат загрузки файла.</returns>
-    [HttpPost, Route("{applicationId}/file")]
+    [HttpPost, Route("{applicationId}/file"), Authorize(Roles = "Student")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> UploadFile([FromRoute] Guid applicationId, [FromForm] UploadFileRequest file)
     {
@@ -117,6 +118,7 @@ public class ApplicationsController : ControllerBase
     /// <param name="applicationId">Идентификатор заявки.</param>
     /// <returns>Полная информация о заявке.</returns>
     [HttpGet, Route("{applicationId}")]
+    [Authorize(Roles = "DeanMember, Student")]
     [ProducesResponseType(typeof(ApplicationResponseDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetApplication(Guid applicationId)
     {
@@ -129,10 +131,11 @@ public class ApplicationsController : ControllerBase
     /// <param name="applicationId">Идентификатор заявки.</param>
     /// <returns>Файл заявки.</returns>
     [HttpGet, Route("{applicationId}/file")]
+    [Authorize(Roles = "DeanMember, Student")]
     public async Task<IActionResult> GetApplicationFile(Guid applicationId)
     {
-        return Ok(await _sender.Send(
-            new DownloadApplicationFileCommand(applicationId, User.GetUserId(), User.GetRoles())));
+        return await _sender.Send(
+            new DownloadApplicationFileCommand(applicationId, User.GetUserId(), User.GetRoles()));
     }
 
     /// <summary>
@@ -154,6 +157,6 @@ public class ApplicationsController : ControllerBase
     [HttpGet, Route("template")]
     public async Task<IActionResult> GetApplicationTemplate()
     {
-        return Ok(await _sender.Send(new GetApplicationTemplateCommand()));
+        return await _sender.Send(new GetApplicationTemplateCommand());
     }
 }

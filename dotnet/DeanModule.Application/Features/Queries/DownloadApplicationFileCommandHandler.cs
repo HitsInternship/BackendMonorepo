@@ -44,8 +44,16 @@ public class DownloadApplicationFileCommandHandler : IRequestHandler<DownloadApp
 
         if (application.DocumentId.HasValue)
         {
-            return await _mediator.Send(new GetDocumentQuery(application.DocumentId.Value, DocumentType.Attachement),
-                cancellationToken);
+            try
+            {
+                return await _mediator.Send(
+                    new GetDocumentQuery(application.DocumentId.Value, DocumentType.Attachement),
+                    cancellationToken);
+            }
+            catch (Exception e)
+            {
+                throw new BadRequest("The application file does not exist");
+            }
         }
 
         throw new BadRequest("The application file does not exist");

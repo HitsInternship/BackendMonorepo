@@ -17,7 +17,7 @@ public class UploadApplicationTemplateCommandHandler : IRequestHandler<UploadApp
     public async Task<Unit> Handle(UploadApplicationTemplateCommand request, CancellationToken cancellationToken)
     {
         await _mediator.Send(
-            new LoadDocumentCommand(DocumentType.Attachement, request.File.File, "ApplicationTemplate",
+            new LoadDocumentCommand(DocumentType.ChangePracticeApplication, request.File.File, "ApplicationTemplate",
                 Guid.Parse("8bcea8ec-2bc0-4d14-bfd2-e1e151bb8aff")),
             cancellationToken);
 

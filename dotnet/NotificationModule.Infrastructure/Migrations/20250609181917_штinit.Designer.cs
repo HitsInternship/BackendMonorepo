@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NotificationModule.Infrastructure.Migrations
 {
     [DbContext(typeof(NotificationModuleDbContext))]
-    [Migration("20250529152831_update")]
-    partial class update
+    [Migration("20250609181917_штinit")]
+    partial class штinit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,7 @@ namespace NotificationModule.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("MessageStatus")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

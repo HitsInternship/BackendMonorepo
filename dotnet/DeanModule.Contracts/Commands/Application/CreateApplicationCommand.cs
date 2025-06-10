@@ -3,4 +3,4 @@ using MediatR;
 
 namespace DeanModule.Contracts.Commands.Application;
 
-public record CreateApplicationCommand(ApplicationRequestDto ApplicationRequestDto) : IRequest<Unit>;
+public record CreateApplicationCommand(ApplicationRequestDto ApplicationRequestDto, Guid UserId) : IRequest<Unit>;

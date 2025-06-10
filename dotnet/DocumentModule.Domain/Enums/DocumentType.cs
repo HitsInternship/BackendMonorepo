@@ -11,6 +11,7 @@ namespace DocumentModule.Domain.Enums
         PartnershipAgreement,
         Attachement,
         StudentPracticeCharacteristic,
-        PracticeDiary
+        PracticeDiary, 
+        ChangePracticeApplication
     }
 }

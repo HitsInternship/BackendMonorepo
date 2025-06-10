@@ -14,7 +14,7 @@ public record ListedApplicationResponseDto : BaseDto
     /// <summary>
     /// Дата подачи заявки.
     /// </summary>
-    public DateTime Date { get; init; }
+    public DateOnly Date { get; init; }
 
     /// <summary>
     /// Статус заявки.

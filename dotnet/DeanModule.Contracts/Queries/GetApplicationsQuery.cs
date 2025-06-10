@@ -4,5 +4,11 @@ using MediatR;
 
 namespace DeanModule.Contracts.Queries;
 
-public record GetApplicationsQuery(ApplicationStatus? ApplicationStatus, Guid? StudentId, bool IsArchives, int Page)
+public record GetApplicationsQuery(
+    ApplicationStatus? ApplicationStatus,
+    Guid? StudentId,
+    bool IsArchives,
+    int Page,
+    Guid UserId,
+    List<string> Roles)
     : IRequest<ApplicationsDto>;

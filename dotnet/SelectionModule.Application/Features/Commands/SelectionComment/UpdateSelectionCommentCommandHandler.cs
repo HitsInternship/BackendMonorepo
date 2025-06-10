@@ -25,6 +25,9 @@ public class UpdateSelectionCommentCommandHandler : IRequestHandler<UpdateSelect
         if (!await _selectionCommentRepository.CheckIfExistsAsync(request.CommentId))
             throw new NotFound("Selection not found");
 
+        if(!await _selectionCommentRepository.CheckIfExistsAsync(request.CommentId))
+            throw new NotFound("Comment not found");
+        
         var comment = await _selectionCommentRepository.GetByIdAsync(request.CommentId);
 
         if (comment.Selection.Id != request.SelectionId) throw new NotFound("Comment for this selection not found");
