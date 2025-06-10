@@ -12,7 +12,7 @@ namespace AuthModule.Controlllers;
 /// </summary>
 [ApiController]
 [Route("api/auth/")]
-public class AuthController: ControllerBase
+public class AuthController : ControllerBase
 {
 
     private readonly IMediator _mediator;
@@ -44,7 +44,7 @@ public class AuthController: ControllerBase
     {
         var userId = User.FindFirst("UserId")?.Value;
         if (userId == null) throw new Unauthorized("UserId - not found");
-        
+
         var newPassword = new EditPasswordQuery()
         {
             OldPassword = password.OldPassword,
@@ -55,9 +55,9 @@ public class AuthController: ControllerBase
         await _mediator.Send(newPassword);
         return Ok();
     }
-    
-    
-    
+
+
+
     /// <summary>
     /// Получение роли пользователя по ID.
     /// </summary>
@@ -70,8 +70,8 @@ public class AuthController: ControllerBase
         var role = await _mediator.Send(query);
         return Ok(role);
     }
-    
-    
+
+
     /// <summary>
     /// Обновление токена доступа по refresh-токену.
     /// </summary>
@@ -102,5 +102,19 @@ public class AuthController: ControllerBase
         await _mediator.Send(new LogoutDTO { UserId = Guid.Parse(userId) });
         return Ok(new { Message = "Logout successful" });
     }
-    
+
+
+    [HttpPost]
+    [Route("change-password-request")]
+    public async Task<IActionResult> PassRequest(ChangePasswordRequestCommand command)
+    {
+        return Ok(await _mediator.Send(command));
+    }
+
+    [HttpPost]
+    [Route("change-password-confirme")]
+    public async Task<IActionResult> PassConfirm(ChangePasswordConfirmCommand command)
+    {
+        return Ok(await _mediator.Send(command));
+    }
 }
