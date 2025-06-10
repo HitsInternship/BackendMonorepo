@@ -33,5 +33,15 @@ namespace StudentModule.Persistence.Repositories
 
             return student;
         }
+
+        public Task<StudentEntity> GetStudentByName(Guid userId, string? middlename)
+        {
+            var students = context.SStudents
+                .Include(s => s.Group)
+                .ThenInclude(g => g.Stream)
+                .FirstOrDefaultAsync(s => s.UserId == userId && s.Middlename == middlename);
+
+            return students;
+        }
     }
 }
