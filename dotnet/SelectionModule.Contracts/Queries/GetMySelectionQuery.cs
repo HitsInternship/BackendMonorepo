@@ -3,4 +3,4 @@ using SelectionModule.Contracts.Dtos.Responses;
 
 namespace SelectionModule.Contracts.Queries;
 
-public record GetVacancyQuery(Guid VacancyId, Guid UserId) : IRequest<VacancyDto>;
+public record GetMySelectionQuery(Guid UserId) : IRequest<SelectionDto>;

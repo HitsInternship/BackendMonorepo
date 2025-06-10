@@ -15,14 +15,17 @@ public class GetVacancyQueryHandler : IRequestHandler<GetVacancyQuery, VacancyDt
     private readonly IVacancyRepository _vacancyRepository;
     private readonly IPositionRepository _positionRepository;
     private readonly ICompanyRepository _companyRepository;
+    private readonly IVacancyResponseRepository _vacancyResponseRepository;
 
     public GetVacancyQueryHandler(IMapper mapper, IVacancyRepository vacancyRepository,
-        ICompanyRepository companyRepository, IPositionRepository positionRepository)
+        ICompanyRepository companyRepository, IPositionRepository positionRepository,
+        IVacancyResponseRepository vacancyResponseRepository)
     {
         _mapper = mapper;
         _vacancyRepository = vacancyRepository;
         _companyRepository = companyRepository;
         _positionRepository = positionRepository;
+        _vacancyResponseRepository = vacancyResponseRepository;
     }
 
     public async Task<VacancyDto> Handle(GetVacancyQuery request, CancellationToken cancellationToken)
@@ -36,6 +39,7 @@ public class GetVacancyQueryHandler : IRequestHandler<GetVacancyQuery, VacancyDt
 
         vacancyDto.Position = _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(vacancy.PositionId));
         vacancyDto.Company = _mapper.Map<ShortenCompanyDto>(await _companyRepository.GetByIdAsync(vacancy.CompanyId));
+        vacancyDto.HasResponse = await _vacancyResponseRepository.CheckIfExistsByUserIdAsync(request.UserId);
 
         return vacancyDto;
     }

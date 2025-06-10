@@ -80,6 +80,7 @@ public class VacancyController : ControllerBase
         {
             return Ok(await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive)));
         }
+
         if (User.IsInRole("Curator"))
         {
             return Ok(await _mediator.Send(new DeleteVacancyCommand(vacancyId, toArchive, User.GetUserId())));
@@ -96,7 +97,7 @@ public class VacancyController : ControllerBase
     [ProducesResponseType(typeof(VacancyDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetVacancy(Guid vacancyId)
     {
-        return Ok(await _mediator.Send(new GetVacancyQuery(vacancyId)));
+        return Ok(await _mediator.Send(new GetVacancyQuery(vacancyId, User.GetUserId())));
     }
 
     /// <summary>
@@ -113,6 +114,6 @@ public class VacancyController : ControllerBase
         bool isClosed = false,
         bool isArchived = false)
     {
-        return Ok(await _mediator.Send(new GetVacanciesQuery(isClosed, isArchived, page, positionId, companyId)));
+        return Ok(await _mediator.Send(new GetVacanciesQuery(isClosed, isArchived, page, companyId, positionId)));
     }
 }

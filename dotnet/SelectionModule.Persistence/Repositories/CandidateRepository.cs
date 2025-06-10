@@ -16,7 +16,7 @@ public class CandidateRepository(SelectionDbContext context)
             .FirstOrDefaultAsync(x => x.StudentId == userId);
     }
 
-    public async Task<CandidateEntity?> GetCandidateByUsrIdAsync(Guid userId)
+    public async Task<CandidateEntity?> GetCandidateByUserIdAsync(Guid userId)
     {
         return await DbSet
             .Include(x => x.Selection)

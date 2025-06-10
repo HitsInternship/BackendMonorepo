@@ -59,7 +59,7 @@ public class ConfirmSelectionStatusCommandHandler : IRequestHandler<ConfirmSelec
     {
         var user = await _userRepository.GetByIdAsync(selection.Candidate.UserId);
 
-        var vacancy = await _mediator.Send(new GetVacancyQuery(selection.Offer!.Value));
+        var vacancy = await _mediator.Send(new GetVacancyQuery(selection.Offer!.Value, Guid.Empty));
 
 
         await _mediator.Send(

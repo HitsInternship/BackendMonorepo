@@ -28,7 +28,7 @@ public class VacancyResponseRepository(SelectionDbContext context)
         return await DbSet
                    .Include(x => x.Candidate)
                    .Include(x => x.Vacancy)
-                   .Include(x=>x.Comments)
+                   .Include(x => x.Comments)
                    .FirstOrDefaultAsync(x => x.Id == id)
                ?? throw new InvalidOperationException();
     }
@@ -40,5 +40,10 @@ public class VacancyResponseRepository(SelectionDbContext context)
             .Include(x => x.Candidate)
             .Where(x => x.CandidateId == candidateId)
             .ToListAsync();
+    }
+
+    public async Task<bool> CheckIfExistsByUserIdAsync(Guid userId)
+    {
+        return await DbSet.Where(x => x.Candidate.UserId == userId).AnyAsync();
     }
 }

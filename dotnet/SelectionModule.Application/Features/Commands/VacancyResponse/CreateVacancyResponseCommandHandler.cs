@@ -1,6 +1,7 @@
 using MediatR;
 using SelectionModule.Contracts.Commands.VacancyResponse;
 using SelectionModule.Contracts.Repositories;
+using SelectionModule.Domain.Entites;
 using SelectionModule.Domain.Enums;
 using Shared.Domain.Exceptions;
 
@@ -32,10 +33,10 @@ public class CreateVacancyResponseCommandHandler : IRequestHandler<CreateVacancy
 
         if (vacancy.IsClosed) throw new BadRequest("Vacancy is closed");
 
-        var candidate = await _candidateRepository.GetCandidateByUsrIdAsync(request.UserId) ??
+        var candidate = await _candidateRepository.GetCandidateByUserIdAsync(request.UserId) ??
                         throw new Forbidden("You are not a candidate");
 
-        var vacancyResponse = new Domain.Entites.VacancyResponseEntity()
+        var vacancyResponse = new VacancyResponseEntity()
         {
             VacancyId = request.VacancyId,
             CandidateId = candidate.Id,
@@ -44,12 +45,11 @@ public class CreateVacancyResponseCommandHandler : IRequestHandler<CreateVacancy
             Status = VacancyResponseStatus.Responding,
         };
 
-        vacancy.Responses.Add(vacancyResponse);
-
         if (candidate.Selection != null)
         {
-            candidate.Selection.SelectionStatus = SelectionStatus.InProgress;
-            await _selectionRepository.UpdateAsync(candidate.Selection);
+            var selection = await _selectionRepository.GetByIdAsync(candidate.Selection.Id);
+            selection.SelectionStatus = SelectionStatus.InProgress;
+            await _selectionRepository.UpdateAsync(selection);
         }
 
         await _vacancyResponseRepository.AddAsync(vacancyResponse);
