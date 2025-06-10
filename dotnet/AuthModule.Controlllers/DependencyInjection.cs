@@ -14,6 +14,7 @@ public static class DependencyInjection
         services.AddAuthModuleInfrastructure(configuration);
         services.AddAuthModuleApplication();
         services.AddScoped<IHashService, HashService>();
+        services.AddTransient<OTPService>();
     }
 
     public static void UseAuthModule(this IServiceProvider services)

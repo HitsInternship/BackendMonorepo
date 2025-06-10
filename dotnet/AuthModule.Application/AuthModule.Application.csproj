@@ -12,6 +12,7 @@
       <PackageReference Include="JwtSecurityTokenCustom" Version="1.0.0.2" />
       <PackageReference Include="MediatR" Version="12.5.0" />
       <PackageReference Include="OfficeOpenXml.Core.ExcelPackage" Version="1.0.0" />
+      <PackageReference Include="Otp.NET" Version="1.4.0" />
     </ItemGroup>
 
     <ItemGroup>

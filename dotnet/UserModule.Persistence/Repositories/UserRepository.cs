@@ -19,5 +19,14 @@ namespace UserModule.Persistence.Repositories
         {
             return await context.Users.FirstOrDefaultAsync(user => user.Email == email);
         }
+
+        public async Task<List<User>> GetUserByName(string name, string surname)
+        {
+            var users = await context.Users
+                .Where(u => u.Name == name && u.Surname == surname)
+                .ToListAsync();
+
+            return users; 
+        }
     }
 }
