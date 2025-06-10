@@ -27,9 +27,9 @@ jobs:
 
       - name: Build and Start Services 
         run: |
-          docker-compose down
+          docker-compose -f docker-compose.yml down
           docker system prune -af
-          docker-compose up -d --build
+          docker-compose up -f docker-compose.yml -d --build
           
         env:
           MINIO_ENDPOINT: ${{ vars.MINIO_ENDPOINT }}
