@@ -112,7 +112,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    [Route("change-password-confirme")]
+    [Route("change-password-confirm")]
     public async Task<IActionResult> PassConfirm(ChangePasswordConfirmCommand command)
     {
         return Ok(await _mediator.Send(command));

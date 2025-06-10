@@ -1,6 +1,7 @@
 using AutoMapper;
 using CompanyModule.Contracts.DTOs.Responses;
 using CompanyModule.Contracts.Repositories;
+using CompanyModule.Domain.Enums;
 using DeanModule.Application.Exceptions;
 using DeanModule.Contracts.Dtos.Responses;
 using DeanModule.Contracts.Queries;
@@ -50,12 +51,29 @@ public class GetApplicationQueryHandler : IRequestHandler<GetApplicationQuery, A
                 throw new BadRequest("The application is deleted");
         }
 
+        //todo: get old practice
+        
         var dto = _mapper.Map<ApplicationResponseDto>(application);
 
-        dto.Company = _mapper.Map<CompanyResponse>(await _companyRepository.GetByIdAsync(application.CompanyId));
-        dto.Position = _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(application.PositionId));
+        dto.NewCompany = _mapper.Map<CompanyResponse>(await _companyRepository.GetByIdAsync(application.CompanyId));
+        dto.NewPosition = _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(application.PositionId));
         dto.Student = _mapper.Map<StudentDto>(await _studentRepository.GetByIdAsync(application.StudentId));
+        dto.OldCompany = new CompanyResponse
+        {
+            id = Guid.Empty,
+            name = "Старая компания",
+            description = "Описание",
+            status = CompanyStatus.Partner
+        };
+        dto.OldPosition = new PositionDto
+        {
+            Id = Guid.Empty,
+            IsDeleted = false,
+            Name = "Старая позиция",
+            Description = "Описание"
+        };
 
+        
         return dto;
     }
 }

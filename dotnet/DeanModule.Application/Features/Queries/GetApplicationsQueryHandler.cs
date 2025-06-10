@@ -1,6 +1,7 @@
 using AutoMapper;
 using CompanyModule.Contracts.DTOs.Responses;
 using CompanyModule.Contracts.Repositories;
+using CompanyModule.Domain.Enums;
 using DeanModule.Contracts.Dtos.Responses;
 using DeanModule.Contracts.Queries;
 using DeanModule.Contracts.Repositories;
@@ -76,16 +77,32 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
 
         var result = new List<ListedApplicationResponseDto>();
 
+        //todo: get old practice
+        
         foreach (var application in pagedApplications)
         {
             var student = await _studentRepository.GetStudentByIdAsync(application.StudentId);
             var user = await _userRepository.GetByIdAsync(student.UserId);
 
             var applicationDto = _mapper.Map<ListedApplicationResponseDto>(application);
-            applicationDto.Position =
+            applicationDto.NewPosition =
                 _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(application.PositionId));
-            applicationDto.Company =
+            applicationDto.NewCompany =
                 _mapper.Map<CompanyResponse>(await _companyRepository.GetByIdAsync(application.CompanyId));
+            applicationDto.OldCompany = new CompanyResponse
+            {
+                id = Guid.Empty,
+                name = "Старая компания",
+                description = "Описание",
+                status = CompanyStatus.Partner
+            };
+            applicationDto.OldPosition = new PositionDto
+            {
+                Id = Guid.Empty,
+                IsDeleted = false,
+                Name = "Старая позиция",
+                Description = "Описание"
+            };
             applicationDto.Student = new StudentDto(student)
             {
                 Name = user.Name,

@@ -73,6 +73,10 @@ public class SelectionCommentController : ControllerBase
             new UpdateSelectionCommentCommand(selectionId, commentId, User.GetUserId(), comment)));
     }
 
+    /// <summary>
+    /// Создаёт комментарий к этапу подбора для выбранных пользователей.
+    /// </summary>
+    /// <param name="comment">Текст комментария.</param>
     [HttpPost, Route("comments"), Authorize(Roles = "DeanMember")]
     public async Task<IActionResult> AddComment([FromBody] CommentRequestDto comment)
     {
