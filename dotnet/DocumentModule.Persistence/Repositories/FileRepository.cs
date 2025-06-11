@@ -16,20 +16,33 @@ namespace DocumentModule.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<string> AddFileAsync(Guid fileId, DocumentType documentType, IFormFile file,
-            string? fileName)
+        public async Task<string> AddFileAsync(Guid fileId, DocumentType documentType, IFormFile file)
         {
+            var bucketName = documentType.ToString().ToLower();
+            var objectName = fileId.ToString();
+
+            var found = await _context.Client.BucketExistsAsync(new BucketExistsArgs().WithBucket(bucketName));
+            if (!found)
+            {
+                await _context.Client.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName));
+            }
+
+            await using var stream = file.OpenReadStream();
+
+            var encodedName = Uri.EscapeDataString(objectName);
+
             var args = new PutObjectArgs()
-                .WithBucket(documentType.ToString().ToLower())
-                .WithObject(fileName ?? fileId.ToString())
-                .WithStreamData(file.OpenReadStream())
+                .WithBucket(bucketName)
+                .WithObject(objectName)
+                .WithStreamData(stream)
                 .WithObjectSize(file.Length)
                 .WithContentType(file.ContentType)
-                .WithHeaders(new Dictionary<string, string> { { "Name", Uri.EscapeDataString(file.FileName) } });
+                .WithHeaders(new Dictionary<string, string> { { "Name", encodedName } });
 
             await _context.Client.PutObjectAsync(args);
             return file.ContentType;
         }
+
 
         public async Task<string?> GetFileNameAsync(Guid fileId, DocumentType documentType)
         {
@@ -43,23 +56,37 @@ namespace DocumentModule.Persistence.Repositories
             else return Uri.UnescapeDataString(metadata.MetaData["Name"]);
         }
 
-        public async Task<FileContentResult?> GetFileAsync(Guid fileId, DocumentType documentType)
+        public async Task<FileContentResult> GetFileAsync(Guid fileId, DocumentType documentType)
         {
+            var bucket = documentType.ToString().ToLower();
+            var objectName = fileId.ToString();
+
             using var memoryStream = new MemoryStream();
 
-            var metadata = await _context.Client.GetObjectAsync(
+            await _context.Client.GetObjectAsync(
                 new GetObjectArgs()
-                    .WithBucket(documentType.ToString().ToLower())
-                    .WithObject(fileId.ToString())
-                    .WithCallbackStream(stream => stream.CopyTo(memoryStream)));
+                    .WithBucket(bucket)
+                    .WithObject(objectName)
+                    .WithCallbackStream(stream => stream.CopyTo(memoryStream))
+            );
 
-            if (metadata == null) return null;
+            var stat = await _context.Client.StatObjectAsync(
+                new StatObjectArgs()
+                    .WithBucket(bucket)
+                    .WithObject(objectName)
+            );
 
-            return new FileContentResult(memoryStream.ToArray(), metadata.ContentType)
+            stat.MetaData.TryGetValue("Name", out string? encodedName);
+            var fileName = encodedName != null ? Uri.UnescapeDataString(encodedName) : objectName;
+            var contentType = stat.ContentType ?? "application/octet-stream";
+
+            return new FileContentResult(memoryStream.ToArray(), contentType)
             {
-                FileDownloadName = Uri.UnescapeDataString(metadata.MetaData["Name"])
+                FileDownloadName = fileName
             };
         }
+
+
 
         public async Task DeleteFileAsync(Guid fileId, DocumentType documentType)
         {

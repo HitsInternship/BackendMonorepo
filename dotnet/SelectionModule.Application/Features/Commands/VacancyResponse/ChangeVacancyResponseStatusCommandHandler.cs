@@ -32,7 +32,7 @@ public class ChangeVacancyResponseStatusCommandHandler : IRequestHandler<ChangeV
 
         await _vacancyResponseRepository.UpdateAsync(vacancyResponse);
 
-        var candidate = await _candidateRepository.GetCandidateByUsrIdAsync(request.UserId) ??
+        var candidate = await _candidateRepository.GetCandidateByUserIdAsync(request.UserId) ??
                         throw new BadRequest("There is no candidate for this user");
 
         if (candidate.Selection != null) candidate.Selection.Offer = vacancyResponse.Vacancy.Id;

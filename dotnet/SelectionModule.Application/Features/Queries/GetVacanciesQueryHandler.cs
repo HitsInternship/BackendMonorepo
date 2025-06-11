@@ -38,10 +38,10 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
 
         var vacancies = request.IsArchived
             ? await _vacancyRepository.ListAllArchivedAsync()
-            : await _vacancyRepository.ListAllAsync();
+            : await _vacancyRepository.ListAllActiveAsync();
 
-        if (request.CompanyId != null) vacancies = vacancies.Where(x => x.CompanyId == request.CompanyId);
-        if (request.PositionId != null) vacancies = vacancies.Where(x => x.PositionId == request.PositionId);
+        if (request.CompanyId.HasValue) vacancies = vacancies.Where(x => x.CompanyId == request.CompanyId.Value);
+        if (request.PositionId.HasValue) vacancies = vacancies.Where(x => x.PositionId == request.PositionId.Value);
 
         vacancies = vacancies.Where(x => x.IsDeleted == request.IsArchived);
         vacancies = vacancies.Where(x => x.IsClosed == request.IsClosed);

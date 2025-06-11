@@ -17,8 +17,7 @@ namespace DocumentModule.Application.Handlers
         {
             Guid fileId = Guid.NewGuid();
 
-            await _fileRepository.AddFileAsync(command.FileId ?? fileId, command.DocumentType, command.File,
-                command.FileName ?? string.Empty);
+            await _fileRepository.AddFileAsync(command.FileId ?? fileId, command.DocumentType, command.File);
 
             return fileId;
         }

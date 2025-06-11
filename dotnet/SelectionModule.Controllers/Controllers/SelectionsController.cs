@@ -124,5 +124,24 @@ namespace SelectionModule.Controllers.Controllers
         {
             return Ok(await _sender.Send(new UpdateGlobalSelectionCommand(date)));
         }
+        
+        /// <summary>
+        /// Получить информацию о своем процессе отбора (Selection) для текущего пользователя.
+        /// </summary>
+        /// <remarks>
+        /// Доступно только пользователям с ролью "Student".
+        /// Возвращает объект SelectionDto для текущего студента.
+        /// </remarks>
+        /// <response code="200">Успешно возвращена информация о Selection</response>
+        /// <response code="401">Пользователь не авторизован</response>
+        /// <response code="403">Недостаточно прав (роль отлична от "Student")</response>
+        [HttpGet]
+        [Authorize(Roles = "Student")]
+        [Route("selections/my")]
+        [ProducesResponseType(typeof(SelectionDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMySelections()
+        {
+            return Ok(await _sender.Send(new GetMySelectionQuery(User.GetUserId())));
+        }
     }
 }

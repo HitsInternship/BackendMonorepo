@@ -3,6 +3,7 @@ using DocumentModule.Contracts.Queries;
 using DocumentModule.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Domain.Exceptions;
 
 namespace DeanModule.Application.Features.Queries;
 
@@ -18,7 +19,14 @@ public class GetApplicationTemplateCommandHandler : IRequestHandler<GetApplicati
     public async Task<FileContentResult> Handle(GetApplicationTemplateCommand request,
         CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new GetDocumentQuery(Guid.Parse("8bcea8ec-2bc0-4d14-bfd2-e1e151bb8aff"),
-            DocumentType.Attachement), cancellationToken);
+        try
+        {
+            return await _mediator.Send(new GetDocumentQuery(Guid.Parse("8bcea8ec-2bc0-4d14-bfd2-e1e151bb8aff"),
+                DocumentType.Attachement), cancellationToken);
+        }
+        catch (Exception e)
+        {
+            throw new BadRequest("Template not found");
+        }
     }
 }

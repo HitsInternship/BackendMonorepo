@@ -11,7 +11,7 @@ namespace StudentModule.Contracts.DTOs
         public string? Surname { get; set; }
         public string? Middlename { get; set; }
         public string? Email { get; set; }
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         public bool IsHeadMan { get; set; }
         public StudentStatus Status { get; set; }
         public StudentInternshipStatus InternshipStatus { get; set; }
@@ -28,9 +28,9 @@ namespace StudentModule.Contracts.DTOs
             Status = student.Status;
             InternshipStatus = student.InternshipStatus;
             IsHeadMan = student.IsHeadMan;
-            Name = student.User.Name;
-            Surname = student.User.Surname;
-            Email = student.User.Email;
+            Name = student.User?.Name;
+            Surname = student.User?.Surname;
+            Email = student.User?.Email;
             GroupNumber = student.Group.GroupNumber;
             Course = student.Group.Stream.Course;
         }

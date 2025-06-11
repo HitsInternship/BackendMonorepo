@@ -22,7 +22,6 @@ public class UpdateApplicationCommentCommandHandler : IRequestHandler<UpdateAppl
         if (!await _applicationRepository.CheckIfExistsAsync(request.ApplicationId))
             throw new NotFound("Application not found");
 
-
         if (!await _applicationCommentRepository.CheckIfExistsAsync(request.ApplicationCommentId))
             throw new NotFound("Comment not found");
 

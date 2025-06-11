@@ -12,7 +12,7 @@ namespace DeanModule.Controllers.Controllers;
 /// <summary>
 /// Контроллер для управления комментариями к заявкам.
 /// </summary>
-[Authorize]
+[Authorize(Roles = "DeanMember, Student")]
 [ApiController]
 [Route("api")]
 public class ApplicationCommentsController : ControllerBase

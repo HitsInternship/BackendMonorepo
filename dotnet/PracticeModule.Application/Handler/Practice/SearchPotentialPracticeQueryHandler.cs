@@ -86,8 +86,8 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
                                                                                                         studentIds.Contains(practice.StudentId)).ToList();
 
         List<ApplicationEntity> applications = (await _applicationRepository.ListAllAsync()).Where(application => studentIds.Contains(application.StudentId) &&
-                                                                                                                    DateOnly.FromDateTime(application.Date) > currentSemester.StartDate &&
-                                                                                                                    DateOnly.FromDateTime(application.Date) < currentSemester.EndDate &&
+                                                                                                                    application.Date > currentSemester.StartDate &&
+                                                                                                                    application.Date < currentSemester.EndDate &&
                                                                                                                     application.Status == ApplicationStatus.Accepted).ToList();
 
         List<Company> companies = (await _companyRepository.ListAllAsync()).Where(company => applications.Select(application => application.CompanyId).Contains(company.Id) || practices.Select(practice => practice.CompanyId).Contains(company.Id)).ToList();

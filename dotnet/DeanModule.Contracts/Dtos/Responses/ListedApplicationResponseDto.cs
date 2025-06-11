@@ -14,7 +14,7 @@ public record ListedApplicationResponseDto : BaseDto
     /// <summary>
     /// Дата подачи заявки.
     /// </summary>
-    public DateTime Date { get; init; }
+    public DateOnly Date { get; init; }
 
     /// <summary>
     /// Статус заявки.
@@ -23,7 +23,11 @@ public record ListedApplicationResponseDto : BaseDto
 
     public StudentDto Student { get; set; }
 
-    public CompanyResponse Company { get; set; }
+    public CompanyResponse NewCompany { get; set; }
 
-    public PositionDto Position { get; set; }
+    public PositionDto NewPosition { get; set; }
+    
+    public CompanyResponse OldCompany { get; set; }
+
+    public PositionDto OldPosition { get; set; }
 }

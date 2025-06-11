@@ -36,7 +36,9 @@ public class AddApplicationCommentCommandHandler : IRequestHandler<AddApplicatio
 
         var application = await _applicationRepository.GetByIdAsync(request.ApplicationId);
 
-        if (application.StudentId != request.UserId || !request.Roles.Contains("DeanMember"))
+        var student = await _studentRepository.GetByIdAsync(application.StudentId);
+
+        if (student.UserId != request.UserId && !request.Roles.Contains("DeanMember"))
             throw new Forbidden("You are not allowed to add application comments");
 
         await _applicationCommentRepository.AddAsync(new ApplicationComment
@@ -47,7 +49,6 @@ public class AddApplicationCommentCommandHandler : IRequestHandler<AddApplicatio
             Application = application
         });
 
-        var student = await _studentRepository.GetByIdAsync(application.StudentId);
 
         if (student.UserId != request.UserId)
         {

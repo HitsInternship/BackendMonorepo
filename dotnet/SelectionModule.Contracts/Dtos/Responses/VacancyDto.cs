@@ -32,4 +32,9 @@ public record VacancyDto : BaseDto
     /// Признак того, что вакансия закрыта.
     /// </summary>
     public bool IsClosed { get; set; }
+
+    /// <summary>
+    /// Признак того, что пользователь откликался на вакансию.
+    /// </summary>
+    public bool HasResponse { get; set; }
 }

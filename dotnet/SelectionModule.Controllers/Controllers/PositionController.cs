@@ -15,7 +15,6 @@ namespace SelectionModule.Controllers.Controllers
     /// </summary>
     [ApiController]
     [Route("api/positions")]
-    [Authorize(Roles = "DeanMember, Curator, CompanyRepresenter")]
     public class PositionController : ControllerBase
     {
         private readonly ISender _mediator;
@@ -31,6 +30,7 @@ namespace SelectionModule.Controllers.Controllers
         /// <param name="positionRequestDto">Данные новой позиции.</param>
         /// <returns>Созданная позиция.</returns>
         [HttpPost]
+        [Authorize(Roles = "DeanMember, Curator")]
         public async Task<IActionResult> CreatePosition([FromBody] PositionRequestDto positionRequestDto)
         {
             return Ok(await _mediator.Send(new CreatePositionCommand(positionRequestDto)));
@@ -44,6 +44,7 @@ namespace SelectionModule.Controllers.Controllers
         /// <returns>Обновлённая позиция.</returns>
         [HttpPut]
         [Route("{positionId}")]
+        [Authorize(Roles = "DeanMember, Curator")]
         public async Task<IActionResult> UpdatePosition(Guid positionId,
             [FromBody] PositionRequestDto positionRequestDto)
         {
@@ -57,6 +58,7 @@ namespace SelectionModule.Controllers.Controllers
         /// <returns>Результат удаления.</returns>
         [HttpDelete]
         [Route("{positionId}")]
+        [Authorize(Roles = "DeanMember, Curator")]
         public async Task<IActionResult> DeletePosition(Guid positionId)
         {
             return Ok(await _mediator.Send(new DeletePositionCommand(positionId)));
