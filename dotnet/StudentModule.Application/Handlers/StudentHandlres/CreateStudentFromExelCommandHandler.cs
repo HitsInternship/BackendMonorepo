@@ -38,14 +38,14 @@ namespace StudentModule.Application.Handlers.StudentHandlres
                     email = exelStudent.Email
                 };
 
-                User user = await _mediator.Send(new CreateUserCommand(userRequest));
-
-                user = await _mediator.Send(new AddUserRoleCommand(user.Id, RoleName.Student));
-
                 var group = await _groupRepository.GetGroupByNumberAsync(int.Parse(exelStudent.Group))
                     ?? throw new NotFound("Group not found");
 
-                StudentEntity student = new StudentEntity()
+                User user = await _mediator.Send(new CreateUserCommand(userRequest), cancellationToken);
+
+                user = await _mediator.Send(new AddUserRoleCommand(user.Id, RoleName.Student), cancellationToken);
+
+                StudentEntity student = new()
                 {
                     UserId = user.Id,
                     User = user,

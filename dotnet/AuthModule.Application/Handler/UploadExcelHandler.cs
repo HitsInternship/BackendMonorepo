@@ -5,7 +5,7 @@ using OfficeOpenXml;
 using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Commands.StudentCommands;
 using UserInfrastructure;
-using LicenseContext = OfficeOpenXml.LicenseContext;
+using OfficeOpenXml;
 
 namespace AuthModel.Service.Handler;
 
@@ -25,10 +25,13 @@ public class UploadExcelHandler : IRequestHandler<UploadExcelDTO, List<ExcelStud
 
     public async Task<List<ExcelStudentDTO>> Handle(UploadExcelDTO request, CancellationToken cancellationToken)
     {
+        //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+        ExcelPackage.License.SetNonCommercialPersonal("<My Name>");
+
         if (request.File == null || request.File.Length == 0)
             throw new BadRequest("Файл отсутствует или пустой");
 
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        
 
         var students = new List<ExcelStudentDTO>();
         var studentEntities = new List<Student>();
