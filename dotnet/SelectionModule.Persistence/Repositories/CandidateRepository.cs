@@ -22,4 +22,11 @@ public class CandidateRepository(SelectionDbContext context)
             .Include(x => x.Selection)
             .FirstOrDefaultAsync(x => x.UserId == userId);
     }
+
+    public async Task<CandidateEntity?> GetCandidateByIdAsync(Guid candidateId)
+    {
+        return await DbSet
+            .Include(x => x.Selection)
+            .FirstOrDefaultAsync(x => x.Id == candidateId);
+    }
 }

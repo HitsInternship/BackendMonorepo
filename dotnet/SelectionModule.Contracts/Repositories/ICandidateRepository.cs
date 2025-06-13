@@ -7,4 +7,5 @@ public interface ICandidateRepository : IBaseEntityRepository<CandidateEntity>
 {
     Task<CandidateEntity?> GetCandidateByStudentIdAsync(Guid userId);
     Task<CandidateEntity?> GetCandidateByUserIdAsync(Guid userId);
+    Task<CandidateEntity?> GetCandidateByIdAsync(Guid candidateId);
 }
