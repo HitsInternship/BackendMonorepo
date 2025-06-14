@@ -76,5 +76,18 @@ namespace PracticeModule.Controllers.PracticeControllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// Получить exel таблицу с информацией о практиках группы(фио студента, компания, позиция).
+        /// </summary>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("{groupId}/practice-exel")]
+        public async Task<IActionResult> GetExelForGroup([FromRoute] Guid groupId)
+        {
+            var querry = new GetExelAboutPracticeByGroupQuery() { GroupId = groupId };
+
+            return Ok(await _sender.Send(querry));
+        }
     }
 }

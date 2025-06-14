@@ -16,10 +16,10 @@ namespace StudentModule.Persistence.Repositories
 
         public async Task<List<GroupEntity>> GetGroupAsync()
         {
-            var groups = context.Groups
+            var groups = await context.Groups
                 .Include(g => g.Stream)
                 .Include(g => g.Students)
-                .ToList();
+                .ToListAsync();
 
             return groups;
         }

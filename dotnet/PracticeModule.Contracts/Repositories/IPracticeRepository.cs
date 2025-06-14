@@ -8,5 +8,8 @@ using System.Threading.Tasks;
 
 namespace PracticeModule.Contracts.Repositories
 {
-    public interface IPracticeRepository : IBaseEntityRepository<Practice> { }
+    public interface IPracticeRepository : IBaseEntityRepository<Practice> 
+    {
+        Task<List<Practice>> GetPracticesByStudentIdAsync(List<Guid> studentsId);
+    }
 }

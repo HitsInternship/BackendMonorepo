@@ -9,5 +9,6 @@ namespace StudentModule.Contracts.Repositories
         Task<StudentEntity> GetStudentByIdAsync(Guid id);
         Task<StudentEntity> GetStudentByUserIdAsync(Guid id);
         Task<StudentEntity> GetStudentByName(Guid userId, string? middlename);
+        Task<List<StudentEntity>> GetStudentsByGroupIdAsync(Guid groupId);
     }
 }
