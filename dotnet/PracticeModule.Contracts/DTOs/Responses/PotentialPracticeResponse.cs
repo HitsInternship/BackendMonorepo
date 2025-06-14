@@ -12,9 +12,9 @@ namespace PracticeModule.Contracts.DTOs.Responses
         public Guid studentId {  get; set; }
         public string studentFullName { get; set; }
 
-        public Guid companyId { get; set; }
+        public Guid? companyId { get; set; }
         public string companyName { get; set; }
-        public Guid positionId { get; set; }
+        public Guid? positionId { get; set; }
         public string positionName { get; set; }
 
         public Guid newCompanyId { get; set; }
