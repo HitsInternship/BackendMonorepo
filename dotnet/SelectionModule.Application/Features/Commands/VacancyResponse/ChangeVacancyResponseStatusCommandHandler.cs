@@ -1,6 +1,7 @@
 using MediatR;
 using SelectionModule.Contracts.Commands.VacancyResponse;
 using SelectionModule.Contracts.Repositories;
+using SelectionModule.Domain.Enums;
 using Shared.Domain.Exceptions;
 
 namespace SelectionModule.Application.Features.Commands.VacancyResponse;
@@ -35,7 +36,10 @@ public class ChangeVacancyResponseStatusCommandHandler : IRequestHandler<ChangeV
         var candidate = await _candidateRepository.GetCandidateByUserIdAsync(request.UserId) ??
                         throw new BadRequest("There is no candidate for this user");
 
-        if (candidate.Selection != null) candidate.Selection.Offer = vacancyResponse.Vacancy.Id;
+        if (request.Status == VacancyResponseStatus.GotOffer)
+        {
+            if (candidate.Selection != null) candidate.Selection.Offer = vacancyResponse.Vacancy.Id;
+        }
 
         await _candidateRepository.UpdateAsync(candidate);
 

@@ -51,9 +51,9 @@ public class CreateVacancyResponseCommentCommandHandler : IRequestHandler<Create
         vacancyResponse.Comments.Add(comment);
         await _vacancyResponseRepository.UpdateAsync(vacancyResponse);
 
-        var candidate = await _candidateRepository.GetByIdAsync(request.UserId);
+        var candidate = await _candidateRepository.GetCandidateByIdAsync(vacancyResponse.CandidateId);
 
-        if (request.UserId != candidate.UserId)
+        if (candidate != null && request.UserId != candidate.UserId)
         {
             var userToSend = await _userRepository.GetByIdAsync(candidate.UserId);
             var userFromSend = await _userRepository.GetByIdAsync(request.UserId);
