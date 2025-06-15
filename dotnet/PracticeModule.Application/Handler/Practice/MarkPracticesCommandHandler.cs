@@ -1,15 +1,8 @@
-using AutoMapper;
-using DocumentModule.Contracts.Commands;
-using DocumentModule.Domain.Enums;
 using MediatR;
 using PracticeModule.Contracts.Commands;
-using PracticeModule.Contracts.DTOs.Requests;
-using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
-using PracticeModule.Domain.Entity;
-using Shared.Domain.Exceptions;
 
-namespace PracticeModule.Application.Handler.PracticePart;
+namespace PracticeModule.Application.Handler.Practice;
 
 public class MarkPracticesCommandHandler : IRequestHandler<MarkPracticesCommand, Unit>
 {
@@ -22,7 +15,7 @@ public class MarkPracticesCommandHandler : IRequestHandler<MarkPracticesCommand,
 
     public async Task<Unit> Handle(MarkPracticesCommand command, CancellationToken cancellationToken)
     {
-        Practice practice = await _practiceRepository.GetByIdAsync(command.practiceId);
+        Domain.Entity.Practice practice = await _practiceRepository.GetByIdAsync(command.practiceId);
 
         practice.Mark = command.mark;
 

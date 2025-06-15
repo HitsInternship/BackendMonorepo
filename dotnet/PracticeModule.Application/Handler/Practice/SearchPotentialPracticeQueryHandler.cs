@@ -1,4 +1,3 @@
-using CompanyModule.Contracts.Queries;
 using CompanyModule.Contracts.Repositories;
 using CompanyModule.Domain.Entities;
 using DeanModule.Contracts.Repositories;
@@ -8,21 +7,18 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
-using PracticeModule.Domain.Entity;
-using PracticeModule.Infrastructure;
 using SelectionModule.Contracts.Repositories;
 using SelectionModule.Domain.Entites;
 using SelectionModule.Domain.Enums;
 using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
 using StudentModule.Domain.Entities;
-using System.Collections.Generic;
 using UserModule.Contracts.Queries;
 using UserModule.Domain.Entities;
 
-namespace PracticeModule.Application.Handler.PracticePart;
+namespace PracticeModule.Application.Handler.Practice;
 
-public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotentialPracticeQuery, List<Practice>>
+public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotentialPracticeQuery, List<Domain.Entity.Practice>>
 {
     private readonly IPracticeRepository _practiceRepository;
     private readonly ISemesterRepository _semesterRepository;
@@ -35,7 +31,12 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
 
     private readonly IStudentRepository _studentRepository;
     private readonly ISender _sender;
-    public SearchPotentialPracticeQueryHandler(IPracticeRepository practiceRepository, ISemesterRepository semesterRepository, ISelectionRepository selectionRepository, IVacancyRepository vacancyRepository, ICompanyRepository companyRepository, IPositionRepository positionRepository, IApplicationRepository applicationRepository, IStudentRepository studentRepository, ISender sender)
+
+    public SearchPotentialPracticeQueryHandler(IPracticeRepository practiceRepository,
+        ISemesterRepository semesterRepository, ISelectionRepository selectionRepository,
+        IVacancyRepository vacancyRepository, ICompanyRepository companyRepository,
+        IPositionRepository positionRepository, IApplicationRepository applicationRepository,
+        IStudentRepository studentRepository, ISender sender)
     {
         _practiceRepository = practiceRepository;
         _studentRepository = studentRepository;
@@ -48,12 +49,18 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
         _sender = sender;
     }
 
-    public async Task<List<Practice>> Handle(SearchPotentialPracticeQuery query, CancellationToken cancellationToken)
+    public async Task<List<Domain.Entity.Practice>> Handle(SearchPotentialPracticeQuery query,
+        CancellationToken cancellationToken)
     {
-        SemesterEntity? currentSemester = (await _semesterRepository.ListAllAsync()).Where(semester => semester.EndDate > DateOnly.FromDateTime(DateTime.UtcNow) && semester.StartDate < DateOnly.FromDateTime(DateTime.UtcNow)).FirstOrDefault();
-        if (currentSemester == null) { throw new NotFound("No current semester found"); }
+        SemesterEntity? currentSemester = (await _semesterRepository.ListAllAsync()).Where(semester =>
+            semester.EndDate > DateOnly.FromDateTime(DateTime.UtcNow) &&
+            semester.StartDate < DateOnly.FromDateTime(DateTime.UtcNow)).FirstOrDefault();
+        if (currentSemester == null)
+        {
+            throw new NotFound("No current semester found");
+        }
 
-        List<Practice> potentialPractices = new List<Practice>();
+        List<Domain.Entity.Practice> potentialPractices = new List<Domain.Entity.Practice>();
 
         IQueryable<StudentEntity> studentDbQuery = await _studentRepository.ListAllAsync();
 
@@ -68,13 +75,19 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
 
         if (query.searchRequest.oldCompanyId != null)
         {
-            var studentInCompanyIds = (await _practiceRepository.ListAllAsync()).Where(practice => practice.GlobalPractice.SemesterId == currentSemester.Id && practice.Company.Id == query.searchRequest.oldCompanyId).Select(practice => practice.StudentId);
+            var studentInCompanyIds = (await _practiceRepository.ListAllAsync())
+                .Where(practice => practice.GlobalPractice.SemesterId == currentSemester.Id &&
+                                   practice.Company.Id == query.searchRequest.oldCompanyId)
+                .Select(practice => practice.StudentId);
             studentDbQuery = studentDbQuery.Where(student => studentInCompanyIds.Contains(student.Id));
         }
 
         if (query.searchRequest.oldPositionId != null)
         {
-            var studentInPositionIds = (await _practiceRepository.ListAllAsync()).Where(practice => practice.GlobalPractice.SemesterId == currentSemester.Id && practice.Position.Id == query.searchRequest.oldPositionId).Select(practice => practice.StudentId);
+            var studentInPositionIds = (await _practiceRepository.ListAllAsync())
+                .Where(practice => practice.GlobalPractice.SemesterId == currentSemester.Id &&
+                                   practice.Position.Id == query.searchRequest.oldPositionId)
+                .Select(practice => practice.StudentId);
             studentDbQuery = studentDbQuery.Where(student => studentInPositionIds.Contains(student.Id));
         }
 
@@ -82,16 +95,22 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
         studentIds = students.Select(student => student.Id).ToList();
         users = await _sender.Send(new GetListUserQuery(students.Select(student => student.UserId).ToList()));
 
-        List<Practice> practices = (await _practiceRepository.ListAllAsync()).Where(practice => practice.GlobalPractice.SemesterId == currentSemester.Id &&
-                                                                                                        studentIds.Contains(practice.StudentId)).ToList();
+        List<Domain.Entity.Practice> practices = (await _practiceRepository.ListAllAsync()).Where(practice =>
+            practice.GlobalPractice.SemesterId == currentSemester.Id &&
+            studentIds.Contains(practice.StudentId)).ToList();
 
-        List<ApplicationEntity> applications = (await _applicationRepository.ListAllAsync()).Where(application => studentIds.Contains(application.StudentId) &&
-                                                                                                                    application.Date > currentSemester.StartDate &&
-                                                                                                                    application.Date < currentSemester.EndDate &&
-                                                                                                                    application.Status == ApplicationStatus.Accepted).ToList();
+        List<ApplicationEntity> applications = (await _applicationRepository.ListAllAsync()).Where(application =>
+            studentIds.Contains(application.StudentId) &&
+            application.Date > currentSemester.StartDate &&
+            application.Date < currentSemester.EndDate &&
+            application.Status == ApplicationStatus.Accepted).ToList();
 
-        List<Company> companies = (await _companyRepository.ListAllAsync()).Where(company => applications.Select(application => application.CompanyId).Contains(company.Id) || practices.Select(practice => practice.CompanyId).Contains(company.Id)).ToList();
-        List<PositionEntity> positions = (await _positionRepository.ListAllAsync()).Where(position => applications.Select(application => application.PositionId).Contains(position.Id) || practices.Select(practice => practice.PositionId).Contains(position.Id)).ToList();
+        List<Company> companies = (await _companyRepository.ListAllAsync()).Where(company =>
+            applications.Select(application => application.CompanyId).Contains(company.Id) ||
+            practices.Select(practice => practice.CompanyId).Contains(company.Id)).ToList();
+        List<PositionEntity> positions = (await _positionRepository.ListAllAsync()).Where(position =>
+            applications.Select(application => application.PositionId).Contains(position.Id) ||
+            practices.Select(practice => practice.PositionId).Contains(position.Id)).ToList();
 
         foreach (var practice in practices)
         {
@@ -101,19 +120,30 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
             Company company = companies.First(company => company.Id == practice.Company.Id);
             PositionEntity position = positions.First(position => position.Id == practice.PositionId);
 
-            ApplicationEntity? approvedApplication = applications.FirstOrDefault(application => application.StudentId == practice.StudentId);
+            ApplicationEntity? approvedApplication =
+                applications.FirstOrDefault(application => application.StudentId == practice.StudentId);
             Company newCompany = companies.FirstOrDefault(company => company.Id == approvedApplication?.CompanyId);
-            PositionEntity newPosition = positions.FirstOrDefault(position => position.Id == approvedApplication?.PositionId);
+            PositionEntity newPosition =
+                positions.FirstOrDefault(position => position.Id == approvedApplication?.PositionId);
 
-            potentialPractices.Add(new Practice() { Student = student, Company = company, Position = position, NewCompany = newCompany, NewPosition = newPosition });
+            potentialPractices.Add(new Domain.Entity.Practice()
+            {
+                Student = student, Company = company, Position = position, NewCompany = newCompany,
+                NewPosition = newPosition
+            });
         }
 
-        List<SelectionEntity> selections = (await _selectionRepository.ListAllAsync()).Where(selection => selection.GlobalSelection.SemesterId == currentSemester.Id &&
-                                                                                        studentIds.Contains(selection.Candidate.StudentId) &&
-                                                                                        selection.SelectionStatus == SelectionStatus.OffersAccepted).Include(selection => selection.Candidate).ToList();
+        List<SelectionEntity> selections = (await _selectionRepository.ListAllAsync()).Where(selection =>
+                selection.GlobalSelection.SemesterId == currentSemester.Id &&
+                studentIds.Contains(selection.Candidate.StudentId) &&
+                selection.SelectionStatus == SelectionStatus.OffersAccepted).Include(selection => selection.Candidate)
+            .ToList();
 
-        List<VacancyEntity> vacancies = (await _vacancyRepository.ListAllAsync()).Where(vacancy => selections.Select(selection => selection.Offer).Contains(vacancy.Id)).Include(vacancy => vacancy.Position).ToList();
-        companies = (await _companyRepository.ListAllAsync()).Where(company => vacancies.Select(vacancy => vacancy.CompanyId).Contains(company.Id)).ToList();
+        List<VacancyEntity> vacancies = (await _vacancyRepository.ListAllAsync())
+            .Where(vacancy => selections.Select(selection => selection.Offer).Contains(vacancy.Id))
+            .Include(vacancy => vacancy.Position).ToList();
+        companies = (await _companyRepository.ListAllAsync())
+            .Where(company => vacancies.Select(vacancy => vacancy.CompanyId).Contains(company.Id)).ToList();
 
         foreach (var selection in selections)
         {
@@ -125,7 +155,8 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
 
             PositionEntity newPosition = newVacancy.Position;
 
-            potentialPractices.Add(new Practice() { Student = student, NewCompany = newCompany, NewPosition = newPosition });
+            potentialPractices.Add(new Domain.Entity.Practice()
+                { Student = student, NewCompany = newCompany, NewPosition = newPosition });
         }
 
         return potentialPractices;

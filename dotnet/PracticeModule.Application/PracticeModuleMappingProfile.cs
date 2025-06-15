@@ -3,7 +3,7 @@ using PracticeModule.Contracts.DTOs.Requests;
 using PracticeModule.Contracts.DTOs.Responses;
 using PracticeModule.Domain.Entity;
 
-namespace CompanyModule.Application;
+namespace PracticeModule.Application;
 
 public class PracticeModuleMappingProfile : Profile
 {

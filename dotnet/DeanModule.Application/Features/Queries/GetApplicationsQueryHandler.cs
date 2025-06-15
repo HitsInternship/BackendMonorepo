@@ -70,6 +70,8 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
         var totalCount = await query.CountAsync(cancellationToken);
         var totalPages = Math.Max(1, (int)Math.Ceiling((double)totalCount / _size));
 
+        if (request.Page > totalPages) throw new BadRequest("Page must be less than or equal to the number of items");
+        
         var pagedApplications = await query
             .Skip(skip)
             .Take(_size)

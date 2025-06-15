@@ -9,7 +9,7 @@ using PracticeModule.Contracts.Repositories;
 using PracticeModule.Domain.Entity;
 using Shared.Domain.Exceptions;
 
-namespace PracticeModule.Application.Handler.PracticePart;
+namespace PracticeModule.Application.Handler.Practice;
 
 public class CreateGlobalPracticeCommandHandler : IRequestHandler<CreateGlobalPracticeCommand, GlobalPractice>
 {
@@ -31,10 +31,10 @@ public class CreateGlobalPracticeCommandHandler : IRequestHandler<CreateGlobalPr
 
         globalPractice = _mapper.Map<GlobalPractice>(command.createRequest);
 
-        globalPractice.DiaryPatternDocumentId = await _sender.Send(new LoadDocumentCommand(DocumentType.PracticeDiary, command.createRequest.diaryPatternFile, "шаблон"));
-        globalPractice.CharacteristicsPatternDocumentId = await _sender.Send(new LoadDocumentCommand(DocumentType.StudentPracticeCharacteristic, command.createRequest.characteristicsPatternFile, "шаблон"));
+        globalPractice.DiaryPatternDocumentId = await _sender.Send(new LoadDocumentCommand(DocumentType.PracticeDiary, command.createRequest.diaryPatternFile, "пїЅпїЅпїЅпїЅпїЅпїЅ"));
+        globalPractice.CharacteristicsPatternDocumentId = await _sender.Send(new LoadDocumentCommand(DocumentType.StudentPracticeCharacteristic, command.createRequest.characteristicsPatternFile, "пїЅпїЅпїЅпїЅпїЅпїЅ"));
 
-        List<Practice> potentialPractices = await _sender.Send(new SearchPotentialPracticeQuery(new SearchPotentialPracticeRequest()));
+        List<Domain.Entity.Practice> potentialPractices = await _sender.Send(new SearchPotentialPracticeQuery(new SearchPotentialPracticeRequest()));
 
         foreach (var practice in potentialPractices)
         {

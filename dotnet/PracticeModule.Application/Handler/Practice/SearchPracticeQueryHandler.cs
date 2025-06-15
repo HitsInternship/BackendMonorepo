@@ -4,21 +4,15 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
-using PracticeModule.Domain.Entity;
-using PracticeModule.Infrastructure;
 using Shared.Domain.Exceptions;
-using StudentModule.Contracts.DTOs;
-using StudentModule.Contracts.Queries.StudentQueries;
 using StudentModule.Contracts.Repositories;
 using StudentModule.Domain.Entities;
-using System.Linq;
 using UserModule.Contracts.Queries;
-using UserModule.Contracts.Repositories;
 using UserModule.Domain.Entities;
 
-namespace PracticeModule.Application.Handler.PracticePart;
+namespace PracticeModule.Application.Handler.Practice;
 
-public class SearchPracticeQueryHandler : IRequestHandler<SearchPracticeQuery, List<Practice>>
+public class SearchPracticeQueryHandler : IRequestHandler<SearchPracticeQuery, List<Domain.Entity.Practice>>
 {
     private readonly IPracticeRepository _practiceRepository;
     private readonly ISemesterRepository _semesterRepository;
@@ -32,9 +26,9 @@ public class SearchPracticeQueryHandler : IRequestHandler<SearchPracticeQuery, L
         _sender = sender;
     }
 
-    public async Task<List<Practice>> Handle(SearchPracticeQuery query, CancellationToken cancellationToken)
+    public async Task<List<Domain.Entity.Practice>> Handle(SearchPracticeQuery query, CancellationToken cancellationToken)
     {
-        IQueryable<Practice> dbQuery = await _practiceRepository.ListAllAsync();
+        IQueryable<Domain.Entity.Practice> dbQuery = await _practiceRepository.ListAllAsync();
 
         if (query.searchRequest.semesterId != null)
         {
@@ -65,11 +59,11 @@ public class SearchPracticeQueryHandler : IRequestHandler<SearchPracticeQuery, L
             dbQuery = dbQuery.Where(practice => (practice.Mark != null) == query.searchRequest.hasMark);
         }
 
-        List<Practice> practices = dbQuery.Include(practice => practice.PracticeDiary).Include(practice => practice.StudentPracticeCharacteristics).ToList();
+        List<Domain.Entity.Practice> practices = dbQuery.Include(practice => practice.PracticeDiary).Include(practice => practice.StudentPracticeCharacteristics).ToList();
         List<StudentEntity> students = (await _studentRepository.ListAllAsync()).Where(student => practices.Select(practice => practice.StudentId).Contains(student.Id)).ToList();
         List<User> users = await _sender.Send(new GetListUserQuery(students.Select(student => student.UserId).ToList()));
 
-        foreach (Practice practice in practices)
+        foreach (Domain.Entity.Practice practice in practices)
         {
             StudentEntity studentTmp = students.First(student => student.Id == practice.StudentId);
             studentTmp.User = users.First(user => user.Id == studentTmp.UserId);

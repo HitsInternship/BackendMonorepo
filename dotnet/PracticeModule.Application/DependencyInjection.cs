@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using CompanyModule.Application;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace PracticeModule.Application
