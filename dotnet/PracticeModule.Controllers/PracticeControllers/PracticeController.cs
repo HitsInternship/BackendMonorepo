@@ -76,5 +76,31 @@ namespace PracticeModule.Controllers.PracticeControllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// Получить exel таблицу с информацией о практиках группы(фио студента, компания, позиция).
+        /// </summary>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("{groupId}/group-practice-exel")]
+        public async Task<IActionResult> GetExelForGroup([FromRoute] Guid groupId)
+        {
+            var querry = new GetExelAboutPracticeByGroupQuery() { GroupId = groupId };
+
+            return Ok(await _sender.Send(querry));
+        }
+
+        /// <summary>
+        /// Получить exel файл с информацией о практиках потока(по таблице на каждую группу).
+        /// </summary>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("{streamId}/stream-practice-exel")]
+        public async Task<IActionResult> GetExelForStream([FromRoute] Guid streamId)
+        {
+            var querry = new GetExelAboutPracticeByStreamQuery() { StreamId = streamId };
+
+            return Ok(await _sender.Send(querry));
+        }
     }
 }

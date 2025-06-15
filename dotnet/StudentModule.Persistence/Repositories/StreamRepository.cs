@@ -18,19 +18,26 @@ namespace StudentModule.Persistence.Repositories
 
         public async Task<bool> IsStreamWithNumderExistsAsync(int number)
         {
-            return await context.Streams.AnyAsync(s => s.StreamNumber == number);
+            return await context.Streams
+                .AnyAsync(s => s.StreamNumber == number);
         }
 
         public async Task<List<StreamEntity>> GetStreamsAsync()
         {
-            var streams = context.Streams.Include(s => s.Groups).ThenInclude(g => g.Students).ToList();
+            var streams = await context.Streams
+                .Include(s => s.Groups)
+                .ThenInclude(g => g.Students)
+                .ToListAsync();
             
             return streams;
         }
 
         public async Task<StreamEntity> GetStreamByIdAsync(Guid id)
         {
-            var stream = await context.Streams.Include(s => s.Groups).ThenInclude(g => g.Students).FirstOrDefaultAsync(s => s.Id == id);
+            var stream = await context.Streams
+                .Include(s => s.Groups)
+                .ThenInclude(g => g.Students)
+                .FirstOrDefaultAsync(s => s.Id == id);
 
             return stream;
         }
