@@ -1,4 +1,5 @@
-﻿using PracticeModule.Contracts.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using PracticeModule.Contracts.Repositories;
 using PracticeModule.Domain.Entity;
 using PracticeModule.Infrastructure;
 using Shared.Persistence.Repositories;
@@ -17,6 +18,18 @@ namespace PracticeModule.Persistence.Repositories
         public PracticeRepository(PracticeDbContext context) : base(context)
         {
             this.context = context;
+        }
+
+        public async Task<List<Practice>> GetPracticesByStudentIdAsync(List<Guid> studentsId)
+        {
+            List<Practice> practices = new();
+
+            foreach (var id in studentsId)
+            {
+                practices.Add(await context.Practice.FirstOrDefaultAsync(p => p.StudentId == id));
+            }
+
+            return practices;
         }
     }
 }

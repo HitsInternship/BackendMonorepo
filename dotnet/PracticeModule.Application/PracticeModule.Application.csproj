@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="EPPlus" Version="8.0.5" />
       <PackageReference Include="MediatR" Version="12.5.0" />
     </ItemGroup>
 
@@ -14,6 +15,7 @@
       <ProjectReference Include="..\DeanModule.Contracts\DeanModule.Contracts.csproj" />
       <ProjectReference Include="..\DocumentModule.Contracts\DocumentModule.Contracts.csproj" />
       <ProjectReference Include="..\PracticeModule.Contracts\PracticeModule.Contracts.csproj" />
+      <ProjectReference Include="..\PracticeModule.Domain\PracticeModule.Domain.csproj" />
       <ProjectReference Include="..\PracticeModule.Infrastructure\PracticeModule.Infrastructure.csproj" />
     </ItemGroup>
 

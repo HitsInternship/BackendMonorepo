@@ -51,6 +51,9 @@ public class EmailService {
     @Value("${url.practice}")
     private String baseUrlPractice;
 
+    @Value("${url.meeting}")
+    private String baseUrlMeeting;
+
     @Async
     public void sendEmailWithThymeLeaf(Mail mail) {
         try {
@@ -180,6 +183,17 @@ public class EmailService {
 
         String process = templateEngine.process("Rated-for-practice", context);
         Mail mail = new Mail(ratedForPractice.getId(), ratedForPractice.getEmail(), "Оценка за практику", process);
+        sendEmailWithThymeLeaf(mail);
+    }
+
+    public void createMeeting(Meeting meeting) {
+        Context context = new Context();
+        context.setVariable("companyName", meeting.getCompanyName());
+        context.setVariable("dateTime", meeting.getMeetingDateTime());
+        context.setVariable("url", baseUrlMeeting + "/" + meeting.getMeetingId().toString());
+
+        String process = templateEngine.process("Meeting", context);
+        Mail mail = new Mail(meeting.getId(), meeting.getEmail(), "Компания назначила встречу", process);
         sendEmailWithThymeLeaf(mail);
     }
 }

@@ -14,9 +14,9 @@ namespace StudentModule.Persistence.Repositories
             return await DbSet.Where(x => x.Group.GroupNumber == groupNumber).AsNoTracking().ToListAsync();
         }
 
-        public Task<StudentEntity> GetStudentByIdAsync(Guid id)
+        public async Task<StudentEntity> GetStudentByIdAsync(Guid id)
         {
-            var student = context.SStudents
+            var student = await context.SStudents
                 .Include(s => s.Group)
                 .ThenInclude(g => g.Stream)
                 .FirstOrDefaultAsync(s => s.Id == id);
@@ -24,9 +24,9 @@ namespace StudentModule.Persistence.Repositories
             return student;
         }
 
-        public Task<StudentEntity> GetStudentByUserIdAsync(Guid id)
+        public async Task<StudentEntity> GetStudentByUserIdAsync(Guid id)
         {
-            var student = context.SStudents
+            var student = await context.SStudents
                 .Include(s => s.Group)
                 .ThenInclude(g => g.Stream)
                 .FirstOrDefaultAsync(s => s.UserId == id);
@@ -34,12 +34,21 @@ namespace StudentModule.Persistence.Repositories
             return student;
         }
 
-        public Task<StudentEntity> GetStudentByName(Guid userId, string? middlename)
+        public async Task<StudentEntity> GetStudentByName(Guid userId, string? middlename)
         {
-            var students = context.SStudents
+            var students = await context.SStudents
                 .Include(s => s.Group)
                 .ThenInclude(g => g.Stream)
                 .FirstOrDefaultAsync(s => s.UserId == userId && s.Middlename == middlename);
+
+            return students;
+        }
+
+        public async Task<List<StudentEntity>> GetStudentsByGroupIdAsync(Guid groupId)
+        {
+            var students = await context.SStudents
+                .Where(s => s.GroupId == groupId)
+                .ToListAsync();
 
             return students;
         }
