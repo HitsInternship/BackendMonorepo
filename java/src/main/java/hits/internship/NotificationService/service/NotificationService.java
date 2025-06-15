@@ -40,11 +40,23 @@ public class NotificationService {
                 case admission_internship -> parsingAdmissionInternship(message);
                 case rated_for_practice -> parsingRatedForPractice(message);
                 case new_comment -> parsingNewComment(message);
+                case meeting -> parsingMeeting(message);
                 default -> sendError(message);
             }
         } catch (Exception ex) {
             log.error("Failed to extract eventType from malformed message: {}", message);
             sendError(message);
+        }
+    }
+
+    private void parsingMeeting(String message) {
+        try {
+            Meeting meeting = objectMapper.readValue(message, Meeting.class);
+            emailService.createMeeting(meeting);
+        } catch (JsonProcessingException e) {
+            log.error("Error parsing the message: {}", message);
+            sendError(message);
+            throw new RuntimeException(e);
         }
     }
 

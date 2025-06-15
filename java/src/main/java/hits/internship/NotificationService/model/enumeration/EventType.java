@@ -7,5 +7,6 @@ public enum EventType {
     deadline,
     admission_internship,
     rated_for_practice,
-    new_comment
+    new_comment,
+    meeting
 }
