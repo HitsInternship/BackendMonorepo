@@ -15,6 +15,7 @@ public class PracticeModuleMappingProfile : Profile
             .ForMember(response => response.characteristicsId, opt => opt.MapFrom(model => model.StudentPracticeCharacteristics.Id));
 
         CreateMap<Practice, PotentialPracticeResponse>()
+            .ForMember(response => response.studentId, opt => opt.MapFrom(model => model.Student.Id))
             .ForMember(response => response.studentFullName, opt => opt.MapFrom(model => $"{model.Student.User.Surname} {model.Student.User.Name} {model.Student.Middlename}"))
             
             .ForMember(response => response.companyId, opt => opt.MapFrom(model => model.Company.Id))

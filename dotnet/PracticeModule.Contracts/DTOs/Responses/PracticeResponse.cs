@@ -16,7 +16,7 @@ namespace PracticeModule.Contracts.DTOs.Responses
 
         public int? mark { get; set; }
 
-        public Guid practiceDiaryId { get; set; }
-        public Guid characteristicsId { get; set; }
+        public Guid? practiceDiaryId { get; set; }
+        public Guid? characteristicsId { get; set; }
     }
 }

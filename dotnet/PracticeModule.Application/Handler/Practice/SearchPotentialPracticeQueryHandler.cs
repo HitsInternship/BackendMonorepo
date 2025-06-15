@@ -80,7 +80,7 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
 
         students = studentDbQuery.ToList();
         studentIds = students.Select(student => student.Id).ToList();
-        users = await _sender.Send(new GetListUserQuery(studentIds));
+        users = await _sender.Send(new GetListUserQuery(students.Select(student => student.UserId).ToList()));
 
         List<Practice> practices = (await _practiceRepository.ListAllAsync()).Where(practice => practice.GlobalPractice.SemesterId == currentSemester.Id &&
                                                                                                         studentIds.Contains(practice.StudentId)).ToList();
