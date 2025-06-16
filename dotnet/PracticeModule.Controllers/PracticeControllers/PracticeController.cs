@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PracticeModule.Application.Handler.Practice;
 using PracticeModule.Contracts.Commands;
 using PracticeModule.Contracts.DTOs.Requests;
 using PracticeModule.Contracts.DTOs.Responses;
@@ -64,15 +65,28 @@ namespace PracticeModule.Controllers.PracticeControllers
         }
 
         /// <summary>
+        /// Получить глобальные практики.
+        /// </summary>
+        /// <returns>Список глобальных практик.</returns>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("global")]
+        [ProducesResponseType(typeof(List<GlobalPracticeResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetGlobalPractices()
+        {
+            return Ok((await _sender.Send(new GetGlobalPracticesQuery())).Select(_mapper.Map<GlobalPracticeResponse>));
+        }
+
+        /// <summary>
         /// Поставить оценку за практику.
         /// </summary>
         [HttpPut]
         [Authorize(Roles = "DeanMember")]
         [Route("{practiceId}/mark")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> MarkPractices(Guid practiceId, int mark)
+        public async Task<IActionResult> MarkPractice(Guid practiceId, int mark)
         {
-            await _sender.Send(new MarkPracticesCommand(practiceId, mark));
+            await _sender.Send(new MarkPracticeCommand(practiceId, mark));
 
             return Ok();
         }

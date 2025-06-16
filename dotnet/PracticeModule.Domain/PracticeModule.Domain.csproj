@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CompanyModule.Domain\CompanyModule.Domain.csproj" />
+      <ProjectReference Include="..\DeanModule.Domain\DeanModule.Domain.csproj" />
       <ProjectReference Include="..\SelectionModule.Domain\SelectionModule.Domain.csproj" />
       <ProjectReference Include="..\Shared.Domain\Shared.Domain.csproj" />
       <ProjectReference Include="..\StudentModule.Contracts\StudentModule.Contracts.csproj" />
