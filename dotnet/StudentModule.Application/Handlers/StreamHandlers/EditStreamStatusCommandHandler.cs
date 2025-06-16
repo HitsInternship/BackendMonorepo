@@ -20,15 +20,15 @@ namespace StudentModule.Application.Handlers.StreamHandlers
         }
 
         public async Task<StreamDto> Handle(EditStreamStatusCommand request, CancellationToken cancellationToken)
-        { 
-            StreamEntity? stream = await _streamRepository.GetByIdAsync(request.Id) 
-                ?? throw new NotFound("Stream not found");
+        {
+            StreamEntity? stream = await _streamRepository.GetByIdAsync(request.Id)
+                                   ?? throw new NotFound("Stream not found");
 
 
             stream.Status = request.Status;
 
             //todo: create selection or practice
-            
+
             await _streamRepository.UpdateAsync(stream);
 
             return await GetStream(stream);
@@ -37,11 +37,10 @@ namespace StudentModule.Application.Handlers.StreamHandlers
         private async Task<StreamDto> GetStream(StreamEntity stream)
         {
             var groups = new List<GroupDto>();
-            var students = new List<StudentDto>();
 
             foreach (var group in stream.Groups)
             {
-                students = new List<StudentDto>();
+                List<StudentDto> students = [];
                 foreach (var student in group.Students)
                 {
                     var user = await _userRepository.GetByIdAsync(student.UserId);
@@ -54,8 +53,10 @@ namespace StudentModule.Application.Handlers.StreamHandlers
                 groups.Add(groupDto);
             }
 
-            var streamDto = new StreamDto(stream);
-            streamDto.groups = groups;
+            var streamDto = new StreamDto(stream)
+            {
+                groups = groups
+            };
 
             return streamDto;
         }

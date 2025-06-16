@@ -11,11 +11,15 @@ public class GetSelectionCommentsQueryHandler : IRequestHandler<GetSelectionComm
 {
     private readonly IUserRepository _userRepository;
     private readonly ISelectionRepository _selectionRepository;
+    private readonly ISelectionCommentRepository _selectionCommentRepository;
 
-    public GetSelectionCommentsQueryHandler(ISelectionRepository selectionRepository, IUserRepository userRepository)
+
+    public GetSelectionCommentsQueryHandler(ISelectionRepository selectionRepository, IUserRepository userRepository,
+        ISelectionCommentRepository selectionCommentRepository)
     {
         _selectionRepository = selectionRepository;
         _userRepository = userRepository;
+        _selectionCommentRepository = selectionCommentRepository;
     }
 
 
@@ -29,7 +33,8 @@ public class GetSelectionCommentsQueryHandler : IRequestHandler<GetSelectionComm
         if (selection.Candidate.UserId != request.UserId && !request.Roles.Contains("DeanMember"))
             throw new Forbidden("You do not have access to leave comment");
 
-        var comments = selection.Comments;
+        var comments = await _selectionCommentRepository.FindAsync(x =>
+            x.ParentId == request.SelectionId);
 
         var result = new List<CommentDto>();
 
@@ -50,7 +55,7 @@ public class GetSelectionCommentsQueryHandler : IRequestHandler<GetSelectionComm
                 }
             });
         }
-        
+
         return result;
     }
 }

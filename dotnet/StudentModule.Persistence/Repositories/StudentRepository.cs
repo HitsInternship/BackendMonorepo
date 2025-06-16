@@ -3,10 +3,11 @@ using Shared.Persistence.Repositories;
 using StudentModule.Contracts.Repositories;
 using StudentModule.Domain.Entities;
 using StudentModule.Infrastructure;
+using UserModule.Infrastructure;
 
 namespace StudentModule.Persistence.Repositories
 {
-    public class StudentRepository(StudentModuleDbContext context)
+    public class StudentRepository(StudentModuleDbContext context, UserModuleDbContext userDbContext)
         : BaseEntityRepository<StudentEntity>(context), IStudentRepository
     {
         public async Task<List<StudentEntity>> GetStudentsByGroup(int groupNumber)
@@ -51,6 +52,28 @@ namespace StudentModule.Persistence.Repositories
                 .ToListAsync();
 
             return students;
+        }
+
+        public async Task<List<Guid>> GetIdsByName(string name)
+        {
+            var lowerName = name.ToLower();
+
+            var users = await userDbContext.Users
+                .Select(u => new { u.Id, u.Name, u.Surname })
+                .ToListAsync();
+
+            var students = await context.SStudents
+                .Select(s => new { s.Id, s.UserId, s.Middlename })
+                .ToListAsync();
+
+            var result = (from s in students
+                    join u in users on s.UserId equals u.Id
+                    let fullName = (u.Surname + " " + u.Name + " " + (s.Middlename ?? "")).Trim()
+                    where fullName.ToLower().Contains(lowerName)
+                    select s.Id)
+                .ToList();
+
+            return result;
         }
     }
 }
