@@ -10,6 +10,6 @@ namespace PracticeModule.Contracts.Repositories
 {
     public interface IPracticeRepository : IBaseEntityRepository<Practice> 
     {
-        Task<List<Practice>> GetPracticesByStudentIdAsync(List<Guid> studentsId);
+        Task<List<Practice>> GetPracticesByStudentIdAsync(List<Guid> studentsId, Guid semesterId);
     }
 }

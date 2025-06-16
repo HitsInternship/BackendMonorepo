@@ -13,6 +13,7 @@ using SelectionModule.Domain.Enums;
 using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
 using StudentModule.Domain.Entities;
+using StudentModule.Domain.Enums;
 using UserModule.Contracts.Queries;
 using UserModule.Domain.Entities;
 
@@ -62,7 +63,7 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
 
         List<Domain.Entity.Practice> potentialPractices = new List<Domain.Entity.Practice>();
 
-        IQueryable<StudentEntity> studentDbQuery = await _studentRepository.ListAllAsync();
+        IQueryable<StudentEntity> studentDbQuery = (await _studentRepository.ListAllAsync()).Where(student => student.Group.StreamId == query.searchRequest.streamId);
 
         List<StudentEntity> students;
         List<Guid> studentIds;
@@ -117,14 +118,12 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
             StudentEntity student = students.First(student => student.Id == practice.StudentId);
             student.User = users.First(user => user.Id == student.UserId);
 
-            Company company = companies.First(company => company.Id == practice.Company.Id);
+            Company company = companies.First(company => company.Id == practice.CompanyId);
             PositionEntity position = positions.First(position => position.Id == practice.PositionId);
 
-            ApplicationEntity? approvedApplication =
-                applications.FirstOrDefault(application => application.StudentId == practice.StudentId);
+            ApplicationEntity? approvedApplication = applications.FirstOrDefault(application => application.StudentId == practice.StudentId);
             Company newCompany = companies.FirstOrDefault(company => company.Id == approvedApplication?.CompanyId);
-            PositionEntity newPosition =
-                positions.FirstOrDefault(position => position.Id == approvedApplication?.PositionId);
+            PositionEntity newPosition = positions.FirstOrDefault(position => position.Id == approvedApplication?.PositionId);
 
             potentialPractices.Add(new Domain.Entity.Practice()
             {

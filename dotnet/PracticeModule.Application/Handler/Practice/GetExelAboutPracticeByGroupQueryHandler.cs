@@ -11,6 +11,10 @@ using OfficeOpenXml;
 using System.Data;
 using UserModule.Domain.Entities;
 using PracticeModule.Domain.Entity;
+using CompanyModule.Domain.Entities;
+using SelectionModule.Domain.Entites;
+using DeanModule.Domain.Entities;
+using DeanModule.Contracts.Repositories;
 
 namespace PracticeModule.Application.Handler.Practice
 {
@@ -22,10 +26,11 @@ namespace PracticeModule.Application.Handler.Practice
         private readonly ICompanyRepository _companyRepository;
         private readonly IPositionRepository _positionRepository;
         private readonly IGroupRepository _groupRepository;
+        private readonly ISemesterRepository _semesterRepository;
 
         public GetExelAboutPracticeByGroupQueryHandler(IPracticeRepository practiceRepository, IUserRepository userRepository, 
             IStudentRepository studentRepository, ICompanyRepository companyRepository,
-            IPositionRepository positionRepository, IGroupRepository groupRepository)
+            IPositionRepository positionRepository, IGroupRepository groupRepository, ISemesterRepository semesterRepository)
         {
             _practiceRepository = practiceRepository;
             _userRepository = userRepository;
@@ -33,6 +38,7 @@ namespace PracticeModule.Application.Handler.Practice
             _companyRepository = companyRepository;
             _positionRepository = positionRepository;
             _groupRepository = groupRepository;
+            _semesterRepository = semesterRepository;
         }
 
         public async Task<FileContentResult> Handle(GetExelAboutPracticeByGroupQuery request, CancellationToken cancellationToken)
@@ -52,7 +58,15 @@ namespace PracticeModule.Application.Handler.Practice
                 users.Add(await _userRepository.GetByIdAsync(student.UserId));
             }
 
-            var practices = await _practiceRepository.GetPracticesByStudentIdAsync(studentsId);
+            SemesterEntity? currentSemester = (await _semesterRepository.ListAllAsync()).Where(semester =>
+                semester.EndDate > DateOnly.FromDateTime(DateTime.UtcNow) &&
+                semester.StartDate < DateOnly.FromDateTime(DateTime.UtcNow)).FirstOrDefault();
+
+            if (currentSemester == null)
+            {
+                throw new NotFound("No current semester found");
+            }
+            var practices = await _practiceRepository.GetPracticesByStudentIdAsync(studentsId, currentSemester.Id);
 
             ExcelPackage.License.SetNonCommercialPersonal("<My Name>");
 
@@ -66,24 +80,25 @@ namespace PracticeModule.Application.Handler.Practice
                 worksheet.Cells[1, 4].Value = "Компания";
                 worksheet.Cells[1, 5].Value = "Позиция";
 
-                for (int i = 0; i < practices.Count; i++)
+                for (int i = 0; i < students.Count(); i++)
                 {
-                    var practice = practices[i];
+                    students[i].User = users.First(user => user.Id == students[i].UserId);
 
-                    var company = await _companyRepository.GetByIdAsync(practice.CompanyId);
-                    var position = await _positionRepository.GetByIdAsync(practice.PositionId);
+                    var practice = practices.FirstOrDefault(practice => practice?.StudentId == students[i].Id);
+                    Company company = null;
+                    PositionEntity position = null;
 
-                    var student = students.FirstOrDefault(s => s.Id == practice.StudentId);
-                    var user = users.FirstOrDefault(u => u.Id == student?.UserId);
-
-                    if (user != null && student != null)
+                    if (practice != null)
                     {
-                        worksheet.Cells[i + 2, 1].Value = user.Surname;
-                        worksheet.Cells[i + 2, 2].Value = user.Name;
-                        worksheet.Cells[i + 2, 3].Value = student.Middlename;
-                        worksheet.Cells[i + 2, 4].Value = company?.Name ?? "Не указано";
-                        worksheet.Cells[i + 2, 5].Value = position?.Name ?? "Не указано";
+                        company = await _companyRepository.GetByIdAsync(practice.CompanyId);
+                        position = await _positionRepository.GetByIdAsync(practice.PositionId);
                     }
+
+                    worksheet.Cells[i + 2, 1].Value = students[i].User.Surname;
+                    worksheet.Cells[i + 2, 2].Value = students[i].User.Name;
+                    worksheet.Cells[i + 2, 3].Value = students[i].Middlename;
+                    worksheet.Cells[i + 2, 4].Value = company?.Name ?? "-";
+                    worksheet.Cells[i + 2, 5].Value = position?.Name ?? "-";
                 }
 
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();

@@ -101,7 +101,7 @@ namespace PracticeModule.Controllers.PracticeControllers
         {
             var querry = new GetExelAboutPracticeByGroupQuery() { GroupId = groupId };
 
-            return Ok(await _sender.Send(querry));
+            return await _sender.Send(querry);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace PracticeModule.Controllers.PracticeControllers
         {
             var querry = new GetExelAboutPracticeByStreamQuery() { StreamId = streamId };
 
-            return Ok(await _sender.Send(querry));
+            return await _sender.Send(querry);
         }
     }
 }

@@ -17,9 +17,9 @@ namespace PracticeModule.Contracts.DTOs.Responses
         public Guid? positionId { get; set; }
         public string positionName { get; set; }
 
-        public Guid newCompanyId { get; set; }
+        public Guid? newCompanyId { get; set; }
         public string newCompanyName { get; set; }
-        public Guid newPositionId { get; set; }
+        public Guid? newPositionId { get; set; }
         public string newPositionName { get; set; }
     }
 }

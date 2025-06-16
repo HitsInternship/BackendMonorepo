@@ -34,7 +34,7 @@ public class CreateGlobalPracticeCommandHandler : IRequestHandler<CreateGlobalPr
         globalPractice.DiaryPatternDocumentId = await _sender.Send(new LoadDocumentCommand(DocumentType.PracticeDiary, command.createRequest.diaryPatternFile));
         globalPractice.CharacteristicsPatternDocumentId = await _sender.Send(new LoadDocumentCommand(DocumentType.StudentPracticeCharacteristic, command.createRequest.characteristicsPatternFile));
 
-        List<Domain.Entity.Practice> potentialPractices = await _sender.Send(new SearchPotentialPracticeQuery(new SearchPotentialPracticeRequest()));
+        List<Domain.Entity.Practice> potentialPractices = await _sender.Send(new SearchPotentialPracticeQuery(new SearchPotentialPracticeRequest() { streamId = command.createRequest.streamId }));
 
         foreach (var practice in potentialPractices)
         {
