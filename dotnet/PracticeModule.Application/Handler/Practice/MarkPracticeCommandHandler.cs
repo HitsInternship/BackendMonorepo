@@ -4,16 +4,16 @@ using PracticeModule.Contracts.Repositories;
 
 namespace PracticeModule.Application.Handler.Practice;
 
-public class MarkPracticesCommandHandler : IRequestHandler<MarkPracticesCommand, Unit>
+public class MarkPracticeCommandHandler : IRequestHandler<MarkPracticeCommand, Unit>
 {
     private readonly IPracticeRepository _practiceRepository;
 
-    public MarkPracticesCommandHandler(IPracticeRepository practiceRepository)
+    public MarkPracticeCommandHandler(IPracticeRepository practiceRepository)
     {
         _practiceRepository = practiceRepository;
     }
 
-    public async Task<Unit> Handle(MarkPracticesCommand command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(MarkPracticeCommand command, CancellationToken cancellationToken)
     {
         Domain.Entity.Practice practice = await _practiceRepository.GetByIdAsync(command.practiceId);
 
