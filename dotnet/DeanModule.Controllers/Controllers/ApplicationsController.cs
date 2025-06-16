@@ -33,16 +33,16 @@ public class ApplicationsController : ControllerBase
     /// Студент получает свои заявки.
     /// </summary>
     /// <param name="status">Статус заявки для фильтрации (опционально).</param>
-    /// <param name="studentId">Идентификатор студента (опционально).</param>
+    /// <param name="name">ФИО студента</param>
     /// <param name="isArchived">Показывать ли архивные заявки (по умолчанию false).</param>
     /// <param name="page">Номер страницы (по умолчанию 1).</param>
     /// <returns>Список заявок с пагинацией.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(ApplicationsDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetApplications([FromQuery] ApplicationStatus? status, [FromQuery] Guid? studentId,
+    public async Task<IActionResult> GetApplications([FromQuery] ApplicationStatus? status, [FromQuery] string? name,
         bool isArchived = false, int page = 1)
     {
-        return Ok(await _sender.Send(new GetApplicationsQuery(status, studentId, isArchived, page, User.GetUserId(),
+        return Ok(await _sender.Send(new GetApplicationsQuery(status, name, isArchived, page, User.GetUserId(),
             User.GetRoles())));
     }
 

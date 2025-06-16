@@ -7,5 +7,5 @@ public record CommentRequestDto
 {
     [Required] public required string Content { get; set; }
     public SelectionStatus? SelectionStatus { get; set; }
-    public List<Guid>? SelectedUsers { get; set; }
+    public List<Guid>? SelectedSelections { get; set; }
 }

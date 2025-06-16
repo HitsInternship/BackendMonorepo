@@ -14,7 +14,6 @@ using Shared.Contracts.Configs;
 using Shared.Domain.Exceptions;
 using StudentModule.Contracts.DTOs;
 using StudentModule.Contracts.Repositories;
-using StudentModule.Domain.Enums;
 using UserModule.Contracts.Repositories;
 
 namespace DeanModule.Application.Features.Queries;
@@ -63,15 +62,19 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
             if (request.ApplicationStatus != null)
                 query = query.Where(x => x.Status == request.ApplicationStatus);
 
-            if (request.StudentId != null)
-                query = query.Where(x => x.StudentId == request.StudentId);
+            if (request.Name != null)
+            {
+                var students = await _studentRepository.GetIdsByName(request.Name);
+
+                query = query.Where(x => students.Contains(x.StudentId));
+            }
         }
 
         var totalCount = await query.CountAsync(cancellationToken);
         var totalPages = Math.Max(1, (int)Math.Ceiling((double)totalCount / _size));
 
         if (request.Page > totalPages) throw new BadRequest("Page must be less than or equal to the number of items");
-        
+
         var pagedApplications = await query
             .Skip(skip)
             .Take(_size)
@@ -80,7 +83,7 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
         var result = new List<ListedApplicationResponseDto>();
 
         //todo: get old practice
-        
+
         foreach (var application in pagedApplications)
         {
             var student = await _studentRepository.GetStudentByIdAsync(application.StudentId);
