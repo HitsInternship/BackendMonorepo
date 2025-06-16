@@ -20,7 +20,7 @@ public record ApplicationResponseDto
     /// <summary>
     /// Дата подачи заявки.
     /// </summary>
-    public DateTime Date { get; init; }
+    public DateOnly Date { get; init; }
 
     /// <summary>
     /// URL на прикреплённый документ (если имеется).
