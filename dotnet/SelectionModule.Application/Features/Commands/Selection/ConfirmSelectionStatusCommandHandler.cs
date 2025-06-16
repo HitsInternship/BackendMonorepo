@@ -41,7 +41,7 @@ public class ConfirmSelectionStatusCommandHandler : IRequestHandler<ConfirmSelec
             throw new BadRequest("You cannot confirm selection with this status ");
 
         if (!selection.Offer.HasValue) throw new BadRequest("You cannot confirm selection");
-        
+
         selection.IsConfirmed = true;
 
         await _selectionRepository.UpdateAsync(selection);
@@ -59,7 +59,7 @@ public class ConfirmSelectionStatusCommandHandler : IRequestHandler<ConfirmSelec
     {
         var user = await _userRepository.GetByIdAsync(selection.Candidate.UserId);
 
-        var vacancy = await _mediator.Send(new GetVacancyQuery(selection.Offer!.Value, Guid.Empty));
+        var vacancy = await _mediator.Send(new GetVacancyQuery(selection.Offer!.Value, Guid.Empty, []));
 
 
         await _mediator.Send(

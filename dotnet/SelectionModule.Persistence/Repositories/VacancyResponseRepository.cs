@@ -42,8 +42,8 @@ public class VacancyResponseRepository(SelectionDbContext context)
             .ToListAsync();
     }
 
-    public async Task<bool> CheckIfExistsByUserIdAsync(Guid userId)
+    public async Task<bool> CheckIfExistsByUserIdAsync(Guid userId, Guid requestVacancyId)
     {
-        return await DbSet.Where(x => x.Candidate.UserId == userId).AnyAsync();
+        return await DbSet.AnyAsync(x => x.VacancyId == requestVacancyId && x.Candidate.UserId == userId);
     }
 }
