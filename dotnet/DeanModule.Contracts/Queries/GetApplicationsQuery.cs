@@ -6,7 +6,7 @@ namespace DeanModule.Contracts.Queries;
 
 public record GetApplicationsQuery(
     ApplicationStatus? ApplicationStatus,
-    Guid? StudentId,
+    string? Name,
     bool IsArchives,
     int Page,
     Guid UserId,
