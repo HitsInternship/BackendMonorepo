@@ -8,7 +8,7 @@ using StudentModule.Domain.Entities;
 
 namespace PracticeModule.Application.Handler.Practice;
 
-public class GetGlobalPracticesQueryHandler : IRequestHandler<GetGlobalPracticesQuery, List<GlobalPractice>>
+public class GetGlobalPracticesQueryHandler : IRequestHandler<GetGlobalPracticesQuery, List<IGrouping<SemesterEntity, GlobalPractice>>>
 {
     private readonly IGlobalPracticeRepository _globalPracticeRepository;
     private readonly ISemesterRepository _semesterRepository;
@@ -21,7 +21,7 @@ public class GetGlobalPracticesQueryHandler : IRequestHandler<GetGlobalPractices
         _streamRepository = streamRepository;
     }
 
-    public async Task<List<GlobalPractice>> Handle(GetGlobalPracticesQuery query, CancellationToken cancellationToken)
+    public async Task<List<IGrouping<SemesterEntity, GlobalPractice>>> Handle(GetGlobalPracticesQuery query, CancellationToken cancellationToken)
     {
         List<GlobalPractice> globalPractices = (await _globalPracticeRepository.ListAllAsync()).ToList();
 
@@ -33,6 +33,6 @@ public class GetGlobalPracticesQueryHandler : IRequestHandler<GetGlobalPractices
             globalPractice.Stream = streams.FirstOrDefault(stream => stream.Id == globalPractice.StreamId);
         });
 
-        return globalPractices.OrderByDescending(globalPractice => globalPractice.Semester.EndDate).ToList();
+        return globalPractices.GroupBy(globalPractice => globalPractice.Semester).OrderByDescending(group => group.Key.EndDate).ToList();
     }
 }

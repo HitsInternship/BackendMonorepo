@@ -28,19 +28,7 @@ public class SearchPracticeQueryHandler : IRequestHandler<SearchPracticeQuery, L
 
     public async Task<List<Domain.Entity.Practice>> Handle(SearchPracticeQuery query, CancellationToken cancellationToken)
     {
-        IQueryable<Domain.Entity.Practice> dbQuery = await _practiceRepository.ListAllAsync();
-
-        if (query.searchRequest.semesterId != null)
-        {
-            dbQuery = dbQuery.Where(practice => practice.GlobalPractice.SemesterId == query.searchRequest.semesterId);
-        }
-        else
-        {
-            SemesterEntity? currentSemester = (await _semesterRepository.ListAllAsync()).Where(semester => semester.EndDate > DateOnly.FromDateTime(DateTime.UtcNow) && semester.StartDate < DateOnly.FromDateTime(DateTime.UtcNow)).FirstOrDefault();
-            if (currentSemester == null) { throw new NotFound("No current semester found"); }
-
-            dbQuery = dbQuery.Where(practice => practice.GlobalPractice.SemesterId == currentSemester.Id);
-        }
+        IQueryable<Domain.Entity.Practice> dbQuery = (await _practiceRepository.ListAllAsync()).Where(practice => practice.GlobalPractice.Id == query.searchRequest.globalPracticeId);
 
         if (query.searchRequest.groupId != null)
         {

@@ -71,10 +71,10 @@ namespace PracticeModule.Controllers.PracticeControllers
         [HttpGet]
         [Authorize(Roles = "DeanMember")]
         [Route("global")]
-        [ProducesResponseType(typeof(List<GlobalPracticeResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<SemesterPracticeResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetGlobalPractices()
         {
-            return Ok((await _sender.Send(new GetGlobalPracticesQuery())).Select(_mapper.Map<GlobalPracticeResponse>));
+            return Ok((await _sender.Send(new GetGlobalPracticesQuery())).Select(group => _mapper.Map<SemesterPracticeResponse>(group)));
         }
 
         /// <summary>
