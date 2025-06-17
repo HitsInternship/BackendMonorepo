@@ -9,6 +9,9 @@
     <ItemGroup>
       <PackageReference Include="MediatR" Version="12.5.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
+      <PackageReference Include="Quartz" Version="3.14.0" />
+      <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.14.0" />
+      <PackageReference Include="Quartz.Extensions.Hosting" Version="3.14.0" />
     </ItemGroup>
 
     <ItemGroup>

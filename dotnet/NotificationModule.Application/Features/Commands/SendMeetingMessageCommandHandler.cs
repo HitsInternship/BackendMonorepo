@@ -1,4 +1,3 @@
-using System.Text.Json;
 using MediatR;
 using NotificationModule.Application.Helpers;
 using NotificationModule.Contracts.Commands;
@@ -10,49 +9,42 @@ using NotificationModule.Kafka.Messages;
 
 namespace NotificationModule.Application.Features.Commands;
 
-public class SendDeadlineMessageCommandHandler : IRequestHandler<SendDeadlineMessageCommand, Unit>
+public class SendMeetingMessageCommandHandler : IRequestHandler<SendMeetingMessageCommand, Unit>
 {
     private readonly IMessageProducer _messageProducer;
     private readonly IMessageRepository _messageRepository;
 
-    public SendDeadlineMessageCommandHandler(IMessageProducer messageProducer, IMessageRepository messageRepository)
+    public SendMeetingMessageCommandHandler(IMessageProducer messageProducer, IMessageRepository messageRepository)
     {
         _messageProducer = messageProducer;
         _messageRepository = messageRepository;
     }
 
-    public async Task<Unit> Handle(SendDeadlineMessageCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SendMeetingMessageCommand request, CancellationToken cancellationToken)
     {
-        List<Message> messages = new List<Message>();
-
         foreach (var email in request.Emails)
         {
-            var message = new Deadline
+            var message = new MeetingMessage
             {
                 Email = email,
-                EventType = EventType.deadline,
-                DeadlineDate = request.DeadLineDate,
-                Event = request.EventType
+                EventType = EventType.meeting,
+                MeetingId = request.AppointmentId,
+                CompanyName = request.CompanyName,
+                MeetingDateTime = request.DateTime
             };
 
             var messageEntity = new Message
             {
                 Id = message.Id,
-                Email = message.Email,
-                EventType = EventType.deadline,
+                Email = email,
+                EventType = EventType.meeting,
                 Data = JsonHelper.Serialize(message),
                 MessageStatus = MessageStatus.in_progress
             };
 
-            messages.Add(messageEntity);
-        }
+            await _messageRepository.AddAsync(messageEntity);
 
-
-        await _messageRepository.AddRangeAsync(messages);
-
-        foreach (var message in messages)
-        {
-            await _messageProducer.ProduceAsync(message.Data);
+            await _messageProducer.ProduceAsync(messageEntity.Data);
         }
 
         return Unit.Value;

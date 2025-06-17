@@ -14,7 +14,7 @@ public static class DependencyInjection
     {
         services.AddSelectionModuleInfrastructure(configuration);
         services.AddSelectionModulePersistence();
-        services.AddSelectionModuleApplication();
+        services.AddSelectionModuleApplication(configuration);
 
         services.AddSwaggerGen(options =>
         {
