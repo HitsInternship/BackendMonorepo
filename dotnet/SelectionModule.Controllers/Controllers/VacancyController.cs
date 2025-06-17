@@ -97,7 +97,7 @@ public class VacancyController : ControllerBase
     [ProducesResponseType(typeof(VacancyDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetVacancy(Guid vacancyId)
     {
-        return Ok(await _mediator.Send(new GetVacancyQuery(vacancyId, User.GetUserId())));
+        return Ok(await _mediator.Send(new GetVacancyQuery(vacancyId, User.GetUserId(), User.GetRoles())));
     }
 
     /// <summary>

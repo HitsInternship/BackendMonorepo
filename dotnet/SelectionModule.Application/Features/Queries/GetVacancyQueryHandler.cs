@@ -39,7 +39,9 @@ public class GetVacancyQueryHandler : IRequestHandler<GetVacancyQuery, VacancyDt
 
         vacancyDto.Position = _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(vacancy.PositionId));
         vacancyDto.Company = _mapper.Map<ShortenCompanyDto>(await _companyRepository.GetByIdAsync(vacancy.CompanyId));
-        vacancyDto.HasResponse = await _vacancyResponseRepository.CheckIfExistsByUserIdAsync(request.UserId);
+        vacancyDto.HasResponse = request.Roles.Contains("Student")
+            ? await _vacancyResponseRepository.CheckIfExistsByUserIdAsync(request.UserId, request.VacancyId)
+            : true;
 
         return vacancyDto;
     }
