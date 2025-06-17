@@ -15,5 +15,8 @@ namespace CompanyModule.Contracts.DTOs.Responses
         public string email { get; set; }
         public string telegram { get; set; }
         public string phone { get; set; }
+
+        public Guid companyId { get; set; }
+        public string companyName { get; set; }
     }
 }
