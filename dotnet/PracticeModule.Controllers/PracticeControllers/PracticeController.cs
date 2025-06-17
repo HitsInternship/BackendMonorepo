@@ -116,5 +116,18 @@ namespace PracticeModule.Controllers.PracticeControllers
 
             return await _sender.Send(querry);
         }
+
+        /// <summary>
+        /// Получить exel файл с информацией о практиках по компании.
+        /// </summary>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("{companyId}/company-practice-exel")]
+        public async Task<IActionResult> GetExelForCompany([FromRoute] Guid companyId)
+        {
+            var querry = new GetExelAboutPracticeByCompanyQuery() { CompanyId = companyId };
+
+            return await _sender.Send(querry);
+        }
     }
 }
