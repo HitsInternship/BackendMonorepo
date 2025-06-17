@@ -8,5 +8,7 @@ namespace CompanyModule.Contracts.Repositories
         public Task<List<Curator>> GetCuratorsByCompany(Company company);
 
         public Task<bool> CheckIfUserIsCurator(Guid companyId, Guid userId);
+        
+        public Task<Curator?> GetCuratorByUserId(Guid id);
     }
 }

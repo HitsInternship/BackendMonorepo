@@ -5,4 +5,5 @@ namespace SelectionModule.Contracts.Repositories;
 
 public interface IVacancyRepository : IBaseEntityRepository<VacancyEntity>
 {
+    Task<List<VacancyEntity>> GetByCompanyAsync(Guid id);
 }

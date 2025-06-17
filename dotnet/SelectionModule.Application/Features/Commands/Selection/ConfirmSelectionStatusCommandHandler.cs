@@ -46,10 +46,6 @@ public class ConfirmSelectionStatusCommandHandler : IRequestHandler<ConfirmSelec
 
         await _selectionRepository.UpdateAsync(selection);
 
-        /*await _selectionRepository.SoftDeleteAsync(selection.Id);
-        await _candidateRepository.SoftDeleteAsync(selection.CandidateId);
-        await _vacancyResponseRepository.SoftDeleteByCandidateAsync(selection.CandidateId);*/
-
         await SendAdmissionInternshipMessageAsync(selection);
 
         return Unit.Value;
@@ -60,7 +56,6 @@ public class ConfirmSelectionStatusCommandHandler : IRequestHandler<ConfirmSelec
         var user = await _userRepository.GetByIdAsync(selection.Candidate.UserId);
 
         var vacancy = await _mediator.Send(new GetVacancyQuery(selection.Offer!.Value, Guid.Empty, []));
-
 
         await _mediator.Send(
             new SendAdmissionInternshipMessageCommand(user.Email, vacancy.Company.Name, vacancy.Position.Name));
