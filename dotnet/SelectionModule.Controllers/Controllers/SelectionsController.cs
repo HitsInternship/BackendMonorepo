@@ -57,14 +57,15 @@ namespace SelectionModule.Controllers.Controllers
         /// <summary>
         /// Получение процедуры отбора для указанного студента.
         /// </summary>
-        /// <param name="studentId">ID студента.</param>
+        /// <param name="selectionId">ID студента.</param>
         /// <returns>Данные по отбору студента.</returns>
         [HttpGet]
-        [Route("{studentId}/selection")]
+        [Route("/selections/{selectionId}")]
         [ProducesResponseType(typeof(SelectionDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetSelection(Guid studentId)
+        public async Task<IActionResult> GetSelection(Guid selectionId)
         {
-            return Ok(await _sender.Send(new GetSelectionQuery(studentId, User.GetUserId(), User.GetRoles())));
+            return Ok(await _sender.Send(new GetSelectionQuery(selectionId, User.GetUserId(), User.GetRoles(),
+                null)));
         }
 
         /// <summary>
@@ -76,12 +77,13 @@ namespace SelectionModule.Controllers.Controllers
         /// <param name="status">Статус процедуры отбора (опционально).</param>
         /// <returns>Список отборов с учётом применённых фильтров.</returns>
         [HttpGet]
-        [Authorize(Roles = "DeanMember")]
+        [Authorize(Roles = "DeanMember, Curator")]
         [Route("selections")]
         [ProducesResponseType(typeof(List<ListedSelectionDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetSelections(Guid? semesterId, int? groupNumber, SelectionStatus? status)
         {
-            return Ok(await _sender.Send(new GetSelectionsQuery(groupNumber, status, semesterId)));
+            return Ok(await _sender.Send(new GetSelectionsQuery(groupNumber, status, semesterId, User.GetUserId(),
+                User.GetRoles())));
         }
 
         /// <summary>
@@ -124,7 +126,7 @@ namespace SelectionModule.Controllers.Controllers
         {
             return Ok(await _sender.Send(new UpdateGlobalSelectionCommand(date)));
         }
-        
+
         /// <summary>
         /// Получить информацию о своем процессе отбора (Selection) для текущего пользователя.
         /// </summary>

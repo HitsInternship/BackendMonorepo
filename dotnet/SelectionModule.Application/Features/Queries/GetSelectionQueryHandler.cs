@@ -5,6 +5,7 @@ using MediatR;
 using SelectionModule.Contracts.Dtos.Responses;
 using SelectionModule.Contracts.Queries;
 using SelectionModule.Contracts.Repositories;
+using SelectionModule.Domain.Entites;
 using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
 using UserModule.Contracts.Repositories;
@@ -16,34 +17,71 @@ public class GetSelectionQueryHandler : IRequestHandler<GetSelectionQuery, Selec
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
     private readonly ICandidateRepository _candidateRepository;
+    private readonly ISelectionRepository _selectionRepository;
     private readonly IVacancyResponseRepository _vacancyResponseRepository;
     private readonly ICompanyRepository _companyRepository;
     private readonly IStudentRepository _studentRepository;
+    private readonly IVacancyRepository _vacancyRepository;
+    private readonly IPositionRepository _positionRepository;
+    private readonly ICuratorRepository _curatorRepository;
 
-    public GetSelectionQueryHandler(IMapper mapper, ISelectionRepository selectionRepository,
-        IVacancyResponseRepository vacancyResponseRepository, ICandidateRepository candidateRepository,
-        IStudentRepository studentRepository, IUserRepository userRepository, ICompanyRepository companyRepository)
+    public GetSelectionQueryHandler(IVacancyRepository vacancyRepository, IUserRepository userRepository,
+        ISelectionRepository selectionRepository, IMapper mapper, IVacancyResponseRepository vacancyResponseRepository,
+        ICompanyRepository companyRepository, IStudentRepository studentRepository,
+        IPositionRepository positionRepository, ICandidateRepository candidateRepository,
+        ICuratorRepository curatorRepository)
     {
+        _vacancyRepository = vacancyRepository;
+        _userRepository = userRepository;
+        _selectionRepository = selectionRepository;
         _mapper = mapper;
         _vacancyResponseRepository = vacancyResponseRepository;
-        _candidateRepository = candidateRepository;
-        _studentRepository = studentRepository;
-        _userRepository = userRepository;
         _companyRepository = companyRepository;
+        _studentRepository = studentRepository;
+        _positionRepository = positionRepository;
+        _candidateRepository = candidateRepository;
+        _curatorRepository = curatorRepository;
     }
+
 
     public async Task<SelectionDto> Handle(GetSelectionQuery request, CancellationToken cancellationToken)
     {
-        var candidate = await _candidateRepository.GetCandidateByStudentIdAsync(request.StudentId) ??
-                        throw new NotFound("User does not have selection.");
+        CandidateEntity candidate;
+        SelectionEntity selection;
 
-        var selection = candidate.Selection ?? throw new BadRequest("No selection .");
+        if (request.StudentId.HasValue)
+        {
+            candidate = await _candidateRepository.GetCandidateByStudentIdAsync(request.StudentId.Value) ?? throw new
+                BadRequest("You are not a candidate");
+
+            selection = candidate.Selection ?? throw new BadRequest("You do not have a selection");
+        }
+        else
+        {
+            selection = await _selectionRepository.GetByIdAsync(request.SelectionId);
+
+            candidate = selection.Candidate;
+        }
 
         var vacancyResponses = await _vacancyResponseRepository.GetByCandidateIdAsync(candidate.Id);
 
         var student = await _studentRepository.GetStudentByIdAsync(candidate.StudentId);
 
-        if (student.UserId != request.UserId && !request.Roles.Contains("DeanMember"))
+        if (request.Roles.Contains("Curator"))
+        {
+            var curator = await _curatorRepository.GetCuratorByUserId(request.UserId);
+
+            if (curator == null) throw new Forbidden("You don't have access to the curator");
+
+            var companyVacancyIds = (await _vacancyRepository
+                    .GetByCompanyAsync(curator.Company.Id))
+                .Select(v => v.Id)
+                .ToList();
+
+            if (!selection.Offer.HasValue || !companyVacancyIds.Contains(selection.Offer.Value))
+                throw new Forbidden("You don't have access to the selection");
+        }
+        else if (student.UserId != request.UserId && !request.Roles.Contains("DeanMember"))
             throw new Forbidden("You do not have access to this candidate.");
 
         var user = await _userRepository.GetByIdAsync(candidate.UserId);
@@ -75,7 +113,7 @@ public class GetSelectionQueryHandler : IRequestHandler<GetSelectionQuery, Selec
             });
         }
 
-        return new SelectionDto
+        var selectionDto = new SelectionDto
         {
             Id = selection.Id,
             IsDeleted = selection.IsDeleted,
@@ -84,5 +122,21 @@ public class GetSelectionQueryHandler : IRequestHandler<GetSelectionQuery, Selec
             Candidate = candidateDto,
             Responses = vacanciesDtos
         };
+
+        if (selection.Offer.HasValue)
+        {
+            var vacancy = await _vacancyRepository.GetByIdAsync(selection.Offer.Value);
+            var position = await _positionRepository.GetByIdAsync(vacancy.PositionId);
+            var company = await _companyRepository.GetByIdAsync(vacancy.CompanyId);
+
+
+            selectionDto.Offer = new OfferDto
+            {
+                Position = position.Name,
+                CompanyName = company.Name,
+            };
+        }
+
+        return selectionDto;
     }
 }

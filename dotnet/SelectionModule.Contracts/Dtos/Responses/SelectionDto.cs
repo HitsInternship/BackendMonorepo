@@ -24,6 +24,16 @@ public record SelectionDto : BaseDto
     public required CandidateDto Candidate { get; set; }
 
     /// <summary>
+    /// Данные оффера студента.
+    /// </summary>
+    public OfferDto? Offer { get; set; }
+
+    /// <summary>
+    /// флаг того, что отбор подтвержден
+    /// </summary>
+    public bool IsConfirmed { get; set; }
+    
+    /// <summary>
     /// Список откликов на вакансии, связанных с этим отбором.
     /// </summary>
     public required List<SelectionVacancyResponseDto> Responses { get; set; }

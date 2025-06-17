@@ -37,6 +37,7 @@ public class GetMySelectionQueryHandler : IRequestHandler<GetMySelectionQuery, S
 
         var student = await _studentRepository.GetStudentByUserIdAsync(request.UserId);
 
-        return await _mediator.Send(new GetSelectionQuery(student.Id, user.Id, ["Student"]), cancellationToken);
+        return await _mediator.Send(new GetSelectionQuery(Guid.Empty, user.Id, ["Student"], student.Id),
+            cancellationToken);
     }
 }
