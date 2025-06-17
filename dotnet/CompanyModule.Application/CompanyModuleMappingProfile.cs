@@ -24,7 +24,9 @@ public class CompanyModuleMappingProfile : Profile
             .ForMember(dest => dest.id, opt => opt.MapFrom(src => src.UserId))
             .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name))
             .ForMember(dest => dest.surname, opt => opt.MapFrom(src => src.User.Surname))
-            .ForMember(dest => dest.email, opt => opt.MapFrom(src => src.User.Email));
+            .ForMember(dest => dest.email, opt => opt.MapFrom(src => src.User.Email))
+            .ForMember(dest => dest.companyId, opt => opt.MapFrom(src => src.Company.Id))
+            .ForMember(dest => dest.companyName, opt => opt.MapFrom(src => src.Company.Name));
 
         CreateMap<AppointmentRequest, Appointment>();
         CreateMap<Appointment, AppointmentResponse>()
