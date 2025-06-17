@@ -8,7 +8,7 @@ namespace PracticeModule.Contracts.DTOs.Requests
 {
     public class SearchPracticeRequest
     {
-        public Guid? semesterId { get; set; }
+        public Guid globalPracticeId { get; set; }
         public Guid? groupId { get; set; }
         public Guid? companyId { get; set; }
         public bool? hasMark { get; set; }

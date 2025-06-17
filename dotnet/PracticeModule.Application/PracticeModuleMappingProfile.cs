@@ -1,4 +1,5 @@
 using AutoMapper;
+using DeanModule.Domain.Entities;
 using PracticeModule.Contracts.DTOs.Requests;
 using PracticeModule.Contracts.DTOs.Responses;
 using PracticeModule.Domain.Entity;
@@ -29,6 +30,14 @@ public class PracticeModuleMappingProfile : Profile
             .ForMember(response => response.newPositionName, opt => opt.MapFrom(model => model.NewPosition.Name));
 
         CreateMap<CreateGlobalPracticeRequest, GlobalPractice>();
-        CreateMap<GlobalPractice, GlobalPracticeResponse>();
+        CreateMap<GlobalPractice, GlobalPracticeResponse>()
+            .ForMember(response => response.streamNumber, opt => opt.MapFrom(model => model.Stream.StreamNumber));
+
+        CreateMap<IGrouping<SemesterEntity, GlobalPractice>, SemesterPracticeResponse>()
+            .ForMember(response => response.semesterId, opt => opt.MapFrom(group => group.Key.Id))
+            .ForMember(response => response.semesterStartDate, opt => opt.MapFrom(group => group.Key.StartDate))
+            .ForMember(response => response.semesterEndDate, opt => opt.MapFrom(group => group.Key.EndDate))
+
+            .ForMember(response => response.globalPractices, opt => opt.MapFrom(group => group.ToList()));
     }
 }

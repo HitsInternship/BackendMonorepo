@@ -71,10 +71,10 @@ namespace PracticeModule.Controllers.PracticeControllers
         [HttpGet]
         [Authorize(Roles = "DeanMember")]
         [Route("global")]
-        [ProducesResponseType(typeof(List<GlobalPracticeResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<SemesterPracticeResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetGlobalPractices()
         {
-            return Ok((await _sender.Send(new GetGlobalPracticesQuery())).Select(_mapper.Map<GlobalPracticeResponse>));
+            return Ok((await _sender.Send(new GetGlobalPracticesQuery())).Select(group => _mapper.Map<SemesterPracticeResponse>(group)));
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace PracticeModule.Controllers.PracticeControllers
         {
             var querry = new GetExelAboutPracticeByGroupQuery() { GroupId = groupId };
 
-            return Ok(await _sender.Send(querry));
+            return await _sender.Send(querry);
         }
 
         /// <summary>
@@ -114,7 +114,35 @@ namespace PracticeModule.Controllers.PracticeControllers
         {
             var querry = new GetExelAboutPracticeByStreamQuery() { StreamId = streamId };
 
-            return Ok(await _sender.Send(querry));
+            return await _sender.Send(querry);
         }
+
+        /// <summary>
+        /// Получить exel файл с информацией о практиках по компании.
+        /// </summary>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("{companyId}/company-practice-exel")]
+        public async Task<IActionResult> GetExelForCompany([FromRoute] Guid companyId)
+        {
+            var querry = new GetExelAboutPracticeByCompanyQuery() { CompanyId = companyId };
+
+            return await _sender.Send(querry);
+        } 
+        
+        /// <summary>
+        /// Получить exel файл с информацией о практиках для всех компаний.
+        /// </summary>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("company-practice-exel")]
+        public async Task<IActionResult> GetExelForAllCompanys()
+        {
+            var querry = new GetExelAboutPracticeForAllCompanysQuery();
+
+            return await _sender.Send(querry);
+        }
+
+
     }
 }

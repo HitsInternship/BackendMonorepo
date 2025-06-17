@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using DeanModule.Domain.Entities;
+using MediatR;
 using PracticeModule.Contracts.DTOs.Requests;
 using PracticeModule.Domain.Entity;
 using System;
@@ -9,5 +10,5 @@ using System.Threading.Tasks;
 
 namespace PracticeModule.Application.Handler.Practice
 {
-    public record GetGlobalPracticesQuery() : IRequest<List<GlobalPractice>>;
+    public record GetGlobalPracticesQuery() : IRequest<List<IGrouping<SemesterEntity, GlobalPractice>>>;
 }

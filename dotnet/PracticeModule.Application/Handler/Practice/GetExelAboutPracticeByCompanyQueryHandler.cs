@@ -15,20 +15,20 @@ using CompanyModule.Domain.Entities;
 using SelectionModule.Domain.Entites;
 using DeanModule.Domain.Entities;
 using DeanModule.Contracts.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace PracticeModule.Application.Handler.Practice
 {
-    public class GetExelAboutPracticeByGroupQueryHandler : IRequestHandler<GetExelAboutPracticeByGroupQuery, FileContentResult>
+    public class GetExelAboutPracticeByCompanyQueryHandler : IRequestHandler<GetExelAboutPracticeByCompanyQuery, FileContentResult>
     {
         private readonly IPracticeRepository _practiceRepository;
         private readonly IUserRepository _userRepository;
         private readonly IStudentRepository _studentRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly IPositionRepository _positionRepository;
-        private readonly IGroupRepository _groupRepository;
         private readonly ISemesterRepository _semesterRepository;
 
-        public GetExelAboutPracticeByGroupQueryHandler(IPracticeRepository practiceRepository, IUserRepository userRepository, 
+        public GetExelAboutPracticeByCompanyQueryHandler(IPracticeRepository practiceRepository, IUserRepository userRepository, 
             IStudentRepository studentRepository, ICompanyRepository companyRepository,
             IPositionRepository positionRepository, IGroupRepository groupRepository, ISemesterRepository semesterRepository)
         {
@@ -37,26 +37,12 @@ namespace PracticeModule.Application.Handler.Practice
             _studentRepository = studentRepository;
             _companyRepository = companyRepository;
             _positionRepository = positionRepository;
-            _groupRepository = groupRepository;
             _semesterRepository = semesterRepository;
         }
 
-        public async Task<FileContentResult> Handle(GetExelAboutPracticeByGroupQuery request, CancellationToken cancellationToken)
+        public async Task<FileContentResult> Handle(GetExelAboutPracticeByCompanyQuery request, CancellationToken cancellationToken)
         {
-            if (!await _groupRepository.CheckIfExistsAsync(request.GroupId)) 
-                throw new NotFound("Группа не найдена");
-
-            var group = await _groupRepository.GetGroupByIdAsync(request.GroupId);
-            var students = await _studentRepository.GetStudentsByGroupIdAsync(request.GroupId);
-
-            List<User> users = [];
-            List<Guid> studentsId = [];
-
-            foreach (var student in students)
-            {
-                studentsId.Add(student.Id);
-                users.Add(await _userRepository.GetByIdAsync(student.UserId));
-            }
+            Company company = await _companyRepository.GetByIdAsync(request.CompanyId);
 
             SemesterEntity? currentSemester = (await _semesterRepository.ListAllAsync()).Where(semester =>
                 semester.EndDate > DateOnly.FromDateTime(DateTime.UtcNow) &&
@@ -66,7 +52,9 @@ namespace PracticeModule.Application.Handler.Practice
             {
                 throw new NotFound("No current semester found");
             }
-            var practices = await _practiceRepository.GetPracticesByStudentIdAsync(studentsId, currentSemester.Id);
+            var practices = (await _practiceRepository.ListAllAsync()).Where(practice => practice.CompanyId == company.Id && practice.GlobalPractice.SemesterId == currentSemester.Id).ToList();
+            var students = (await _studentRepository.ListAllAsync()).Where(student => practices.Select(practice => practice.StudentId).Contains(student.Id)).ToList();
+            var users = (await _userRepository.ListAllAsync()).Where(user => students.Select(student => student.UserId).Contains(user.Id)).ToList();
 
             ExcelPackage.License.SetNonCommercialPersonal("<My Name>");
 
@@ -80,32 +68,25 @@ namespace PracticeModule.Application.Handler.Practice
                 worksheet.Cells[1, 4].Value = "Компания";
                 worksheet.Cells[1, 5].Value = "Позиция";
 
-                for (int i = 0; i < students.Count(); i++)
+                for (int i = 0; i < practices.Count(); i++)
                 {
-                    students[i].User = users.First(user => user.Id == students[i].UserId);
+                    var student = students.First(student => student.Id == practices[i].StudentId);
+                    student.User = users.First(user => user.Id == student.UserId);
 
-                    var practice = practices.FirstOrDefault(practice => practice?.StudentId == students[i].Id);
-                    Company company = null;
-                    PositionEntity position = null;
+                    var position = await _positionRepository.GetByIdAsync(practices[i].PositionId);
 
-                    if (practice != null)
-                    {
-                        company = await _companyRepository.GetByIdAsync(practice.CompanyId);
-                        position = await _positionRepository.GetByIdAsync(practice.PositionId);
-                    }
-
-                    worksheet.Cells[i + 2, 1].Value = students[i].User.Surname;
-                    worksheet.Cells[i + 2, 2].Value = students[i].User.Name;
-                    worksheet.Cells[i + 2, 3].Value = students[i].Middlename;
-                    worksheet.Cells[i + 2, 4].Value = company?.Name ?? "-";
-                    worksheet.Cells[i + 2, 5].Value = position?.Name ?? "-";
+                    worksheet.Cells[i + 2, 1].Value = student.User.Surname;
+                    worksheet.Cells[i + 2, 2].Value = student.User.Name;
+                    worksheet.Cells[i + 2, 3].Value = student.Middlename;
+                    worksheet.Cells[i + 2, 4].Value = company.Name;
+                    worksheet.Cells[i + 2, 5].Value = position.Name;
                 }
 
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
                 byte[] fileContents = package.GetAsByteArray();
 
-                string fileName = $"Практики_{group.GroupNumber}.xlsx";
+                string fileName = $"Практики_{company.Name}.xlsx";
                 return new FileContentResult(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 {
                     FileDownloadName = fileName

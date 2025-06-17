@@ -20,16 +20,9 @@ namespace PracticeModule.Persistence.Repositories
             this.context = context;
         }
 
-        public async Task<List<Practice>> GetPracticesByStudentIdAsync(List<Guid> studentsId)
+        public async Task<List<Practice>> GetPracticesByStudentIdAsync(List<Guid> studentsId, Guid semesterId)
         {
-            List<Practice> practices = new();
-
-            foreach (var id in studentsId)
-            {
-                practices.Add(await context.Practice.FirstOrDefaultAsync(p => p.StudentId == id));
-            }
-
-            return practices;
+            return context.Practice.Where(practice => studentsId.Contains(practice.StudentId) && practice.GlobalPractice.SemesterId == semesterId).ToList();
         }
     }
 }
