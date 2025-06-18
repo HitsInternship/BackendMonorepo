@@ -17,7 +17,7 @@ using DeanModule.Domain.Entities;
 using DeanModule.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace PracticeModule.Application.Handler.Practice
+namespace PracticeModule.Application.Handler.PracticePart
 {
     public class GetExelAboutPracticeByCompanyQueryHandler : IRequestHandler<GetExelAboutPracticeByCompanyQuery, FileContentResult>
     {

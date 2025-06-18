@@ -10,7 +10,7 @@ using StudentModule.Domain.Entities;
 using UserModule.Contracts.Queries;
 using UserModule.Domain.Entities;
 
-namespace PracticeModule.Application.Handler.Practice;
+namespace PracticeModule.Application.Handler.PracticePart;
 
 public class SearchPracticeQueryHandler : IRequestHandler<SearchPracticeQuery, List<Domain.Entity.Practice>>
 {

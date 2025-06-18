@@ -15,7 +15,7 @@ using SelectionModule.Domain.Entites;
 using DeanModule.Contracts.Repositories;
 using DeanModule.Domain.Entities;
 
-namespace PracticeModule.Application.Handler.Practice
+namespace PracticeModule.Application.Handler.PracticePart
 {
     public class GetExelAboutPracticeByStreamQueryHandler : IRequestHandler<GetExelAboutPracticeByStreamQuery, FileContentResult>
     {

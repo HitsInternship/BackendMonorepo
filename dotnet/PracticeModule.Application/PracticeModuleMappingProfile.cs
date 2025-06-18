@@ -39,5 +39,15 @@ public class PracticeModuleMappingProfile : Profile
             .ForMember(response => response.semesterEndDate, opt => opt.MapFrom(group => group.Key.EndDate))
 
             .ForMember(response => response.globalPractices, opt => opt.MapFrom(group => group.ToList()));
+
+        CreateMap<IGrouping<SemesterEntity, GlobalPractice>, StudentGlobalPracticeResponse>()
+            .ForMember(response => response.semesterId, opt => opt.MapFrom(group => group.Key.Id))
+            .ForMember(response => response.semesterStartDate, opt => opt.MapFrom(group => group.Key.StartDate))
+            .ForMember(response => response.semesterEndDate, opt => opt.MapFrom(group => group.Key.EndDate))
+            .ForMember(response => response.practiceType, opt => opt.MapFrom(group => group.First().PracticeType))
+            .ForMember(response => response.diaryPatternDocumentId, opt => opt.MapFrom(group => group.First().DiaryPatternDocumentId))
+            .ForMember(response => response.characteristicsPatternDocumentId, opt => opt.MapFrom(group => group.First().CharacteristicsPatternDocumentId))
+
+            .ForMember(response => response.practice, opt => opt.MapFrom(group => group.First().Practices.First()));
     }
 }

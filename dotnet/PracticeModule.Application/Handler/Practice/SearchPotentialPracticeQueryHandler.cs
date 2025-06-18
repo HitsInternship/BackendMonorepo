@@ -17,7 +17,7 @@ using StudentModule.Domain.Enums;
 using UserModule.Contracts.Queries;
 using UserModule.Domain.Entities;
 
-namespace PracticeModule.Application.Handler.Practice;
+namespace PracticeModule.Application.Handler.PracticePart;
 
 public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotentialPracticeQuery, List<Domain.Entity.Practice>>
 {

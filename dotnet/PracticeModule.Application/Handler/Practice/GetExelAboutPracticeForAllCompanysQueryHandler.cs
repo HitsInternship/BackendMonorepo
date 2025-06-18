@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using UserModule.Contracts.Repositories;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace PracticeModule.Application.Handler.Practice
+namespace PracticeModule.Application.Handler.PracticePart
 {
     public class GetExelAboutPracticeForAllCompanysQueryHandler : IRequestHandler<GetExelAboutPracticeForAllCompanysQuery, FileContentResult>
     {
