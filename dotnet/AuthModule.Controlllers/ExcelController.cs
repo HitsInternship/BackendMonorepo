@@ -1,5 +1,6 @@
 using AuthModule.Contracts.CQRS;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace AuthModule.Controlllers;
 
 [ApiController]
 [Route("api/excel")]
+[Authorize(Roles = "DeanMember")]
 public class ExcelController : ControllerBase
 {
     private readonly IMediator _mediator;

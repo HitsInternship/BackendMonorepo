@@ -24,6 +24,9 @@ namespace StudentModule.Application.Handlers.StreamHandlers
             if (request.Year < 2017 || request.Year > DateTime.Now.Year)
                 throw new BadRequest("Invalid year");
 
+            if (request.StreamNumber < 0) 
+                throw new BadRequest("Invalid stream number");
+
 
             StreamEntity stream = new StreamEntity()
             {
