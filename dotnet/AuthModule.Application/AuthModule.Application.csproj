@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AppSettingsModule.Contracts\AppSettingsModule.Contracts.csproj" />
       <ProjectReference Include="..\AuthModule.Infrastructure\AuthModule.Infrastructure.csproj" />
       <ProjectReference Include="..\AuthModule.Contracts\AuthModule.Contracts.csproj" />
       <ProjectReference Include="..\NotificationModule.Contracts\NotificationModule.Contracts.csproj" />

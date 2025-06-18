@@ -1,4 +1,6 @@
-﻿using AuthModule.Contracts.CQRS;
+﻿using AppSettingsModule.Contracts.Commands;
+using AppSettingsModule.Domain.Entities;
+using AuthModule.Contracts.CQRS;
 using AutoMapper;
 using MediatR;
 using Shared.Domain.Exceptions;
@@ -29,6 +31,8 @@ namespace UserModule.Application.Handlers
             User user = _mapper.Map<User>(command.CreateRequest);
 
             await _userRepository.AddAsync(user);
+
+            await _mediator.Send(new CreateSettingsCommand(user.Id), cancellationToken);
 
             await _mediator.Send(new CreateAspNetUserQuery(user.Id, user.Email, command.Password),
                 cancellationToken);

@@ -14,6 +14,9 @@ using Shared.Domain.Exceptions;
 using UserModule.Contracts.Repositories;
 using UserInfrastructure;
 using UserModule.Domain.Enums;
+using AppSettingsModule.Contracts.Repositories;
+using AppSettingsModule.Contracts.DTOs;
+using AppSettingsModule.Contracts.Queries;
 
 
 namespace AuthModel.Service.Handler;
@@ -23,12 +26,14 @@ public class LoginHandler : IRequestHandler<LoginDTO, LoginResponseDTO>
     private readonly IHashService _hashService;
     private readonly AuthDbContext _context;
     private readonly IRoleRepository _roleRepository;
-    
-    public LoginHandler(IHashService hashService, AuthDbContext context, IRoleRepository roleRepository)
+    private readonly IMediator _mediator;
+
+    public LoginHandler(IHashService hashService, AuthDbContext context, IRoleRepository roleRepository, IMediator mediator)
     {
         _hashService = hashService;
         _context = context;
         _roleRepository = roleRepository;
+        _mediator = mediator;
     }
     
     public async Task<LoginResponseDTO> Handle(LoginDTO request, CancellationToken cancellationToken)
@@ -51,6 +56,7 @@ public class LoginHandler : IRequestHandler<LoginDTO, LoginResponseDTO>
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
 
         await _context.SaveChangesAsync(cancellationToken);
+
         var roles = await _roleRepository.GetRolesByUserIdAsync(user.UserId.Value);
         var roleNames = new List<RoleName>(roles.Count);
         foreach (var role in roles)
@@ -58,11 +64,14 @@ public class LoginHandler : IRequestHandler<LoginDTO, LoginResponseDTO>
             roleNames.Add(role.RoleName);
         }
 
+        var settings = await _mediator.Send(new GetSettingsQuery(user.UserId.Value), cancellationToken);
+
         return new LoginResponseDTO
         {
             AccessToken = accessToken,
             RefreshToken = refreshToken,
-            Roles = roleNames
+            Roles = roleNames,
+            Settings = settings
         };
     }
     
