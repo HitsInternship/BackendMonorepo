@@ -4,5 +4,10 @@ using SelectionModule.Domain.Enums;
 
 namespace SelectionModule.Contracts.Queries;
 
-public record GetSelectionsQuery(int? GroupNumber, SelectionStatus? Status, Guid? SemesterId)
+public record GetSelectionsQuery(
+    int? GroupNumber,
+    SelectionStatus? Status,
+    Guid? SemesterId,
+    Guid UserId,
+    List<string> Roles)
     : IRequest<List<ListedSelectionDto>>;

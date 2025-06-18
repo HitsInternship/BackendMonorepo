@@ -6,23 +6,22 @@ using Shared.Persistence.Repositories;
 
 namespace CompanyModule.Persistence.Repositories
 {
-    public class CuratorRepository : BaseEntityRepository<Curator>, ICuratorRepository
+    public class CuratorRepository(CompanyModuleDbContext context)
+        : BaseEntityRepository<Curator>(context), ICuratorRepository
     {
-        private readonly CompanyModuleDbContext _context;
-
-        public CuratorRepository(CompanyModuleDbContext context) : base(context)
-        {
-            _context = context;
-        }
-
         public async Task<List<Curator>> GetCuratorsByCompany(Company company)
         {
-            return _context.Curators.Where(curator => curator.Company == company).ToList();
+            return await DbSet.Where(curator => curator.Company == company).ToListAsync();
         }
 
         public async Task<bool> CheckIfUserIsCurator(Guid companyId, Guid userId)
         {
             return await DbSet.AnyAsync(x => x.UserId == userId && x.Company.Id == companyId);
+        }
+
+        public async Task<Curator?> GetCuratorByUserId(Guid id)
+        {
+            return await DbSet.Include(x => x.Company).FirstOrDefaultAsync(curator => curator.UserId == id);
         }
     }
 }

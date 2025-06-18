@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AppSettingsModule.Contracts\AppSettingsModule.Contracts.csproj" />
       <ProjectReference Include="..\UserModule.Domain\UserModule.Domain.csproj" />
     </ItemGroup>
 

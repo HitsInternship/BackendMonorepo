@@ -1,13 +1,15 @@
 ﻿using AppSettingsModule.Contracts.Commands;
+using AppSettingsModule.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UserModule.Persistence;
 
 namespace AppSettingsModule.Controllers
 {
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [Route("api/settings/")]
     public class SettingsController : ControllerBase
     {
@@ -19,16 +21,16 @@ namespace AppSettingsModule.Controllers
 
         [HttpPatch]
         [Route("edit-theme")]
-        public async Task<IActionResult> EditTheme([FromBody] EditThemeCommand command)
+        public async Task<IActionResult> EditTheme([FromBody] Theme theme)
         {
-            return Ok(await _mediator.Send(command));
+            return Ok(await _mediator.Send(new EditThemeCommand(User.GetUserId(), theme)));
         }
 
         [HttpPatch]
         [Route("edit-language")]
-        public async Task<IActionResult> EditLanguage([FromBody] EditLanguageCommand command)
+        public async Task<IActionResult> EditLanguage([FromBody] Language language)
         {
-            return Ok(await _mediator.Send(command));
+            return Ok(await _mediator.Send(new EditLanguageCommand(User.GetUserId(), language)));
         }
     }
 }

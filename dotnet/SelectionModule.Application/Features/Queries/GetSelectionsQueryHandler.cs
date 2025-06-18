@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SelectionModule.Contracts.Dtos.Responses;
 using SelectionModule.Contracts.Queries;
 using SelectionModule.Contracts.Repositories;
+using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
 using StudentModule.Domain.Entities;
 using UserModule.Contracts.Repositories;
@@ -19,10 +20,12 @@ public class GetSelectionsQueryHandler : IRequestHandler<GetSelectionsQuery, Lis
     private readonly ICompanyRepository _companyRepository;
     private readonly IPositionRepository _positionRepository;
     private readonly IVacancyRepository _vacancyRepository;
+    private readonly ICuratorRepository _curatorRepository;
 
     public GetSelectionsQueryHandler(ISelectionRepository selectionRepository, ICandidateRepository candidateRepository,
         IStudentRepository studentRepository, IUserRepository userRepository, IPositionRepository positionRepository,
-        ICompanyRepository companyRepository, IVacancyRepository vacancyRepository)
+        ICompanyRepository companyRepository, IVacancyRepository vacancyRepository,
+        ICuratorRepository curatorRepository)
     {
         _selectionRepository = selectionRepository;
         _candidateRepository = candidateRepository;
@@ -31,6 +34,7 @@ public class GetSelectionsQueryHandler : IRequestHandler<GetSelectionsQuery, Lis
         _positionRepository = positionRepository;
         _companyRepository = companyRepository;
         _vacancyRepository = vacancyRepository;
+        _curatorRepository = curatorRepository;
     }
 
     public async Task<List<ListedSelectionDto>> Handle(GetSelectionsQuery request, CancellationToken cancellationToken)
@@ -38,6 +42,21 @@ public class GetSelectionsQueryHandler : IRequestHandler<GetSelectionsQuery, Lis
         List<Guid> userIds;
         IQueryable<StudentEntity> students = await _studentRepository.ListAllAsync();
         var selectionsEntity = await _selectionRepository.ListAllAsync();
+
+        if (request.Roles.Contains("Curator"))
+        {
+            var curator = await _curatorRepository.GetCuratorByUserId(request.UserId);
+
+            if (curator == null) throw new Forbidden("You don't have access to the curator");
+
+            var companyVacancyIds = (await _vacancyRepository
+                    .GetByCompanyAsync(curator.Company.Id))
+                .Select(v => v.Id)
+                .ToList();
+
+            selectionsEntity = selectionsEntity
+                .Where(x => x.Offer.HasValue && companyVacancyIds.Contains(x.Offer.Value));
+        }
 
         if (request.GroupNumber.HasValue)
         {

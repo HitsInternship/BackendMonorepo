@@ -23,7 +23,8 @@ namespace StudentModule.Application.Handlers.StreamHandlers
 
         public async Task<Unit> Handle(DeleteStreamCommand request, CancellationToken cancellationToken)
         {
-            StreamEntity? stream = await _streamRepository.GetByIdAsync(request.StreamId) ?? throw new NotFound("Stream not found");
+            StreamEntity? stream = await _streamRepository.GetStreamByIdAsync(request.StreamId) 
+                ?? throw new NotFound("Stream not found");
 
 
             await _streamRepository.DeleteAsync(stream);
