@@ -21,7 +21,7 @@ namespace StudentModule.Application.Handlers.StreamHandlers
 
         public async Task<StreamDto> Handle(EditStreamStatusCommand request, CancellationToken cancellationToken)
         {
-            StreamEntity? stream = await _streamRepository.GetByIdAsync(request.Id)
+            StreamEntity? stream = await _streamRepository.GetStreamByIdAsync(request.Id)
                                    ?? throw new NotFound("Stream not found");
 
 

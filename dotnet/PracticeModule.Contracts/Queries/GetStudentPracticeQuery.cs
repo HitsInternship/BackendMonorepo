@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PracticeModule.Application.Handler.PracticePart
+namespace PracticeModule.Contracts.Queries
 {
-    public record GetGlobalPracticesQuery(Guid? studentUserId = null) : IRequest<List<IGrouping<SemesterEntity, GlobalPractice>>>;
+    public record GetStudentPracticeQuery(Guid studentId) : IRequest<Practice>;
 }

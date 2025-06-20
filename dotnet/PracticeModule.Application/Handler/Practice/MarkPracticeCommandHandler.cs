@@ -2,7 +2,7 @@ using MediatR;
 using PracticeModule.Contracts.Commands;
 using PracticeModule.Contracts.Repositories;
 
-namespace PracticeModule.Application.Handler.Practice;
+namespace PracticeModule.Application.Handler.PracticePart;
 
 public class MarkPracticeCommandHandler : IRequestHandler<MarkPracticeCommand, Unit>
 {

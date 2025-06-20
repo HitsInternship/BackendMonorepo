@@ -3,11 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PracticeModule.Application.Handler.Practice;
+using PracticeModule.Application.Handler.PracticePart;
 using PracticeModule.Contracts.Commands;
 using PracticeModule.Contracts.DTOs.Requests;
 using PracticeModule.Contracts.DTOs.Responses;
 using PracticeModule.Contracts.Queries;
+using StudentModule.Contracts.Queries.StudentQueries;
+using StudentModule.Domain.Entities;
 
 namespace PracticeModule.Controllers.PracticeControllers
 {
@@ -74,7 +76,22 @@ namespace PracticeModule.Controllers.PracticeControllers
         [ProducesResponseType(typeof(List<SemesterPracticeResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetGlobalPractices()
         {
-            return Ok((await _sender.Send(new GetGlobalPracticesQuery())).Select(group => _mapper.Map<SemesterPracticeResponse>(group)));
+            return Ok((await _sender.Send(new GetGlobalPracticesQuery())).Select(_mapper.Map<SemesterPracticeResponse>));
+        }
+
+        /// <summary>
+        /// Получить глобальные практики для студента.
+        /// </summary>
+        /// <returns>Список глобальных практик.</returns>
+        [HttpGet]
+        [Authorize(Roles = "Student")]
+        [Route("global/student")]
+        [ProducesResponseType(typeof(List<SemesterPracticeResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetStudentGlobalPractices()
+        {
+            Guid studentUserId = new Guid(User.Claims.First().Value);
+
+            return Ok((await _sender.Send(new GetGlobalPracticesQuery(studentUserId))).Select(_mapper.Map<StudentGlobalPracticeResponse>));
         }
 
         /// <summary>
@@ -142,7 +159,5 @@ namespace PracticeModule.Controllers.PracticeControllers
 
             return await _sender.Send(querry);
         }
-
-
     }
 }

@@ -25,8 +25,11 @@ namespace StudentModule.Application.Handlers.StreamHandlers
             StreamEntity? stream = await _streamRepository.GetStreamByIdAsync(request.Id) 
                 ?? throw new NotFound("Stream not found");
             
-            if (await _streamRepository.IsStreamWithNumderExistsAsync(request.StreamNumber))
+            if (await _streamRepository.IsStreamWithNumderExistsAsync(request.StreamNumber) && request.StreamNumber != stream.StreamNumber)
                 throw new Conflict($"Stream with number {request.StreamNumber} already exists");
+
+            if (request.StreamNumber < 0) 
+                throw new BadRequest("Invalid stream number");
 
             if (request.Year < 2017 || request.Year > DateTime.Now.Year)
                 throw new BadRequest("Invalid year");
