@@ -8,5 +8,7 @@ namespace UserModule.Contracts.Repositories
         public Task<User?> GetByEmailAsync(string email);
 
         public Task<List<User>> GetUserByName(string name, string surname);
+        
+        public Task<List<User>> GetByIdsAsync(List<Guid> ids);
     }
 }

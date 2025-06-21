@@ -24,9 +24,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationModule", "NotificationModule", "{FF87A8B7-DE35-4BBC-8077-FECB09DE4446}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{B2693D18-F1B0-44FC-8E05-A2A96757416F}"
-	ProjectSection(SolutionItems) = preProject
-		UploadFileRequestDto.cs = UploadFileRequestDto.cs
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Contracts", "Shared.Contracts\Shared.Contracts.csproj", "{860945F4-E99A-48B9-BF76-1A4F27295E74}"
 EndProject
@@ -157,6 +154,19 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationModule.Controllers", "NotificationModule.Controllers\NotificationModule.Controllers.csproj", "{01EE5817-FA4B-4AC1-B5A8-A8DA4A112C0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticeModule.Persistence", "PracticeModule.Persistence\PracticeModule.Persistence.csproj", "{F6649847-EE71-4F06-8042-351225CD13C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundJobs", "BackgroundJobs\BackgroundJobs.csproj", "{BB85B0DD-A44F-44AC-B415-9A0DF567CFC9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{E39FABFB-AAE4-4AD7-9E25-F09B79F3C203}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{61096058-9B32-4666-B83B-E0582C33F443}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+		.dockerignore = .dockerignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -423,6 +433,10 @@ Global
 		{F6649847-EE71-4F06-8042-351225CD13C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6649847-EE71-4F06-8042-351225CD13C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6649847-EE71-4F06-8042-351225CD13C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB85B0DD-A44F-44AC-B415-9A0DF567CFC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB85B0DD-A44F-44AC-B415-9A0DF567CFC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB85B0DD-A44F-44AC-B415-9A0DF567CFC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB85B0DD-A44F-44AC-B415-9A0DF567CFC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="14.0.0" />
-      <PackageReference Include="MediatR" Version="12.5.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
+        <PackageReference Include="AutoMapper"  />
+        <PackageReference Include="MediatR" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" />
     </ItemGroup>
 
     <ItemGroup>
@@ -17,6 +17,7 @@
       <ProjectReference Include="..\DeanModule.Contracts\DeanModule.Contracts.csproj" />
       <ProjectReference Include="..\DocumentModule.Contracts\DocumentModule.Contracts.csproj" />
       <ProjectReference Include="..\NotificationModule.Contracts\NotificationModule.Contracts.csproj" />
+      <ProjectReference Include="..\PracticeModule.Contracts\PracticeModule.Contracts.csproj" />
       <ProjectReference Include="..\SelectionModule.Contracts\SelectionModule.Contracts.csproj" />
       <ProjectReference Include="..\StudentModule.Contracts\StudentModule.Contracts.csproj" />
       <ProjectReference Include="..\UserModule.Contracts\UserModule.Contracts.csproj" />

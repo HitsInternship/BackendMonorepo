@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+      <PackageReference Include="Quartz" />
+      <PackageReference Include="Quartz.Extensions.DependencyInjection"  />
+      <PackageReference Include="Quartz.Extensions.Hosting"  />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NotificationModule.Contracts\NotificationModule.Contracts.csproj" />
+      <ProjectReference Include="..\SelectionModule.Contracts\SelectionModule.Contracts.csproj" />
+      <ProjectReference Include="..\UserModule.Contracts\UserModule.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

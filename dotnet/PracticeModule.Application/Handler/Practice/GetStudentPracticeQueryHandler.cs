@@ -21,8 +21,14 @@ public class GetStudentPracticeQueryHandler : IRequestHandler<GetStudentPractice
 
     public async Task<Practice> Handle(GetStudentPracticeQuery query, CancellationToken cancellationToken)
     {
-        Practice? practice = (await _practiceRepository.ListAllActiveAsync()).Where(practice => practice.StudentId == query.studentId).FirstOrDefault();
-        if (practice == null) { throw new NotFound("No practice for this student"); }
+        Practice? practice =
+            (await _practiceRepository.ListAllActiveAsync()).FirstOrDefault(practice =>
+                practice.StudentId == query.studentId);
+        if (practice == null)
+        {
+            throw new NotFound("No practice for this student");
+        }
+
         return practice;
     }
 }

@@ -69,6 +69,9 @@ namespace DeanModule.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid>("OldPractice")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("PositionId")
                         .HasColumnType("uuid");
 

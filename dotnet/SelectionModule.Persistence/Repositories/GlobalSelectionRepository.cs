@@ -14,4 +14,13 @@ public class GlobalSelectionRepository(SelectionDbContext context)
         return await DbSet.Include(x => x.Selections)
             .FirstOrDefaultAsync(x => x.IsDeleted == false);
     }
+
+    public async Task<List<GlobalSelection>> GetSelectionsByDeadlinesAsync(IEnumerable<DateOnly> dates)
+    {
+        return await DbSet.Include(g => g.Selections)
+            .ThenInclude(x => x.Candidate)
+            .AsNoTracking()
+            .Where(g => dates.Contains(g.EndDate))
+            .ToListAsync();
+    }
 }

@@ -3,6 +3,7 @@ using HitsInternship.Api.Extensions.Middlewares;
 using HitsInternship.Api.Extensions.Swagger;
 using System.Text.Json.Serialization;
 using AuthModel.Service.Service;
+using BackgroundJobs;
 using HitsInternship.Api.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -44,8 +45,7 @@ builder.Services.AddControllers()
         options.InvalidModelStateResponseFactory = FailedAnnotationValidationResponse.MakeValidationResponse);
 
 builder.Services.AddApplicationModules(builder.Configuration, builder.Environment);
-
-Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING"));
+builder.Services.AddBackGroundJobs(builder.Configuration);
 
 var app = builder.Build();
 
