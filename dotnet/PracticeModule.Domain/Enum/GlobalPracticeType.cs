@@ -8,6 +8,6 @@ namespace PracticeModule.Domain.Enum
 {
     public enum GlobalPracticeType
     {
-        Technological
+        Technological = 1
     }
 }

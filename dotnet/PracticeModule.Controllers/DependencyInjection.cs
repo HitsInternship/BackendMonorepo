@@ -15,8 +15,9 @@ namespace PracticeModule.Controllers
             services.AddPracticeModuleInfrastructure(configuration);
             services.AddPracticeModulePersistence();
             services.AddPracticeModuleApplication();
-            
-          
+            services.AddScoped<ExelService>();
+
+
             // services.AddSwaggerGen(options =>
             // {
             //     var assemblyName = Assembly.GetAssembly(typeof(PracticeController))?.GetName().Name;
