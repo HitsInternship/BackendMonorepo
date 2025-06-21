@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
+using PracticeModule.Domain.Entity;
 using SelectionModule.Contracts.Repositories;
 using SelectionModule.Domain.Entites;
 using SelectionModule.Domain.Enums;
@@ -23,6 +24,7 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
 {
     private readonly IPracticeRepository _practiceRepository;
     private readonly ISemesterRepository _semesterRepository;
+    private readonly IGlobalPracticeRepository _globalPracticeRepository;
 
     private readonly ISelectionRepository _selectionRepository;
     private readonly IVacancyRepository _vacancyRepository;
@@ -34,13 +36,14 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
     private readonly ISender _sender;
 
     public SearchPotentialPracticeQueryHandler(IPracticeRepository practiceRepository,
-        ISemesterRepository semesterRepository, ISelectionRepository selectionRepository,
+        ISemesterRepository semesterRepository, IGlobalPracticeRepository globalPracticeRepository, ISelectionRepository selectionRepository,
         IVacancyRepository vacancyRepository, ICompanyRepository companyRepository,
         IPositionRepository positionRepository, IApplicationRepository applicationRepository,
         IStudentRepository studentRepository, ISender sender)
     {
         _practiceRepository = practiceRepository;
         _studentRepository = studentRepository;
+        _globalPracticeRepository = globalPracticeRepository;
         _selectionRepository = selectionRepository;
         _vacancyRepository = vacancyRepository;
         _companyRepository = companyRepository;
@@ -53,13 +56,8 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
     public async Task<List<Domain.Entity.Practice>> Handle(SearchPotentialPracticeQuery query,
         CancellationToken cancellationToken)
     {
-        SemesterEntity? currentSemester = (await _semesterRepository.ListAllAsync()).Where(semester =>
-            semester.EndDate > DateOnly.FromDateTime(DateTime.UtcNow) &&
-            semester.StartDate < DateOnly.FromDateTime(DateTime.UtcNow)).FirstOrDefault();
-        if (currentSemester == null)
-        {
-            throw new NotFound("No current semester found");
-        }
+        SemesterEntity? lastSemester = await _semesterRepository.GetByIdAsync(query.searchRequest.lastSemesterId);
+        if (lastSemester == null) { throw new NotFound("No last semester"); }
 
         List<Domain.Entity.Practice> potentialPractices = new List<Domain.Entity.Practice>();
 
@@ -77,7 +75,7 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
         if (query.searchRequest.oldCompanyId != null)
         {
             var studentInCompanyIds = (await _practiceRepository.ListAllAsync())
-                .Where(practice => practice.GlobalPractice.SemesterId == currentSemester.Id &&
+                .Where(practice => practice.GlobalPractice.SemesterId == lastSemester.Id &&
                                    practice.Company.Id == query.searchRequest.oldCompanyId)
                 .Select(practice => practice.StudentId);
             studentDbQuery = studentDbQuery.Where(student => studentInCompanyIds.Contains(student.Id));
@@ -86,7 +84,7 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
         if (query.searchRequest.oldPositionId != null)
         {
             var studentInPositionIds = (await _practiceRepository.ListAllAsync())
-                .Where(practice => practice.GlobalPractice.SemesterId == currentSemester.Id &&
+                .Where(practice => practice.GlobalPractice.SemesterId == lastSemester.Id &&
                                    practice.Position.Id == query.searchRequest.oldPositionId)
                 .Select(practice => practice.StudentId);
             studentDbQuery = studentDbQuery.Where(student => studentInPositionIds.Contains(student.Id));
@@ -97,13 +95,13 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
         users = await _sender.Send(new GetListUserQuery(students.Select(student => student.UserId).ToList()));
 
         List<Domain.Entity.Practice> practices = (await _practiceRepository.ListAllAsync()).Where(practice =>
-            practice.GlobalPractice.SemesterId == currentSemester.Id &&
+            practice.GlobalPractice.SemesterId == lastSemester.Id &&
             studentIds.Contains(practice.StudentId)).ToList();
 
         List<ApplicationEntity> applications = (await _applicationRepository.ListAllAsync()).Where(application =>
             studentIds.Contains(application.StudentId) &&
-            application.Date > currentSemester.StartDate &&
-            application.Date < currentSemester.EndDate &&
+            application.Date > lastSemester.StartDate &&
+            application.Date < lastSemester.EndDate &&
             application.Status == ApplicationStatus.Accepted).ToList();
 
         List<Company> companies = (await _companyRepository.ListAllAsync()).Where(company =>
@@ -133,7 +131,7 @@ public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotenti
         }
 
         List<SelectionEntity> selections = (await _selectionRepository.ListAllAsync()).Where(selection =>
-                selection.GlobalSelection.SemesterId == currentSemester.Id &&
+                selection.GlobalSelection.SemesterId == lastSemester.Id &&
                 studentIds.Contains(selection.Candidate.StudentId) &&
                 selection.SelectionStatus == SelectionStatus.OffersAccepted).Include(selection => selection.Candidate)
             .ToList();

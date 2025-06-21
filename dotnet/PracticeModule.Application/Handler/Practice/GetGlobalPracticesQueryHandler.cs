@@ -30,7 +30,12 @@ public class GetGlobalPracticesQueryHandler : IRequestHandler<GetGlobalPractices
         if (query.studentUserId != null)
         {
             Guid studentId = (await _studentRepository.ListAllAsync()).Where(student => student.UserId == query.studentUserId).Select(student => student.Id).First();
-            dbQuery = dbQuery.Where(globalPractice => globalPractice.Practices.Any(practice => practice.StudentId == studentId)).Include(globalPractice => globalPractice.Practices.Where(practice => practice.StudentId == studentId));
+            dbQuery = dbQuery
+                .Where(globalPractice => globalPractice.Practices.Any(practice => practice.StudentId == studentId))
+                .Include(globalPractice => globalPractice.Practices.Where(practice => practice.StudentId == studentId))
+                    .ThenInclude(practice => practice.StudentPracticeCharacteristics)
+                .Include(globalPractice => globalPractice.Practices.Where(practice => practice.StudentId == studentId))
+                    .ThenInclude(practice => practice.PracticeDiary);
         }
         List<GlobalPractice> globalPractices = dbQuery.ToList();
         List<SemesterEntity> semesters = (await _semesterRepository.ListAllAsync()).Where(semester => globalPractices.Select(globalPractice => globalPractice.SemesterId).Contains(semester.Id)).ToList();

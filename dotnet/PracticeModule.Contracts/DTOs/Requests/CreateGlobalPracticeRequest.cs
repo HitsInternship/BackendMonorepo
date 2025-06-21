@@ -11,6 +11,7 @@ namespace PracticeModule.Contracts.DTOs.Requests
     public class CreateGlobalPracticeRequest
     {
         public GlobalPracticeType practiceType { get; set; }
+        public Guid lastSemesterId { get; set; }
         public Guid semesterId { get; set; }
         public Guid streamId { get; set; }
 
