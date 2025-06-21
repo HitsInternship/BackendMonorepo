@@ -10,7 +10,7 @@ using Shared.Extensions;
 
 namespace NotificationModule.Controllers;
 
-public static class DependencyInjection 
+public static class DependencyInjection
 {
     public static void AddNotificationModule(this IServiceCollection services, IConfiguration configuration,
         IWebHostEnvironment builderEnvironment)

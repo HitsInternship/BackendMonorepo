@@ -1,14 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AuthModule.Contracts\AuthModule.Contracts.csproj" />
-    <ProjectReference Include="..\StudentModule.Contracts\StudentModule.Contracts.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AutoMapper"  />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\AuthModule.Contracts\AuthModule.Contracts.csproj"/>
+        <ProjectReference Include="..\StudentModule.Contracts\StudentModule.Contracts.csproj"/>
+    </ItemGroup>
 
 </Project>

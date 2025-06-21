@@ -15,13 +15,11 @@ namespace PracticeModule.Application.Handler.PracticePart;
 public class SearchPracticeQueryHandler : IRequestHandler<SearchPracticeQuery, List<Domain.Entity.Practice>>
 {
     private readonly IPracticeRepository _practiceRepository;
-    private readonly ISemesterRepository _semesterRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly ISender _sender;
-    public SearchPracticeQueryHandler(IPracticeRepository practiceRepository, ISemesterRepository semesterRepository, IStudentRepository studentRepository, ISender sender)
+    public SearchPracticeQueryHandler(IPracticeRepository practiceRepository, IStudentRepository studentRepository, ISender sender)
     {
         _practiceRepository = practiceRepository;
-        _semesterRepository = semesterRepository;
         _studentRepository = studentRepository;
         _sender = sender;
     }

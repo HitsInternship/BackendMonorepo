@@ -1,8 +1,8 @@
 services:
   web:
     build:
-      context: .
-      dockerfile: dotnet/HitsInternship.Api/Dockerfile
+      context: dotnet
+      dockerfile: Dockerfile
     environment:
       DATABASE_CONNECTION_STRING: Server=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}

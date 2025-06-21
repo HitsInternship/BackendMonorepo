@@ -7,20 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR" Version="12.5.0" />
-      <PackageReference Include="Quartz" Version="3.14.0" />
-      <PackageReference Include="Quartz.Extensions.Hosting" Version="3.14.0" />
+      <PackageReference Include="MediatR"  />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\NotificationModule.Contracts\NotificationModule.Contracts.csproj" />
       <ProjectReference Include="..\NotificationModule.Kafka\NotificationModule.Kafka.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.AspNetCore.Http.Extensions">
-        <HintPath>..\..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\9.0.0\Microsoft.AspNetCore.Http.Extensions.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>

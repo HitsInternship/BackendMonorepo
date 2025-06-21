@@ -5,7 +5,7 @@ using NotificationModule.Contracts.Repositories;
 using NotificationModule.Domain.Enums;
 using Quartz;
 
-namespace NotificationModule.Application;
+namespace BackgroundJobs.Jobs;
 
 public class SendUnsentMessagesJob : IJob
 {

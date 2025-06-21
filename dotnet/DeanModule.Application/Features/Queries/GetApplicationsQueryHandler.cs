@@ -8,6 +8,7 @@ using DeanModule.Contracts.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using PracticeModule.Contracts.Queries;
 using SelectionModule.Contracts.Dtos.Responses;
 using SelectionModule.Contracts.Repositories;
 using Shared.Contracts.Configs;
@@ -22,6 +23,7 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
 {
     private readonly int _size;
     private readonly IMapper _mapper;
+    private readonly ISender _mediator;
     private readonly IUserRepository _userRepository;
     private readonly IPositionRepository _positionRepository;
     private readonly ICompanyRepository _companyRepository;
@@ -30,7 +32,7 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
 
     public GetApplicationsQueryHandler(IApplicationRepository applicationRepository, IOptions<PaginationConfig> config,
         IMapper mapper, IStudentRepository studentRepository, ICompanyRepository companyRepository,
-        IPositionRepository positionRepository, IUserRepository userRepository)
+        IPositionRepository positionRepository, IUserRepository userRepository, ISender mediator)
     {
         _size = config.Value.PageSize;
         _applicationRepository = applicationRepository;
@@ -39,6 +41,7 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
         _companyRepository = companyRepository;
         _positionRepository = positionRepository;
         _userRepository = userRepository;
+        _mediator = mediator;
     }
 
     public async Task<ApplicationsDto> Handle(GetApplicationsQuery request, CancellationToken cancellationToken)
@@ -81,33 +84,22 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
             .ToListAsync(cancellationToken);
 
         var result = new List<ListedApplicationResponseDto>();
-
-        //todo: get old practice
-
+        
         foreach (var application in pagedApplications)
         {
             var student = await _studentRepository.GetStudentByIdAsync(application.StudentId);
             var user = await _userRepository.GetByIdAsync(student.UserId);
+            var oldPractice = await _mediator.Send(new GetStudentPracticeQuery(student.Id), cancellationToken);
 
             var applicationDto = _mapper.Map<ListedApplicationResponseDto>(application);
             applicationDto.NewPosition =
                 _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(application.PositionId));
             applicationDto.NewCompany =
                 _mapper.Map<CompanyResponse>(await _companyRepository.GetByIdAsync(application.CompanyId));
-            applicationDto.OldCompany = new CompanyResponse
-            {
-                id = Guid.Empty,
-                name = "Старая компания",
-                description = "Описание",
-                status = CompanyStatus.Partner
-            };
-            applicationDto.OldPosition = new PositionDto
-            {
-                Id = Guid.Empty,
-                IsDeleted = false,
-                Name = "Старая позиция",
-                Description = "Описание"
-            };
+            applicationDto.OldCompany =
+                _mapper.Map<CompanyResponse>(await _companyRepository.GetByIdAsync(oldPractice.CompanyId));
+            applicationDto.OldPosition =
+                _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(oldPractice.PositionId));
             applicationDto.Student = new StudentDto(student)
             {
                 Name = user.Name,
