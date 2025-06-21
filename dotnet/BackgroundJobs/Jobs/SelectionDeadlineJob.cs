@@ -8,7 +8,7 @@ using SelectionModule.Contracts.Repositories;
 using Shared.Contracts.Configs;
 using UserModule.Contracts.Repositories;
 
-namespace SelectionModule.Application.BackgroundJobs;
+namespace BackgroundJobs.Jobs;
 
 public class SelectionDeadlineJob : IJob
 {

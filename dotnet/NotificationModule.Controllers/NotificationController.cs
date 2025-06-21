@@ -7,7 +7,7 @@ namespace NotificationModule.Controllers;
 
 [ApiController]
 [Route("notification")]
-[EnvironmentOnly("Testing")]
+//[EnvironmentOnly("Testing")]
 public class NotificationController : ControllerBase
 {
     private readonly ISender _sender;
@@ -56,6 +56,12 @@ public class NotificationController : ControllerBase
 
     [HttpPost, Route("practice_rate")]
     public async Task<IActionResult> SendPracticeRateMessage(SendRatedForPracticeMessageCommand command)
+    {
+        return Ok(await _sender.Send(command));
+    }
+
+    [HttpPost, Route("appointment")]
+    public async Task<IActionResult> SendAppointment(SendMeetingMessageCommand command)
     {
         return Ok(await _sender.Send(command));
     }

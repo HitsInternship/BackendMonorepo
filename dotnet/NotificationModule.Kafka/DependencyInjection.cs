@@ -1,6 +1,6 @@
+using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Confluent.Kafka;
 using NotificationModule.Contracts.Kafka;
 using NotificationModule.Kafka.Producers;
 using NotificationModule.Kafka.TopicInitializer;

@@ -4,6 +4,7 @@ using DeanModule.Contracts.Commands.Application;
 using DeanModule.Contracts.Repositories;
 using DeanModule.Domain.Entities;
 using MediatR;
+using PracticeModule.Contracts.Queries;
 using SelectionModule.Contracts.Repositories;
 using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
@@ -13,6 +14,7 @@ namespace DeanModule.Application.Features.Commands.Application;
 public class CreateApplicationCommandHandler : IRequestHandler<CreateApplicationCommand, Unit>
 {
     private readonly IMapper _mapper;
+    private readonly ISender _mediator;
     private readonly IApplicationRepository _applicationRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly ICompanyRepository _companyRepository;
@@ -27,6 +29,7 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
         _studentRepository = studentRepository;
         _positionRepository = positionRepository;
         _companyRepository = companyRepository;
+        _mediator = mediator;
     }
 
     public async Task<Unit> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
@@ -42,10 +45,15 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
 
         if (student.UserId != request.UserId) throw new Forbidden("You cannot create a new application");
 
+        var oldPractice = await _mediator.Send(new GetStudentPracticeQuery(student.Id), cancellationToken);
+
+        if (oldPractice == null) throw new BadRequest("Practice not found");
+
         var application = _mapper.Map<ApplicationEntity>(request.ApplicationRequestDto);
+        application.OldPractice = oldPractice.Id;
 
         application.StudentId = student.Id;
-        
+
         await _applicationRepository.AddAsync(application);
 
         return Unit.Value;

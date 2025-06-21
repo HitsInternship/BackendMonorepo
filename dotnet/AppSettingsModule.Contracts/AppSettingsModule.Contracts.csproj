@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.5.0" />
+    <ProjectReference Include="..\AppSettingsModule.Domain\AppSettingsModule.Domain.csproj" />
+    <ProjectReference Include="..\Shared.Contracts\Shared.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppSettingsModule.Domain\AppSettingsModule.Domain.csproj" />
-    <ProjectReference Include="..\Shared.Contracts\Shared.Contracts.csproj" />
+    <PackageReference Include="MediatR.Contracts" />
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,7 @@ using DeanModule.Contracts.Dtos.Responses;
 using DeanModule.Contracts.Queries;
 using DeanModule.Contracts.Repositories;
 using MediatR;
+using PracticeModule.Contracts.Repositories;
 using SelectionModule.Contracts.Dtos.Responses;
 using SelectionModule.Contracts.Repositories;
 using Shared.Domain.Exceptions;
@@ -22,16 +23,18 @@ public class GetApplicationQueryHandler : IRequestHandler<GetApplicationQuery, A
     private readonly IPositionRepository _positionRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly IApplicationRepository _applicationRepository;
+    private readonly IPracticeRepository _practiceRepository;
 
     public GetApplicationQueryHandler(IMapper mapper, IApplicationRepository applicationRepository,
         ICompanyRepository companyRepository, IPositionRepository positionRepository,
-        IStudentRepository studentRepository)
+        IStudentRepository studentRepository, IPracticeRepository practiceRepository)
     {
         _mapper = mapper;
         _applicationRepository = applicationRepository;
         _companyRepository = companyRepository;
         _positionRepository = positionRepository;
         _studentRepository = studentRepository;
+        _practiceRepository = practiceRepository;
     }
 
     public async Task<ApplicationResponseDto> Handle(GetApplicationQuery request, CancellationToken cancellationToken)
@@ -51,29 +54,16 @@ public class GetApplicationQueryHandler : IRequestHandler<GetApplicationQuery, A
                 throw new BadRequest("The application is deleted");
         }
 
-        //todo: get old practice
-        
+        var oldPractice = await _practiceRepository.GetByIdAsync(application.OldPractice);
+
         var dto = _mapper.Map<ApplicationResponseDto>(application);
 
         dto.NewCompany = _mapper.Map<CompanyResponse>(await _companyRepository.GetByIdAsync(application.CompanyId));
         dto.NewPosition = _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(application.PositionId));
         dto.Student = _mapper.Map<StudentDto>(await _studentRepository.GetByIdAsync(application.StudentId));
-        dto.OldCompany = new CompanyResponse
-        {
-            id = Guid.Empty,
-            name = "Старая компания",
-            description = "Описание",
-            status = CompanyStatus.Partner
-        };
-        dto.OldPosition = new PositionDto
-        {
-            Id = Guid.Empty,
-            IsDeleted = false,
-            Name = "Старая позиция",
-            Description = "Описание"
-        };
+        dto.OldCompany = _mapper.Map<CompanyResponse>(await _companyRepository.GetByIdAsync(oldPractice.CompanyId));
+        dto.OldPosition = _mapper.Map<PositionDto>(await _positionRepository.GetByIdAsync(oldPractice.PositionId));
 
-        
         return dto;
     }
 }
