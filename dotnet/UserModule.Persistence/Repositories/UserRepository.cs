@@ -10,6 +10,7 @@ namespace UserModule.Persistence.Repositories
     public class UserRepository : BaseEntityRepository<User>, IUserRepository
     {
         private readonly UserModuleDbContext context;
+
         public UserRepository(UserModuleDbContext context) : base(context)
         {
             this.context = context;
@@ -26,7 +27,12 @@ namespace UserModule.Persistence.Repositories
                 .Where(u => u.Name == name && u.Surname == surname)
                 .ToListAsync();
 
-            return users; 
+            return users;
+        }
+
+        public async Task<List<User>> GetByIdsAsync(List<Guid> ids)
+        {
+            return await DbSet.Where(u => ids.Contains(u.Id)).ToListAsync();
         }
     }
 }

@@ -2,7 +2,6 @@
 using AppSettingsModule.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserModule.Persistence;
 

@@ -6,6 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper"  />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\AuthModule.Contracts\AuthModule.Contracts.csproj" />
     <ProjectReference Include="..\UserModule.Persistence\UserModule.Persistence.csproj" />

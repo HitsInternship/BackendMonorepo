@@ -19,13 +19,13 @@ public class ArchiveGlobalSelectionCommandHandler : IRequestHandler<ArchiveGloba
 
     public async Task<Unit> Handle(ArchiveGlobalSelectionCommand request, CancellationToken cancellationToken)
     {
-        var globalSelection = await _globalSelectionRepository.FindAsync(x => x.IsDeleted == false);
+        var globalSelection = await _globalSelectionRepository.GetActiveSelectionAsync();
 
-        if (!globalSelection.Any()) throw new BadRequest("There is no active selection.");
+        if (globalSelection == null) throw new BadRequest("There is no active selection.");
 
-        await _globalSelectionRepository.SoftDeleteAsync(globalSelection.First().Id);
+        await _globalSelectionRepository.SoftDeleteAsync(globalSelection.Id);
 
-        foreach (var selection in globalSelection.First().Selections)
+        foreach (var selection in globalSelection.Selections)
         {
             await _sender.Send(new ArchiveSelectionCommand(selection.Id), cancellationToken);
         }

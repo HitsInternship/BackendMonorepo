@@ -1,23 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MediatR"/>
+        <PackageReference Include="Microsoft.AspNetCore.Http"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core"/>
+        <PackageReference Include="AutoMapper"  />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AppSettingsModule.Application\AppSettingsModule.Application.csproj" />
-    <ProjectReference Include="..\AppSettingsModule.Infrastructure\AppSettingsModule.Infrastructure.csproj" />
-    <ProjectReference Include="..\AppSettingsModule.Persistence\AppSettingsModule.Persistence.csproj" />
-    <ProjectReference Include="..\UserModule.Persistence\UserModule.Persistence.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\AppSettingsModule.Application\AppSettingsModule.Application.csproj"/>
+        <ProjectReference Include="..\AppSettingsModule.Infrastructure\AppSettingsModule.Infrastructure.csproj"/>
+        <ProjectReference Include="..\AppSettingsModule.Persistence\AppSettingsModule.Persistence.csproj"/>
+        <ProjectReference Include="..\UserModule.Persistence\UserModule.Persistence.csproj"/>
+    </ItemGroup>
 
 </Project>

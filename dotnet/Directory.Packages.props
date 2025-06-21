@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- CQRS -->
+    <PackageVersion Include="MediatR" Version="12.5.0" />
+    <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
+    <PackageVersion Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="12.0.5" />
+    
+    <!-- AutoMapper -->
+    <PackageVersion Include="AutoMapper" Version="14.0.0" />
+    
+    <!-- ASP.NET Core / Options -->
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6"/>
+    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
+    <PackageVersion Include="NuGet.Protocol" Version="6.14.0" />
+
+    <!-- Entity Framework Core + PostgreSQL -->
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.6" />
+
+
+    <!-- Quartz  -->
+    <PackageVersion Include="Quartz" Version="3.14.0" />
+    <PackageVersion Include="Quartz.Extensions.DependencyInjection" Version="3.14.0" />
+    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.14.0" />
+    
+    <!-- Swagger  -->
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.1" />
+
+    <!-- Others  -->
+    <PackageVersion Include="EPPlus" Version="8.0.6" />
+    <PackageVersion Include="JwtSecurityTokenCustom" Version="1.0.0.2" />
+    <PackageVersion Include="OfficeOpenXml.Core.ExcelPackage" Version="1.0.0" />
+    <PackageVersion Include="Otp.NET" Version="1.4.0" />
+    <PackageVersion Include="Minio" Version="6.0.4" />
+    <PackageVersion Include="Confluent.Kafka" Version="2.10.1" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+
+  </ItemGroup>
+</Project>

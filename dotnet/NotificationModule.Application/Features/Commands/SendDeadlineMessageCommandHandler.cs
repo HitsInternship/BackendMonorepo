@@ -23,26 +23,37 @@ public class SendDeadlineMessageCommandHandler : IRequestHandler<SendDeadlineMes
 
     public async Task<Unit> Handle(SendDeadlineMessageCommand request, CancellationToken cancellationToken)
     {
-        var message = new Deadline
+        List<Message> messages = new List<Message>();
+
+        foreach (var email in request.Emails)
         {
-            Email = request.Email,
-            EventType = EventType.deadline,
-            DeadlineDate = request.DeadLineDate,
-            Event = request.EventType
-        };
+            var message = new Deadline
+            {
+                Email = email,
+                EventType = EventType.deadline,
+                DeadlineDate = request.DeadLineDate,
+                Event = request.EventType
+            };
 
-        var messageEntity = new Message
+            var messageEntity = new Message
+            {
+                Id = message.Id,
+                Email = message.Email,
+                EventType = EventType.deadline,
+                Data = JsonHelper.Serialize(message),
+                MessageStatus = MessageStatus.in_progress
+            };
+
+            messages.Add(messageEntity);
+        }
+
+
+        await _messageRepository.AddRangeAsync(messages);
+
+        foreach (var message in messages)
         {
-            Id = message.Id,
-            Email = message.Email,
-            EventType = EventType.deadline,
-            Data = JsonHelper.Serialize(message),
-            MessageStatus = MessageStatus.in_progress
-        };
-
-        await _messageRepository.AddAsync(messageEntity);
-
-        await _messageProducer.ProduceAsync(messageEntity.Data);
+            await _messageProducer.ProduceAsync(message.Data);
+        }
 
         return Unit.Value;
     }

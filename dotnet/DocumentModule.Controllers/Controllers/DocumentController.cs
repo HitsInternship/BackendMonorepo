@@ -1,7 +1,7 @@
-﻿using System.Web.Mvc;
-using DocumentModule.Contracts.Queries;
+﻿using DocumentModule.Contracts.Queries;
 using DocumentModule.Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ControllerBase = Microsoft.AspNetCore.Mvc.ControllerBase;
@@ -11,10 +11,11 @@ namespace DocumentModule.Controllers.Controllers
 {
     [ApiController]
     [Authorize]
-    [Microsoft.AspNetCore.Mvc.Route("api/documents/")]
+    [Route("api/documents/")]
     public class DocumentController : ControllerBase
     {
         private readonly ISender _sender;
+
         public DocumentController(ISender sender)
         {
             _sender = sender;
@@ -24,8 +25,8 @@ namespace DocumentModule.Controllers.Controllers
         /// Получает название документа по идентификатору.
         /// </summary>
         /// <returns>Название документа.</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet]
-        [Microsoft.AspNetCore.Mvc.Route("{documentId}/name")]
+        [HttpGet]
+        [Route("{documentId}/name")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDocumentName(Guid documentId, DocumentType documentType)
         {
@@ -36,8 +37,8 @@ namespace DocumentModule.Controllers.Controllers
         /// Получает документ по идентификатору.
         /// </summary>
         /// <returns>Документ.</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet]
-        [Microsoft.AspNetCore.Mvc.Route("{documentId}")]
+        [HttpGet]
+        [Route("{documentId}")]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDocument(Guid documentId, DocumentType documentType)
         {

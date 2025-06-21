@@ -3,5 +3,4 @@ using NotificationModule.Domain.Enums;
 
 namespace NotificationModule.Contracts.Commands;
 
-public record SendDeadlineMessageCommand(string Email, DateOnly DeadLineDate, DeadLineType EventType) : IRequest<Unit>;
-//todo: add job to send deadline message
+public record SendDeadlineMessageCommand(List<string> Emails, DateOnly DeadLineDate, DeadLineType EventType) : IRequest<Unit>;
