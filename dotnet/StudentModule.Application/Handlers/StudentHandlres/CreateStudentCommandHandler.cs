@@ -28,11 +28,15 @@ namespace StudentModule.Application.Handlers.StudentHandlres
 
         public async Task<StudentDto> Handle(CreateStudentCommand request, CancellationToken cancellationToken)
         {
+            var group = await _groupRepository.GetByIdAsync(request.GroupId)
+                        ?? throw new NotFound("Group not found");
+
             User? user = null;
             if (request.userRequest != null)
             {
                 user = await _mediator.Send(new CreateUserCommand(request.userRequest, request.Password),
                     cancellationToken);
+                request.userId = null;
             }
             else if (request.userId == null)
             {
@@ -41,9 +45,6 @@ namespace StudentModule.Application.Handlers.StudentHandlres
             
             user = await _mediator.Send(new AddUserRoleCommand(request.userId ?? user.Id, RoleName.Student),
                 cancellationToken);
-
-            var group = await _groupRepository.GetByIdAsync(request.GroupId)
-                        ?? throw new NotFound("Group not found");
 
             StudentEntity student = new StudentEntity()
             {

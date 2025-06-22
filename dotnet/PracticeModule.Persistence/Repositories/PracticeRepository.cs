@@ -22,7 +22,7 @@ namespace PracticeModule.Persistence.Repositories
 
         public async Task<List<Practice>> GetPracticesByStudentIdAsync(List<Guid> studentsId, Guid semesterId)
         {
-            return context.Practice.Where(practice => studentsId.Contains(practice.StudentId) && practice.GlobalPractice.SemesterId == semesterId).ToList();
+            return context.Practice.Include(p => p.GlobalPractice).Where(practice => studentsId.Contains(practice.StudentId) && practice.GlobalPractice.SemesterId == semesterId).ToList();
         }
     }
 }

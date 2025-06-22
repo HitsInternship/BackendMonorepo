@@ -17,7 +17,7 @@ namespace StudentModule.Application.Handlers.GroupHandlers
 
         public async Task<Unit> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
         {
-            GroupEntity? group = await _groupRepository.GetByIdAsync(request.GroupId)
+            GroupEntity? group = await _groupRepository.GetGroupByIdAsync(request.GroupId)
                 ?? throw new NotFound("Group not found");
 
             await _groupRepository.DeleteAsync(group);

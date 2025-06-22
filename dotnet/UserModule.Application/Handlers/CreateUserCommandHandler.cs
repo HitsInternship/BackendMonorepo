@@ -1,5 +1,4 @@
 ﻿using AppSettingsModule.Contracts.Commands;
-using AppSettingsModule.Domain.Entities;
 using AuthModule.Contracts.CQRS;
 using AutoMapper;
 using MediatR;

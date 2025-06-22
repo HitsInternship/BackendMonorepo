@@ -11,6 +11,8 @@ public class ApplicationEntity : BaseEntity
     public Guid CompanyId { get; set; }
     public Guid PositionId { get; set; }
     public Guid? DocumentId { get; set; }
+
+    public Guid OldPractice { get; set; }
     public ApplicationStatus Status { get; set; } = ApplicationStatus.Created;
     public ICollection<ApplicationComment> Comments { get; set; } = [];
 }
