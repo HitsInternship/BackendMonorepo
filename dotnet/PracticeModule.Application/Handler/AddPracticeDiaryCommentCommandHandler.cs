@@ -32,9 +32,7 @@ public class AddPracticeDiaryCommentCommandHandler : IRequestHandler<AddPractice
             DiaryId = request.DiaryId
         };
 
-        diary.Comment ??= new List<PracticeDiaryComment>();
-        diary.Comment.Add(comment);
-
+        _context.PracticeDiaryComment.Add(comment);
         await _context.SaveChangesAsync(cancellationToken);
     }
 }

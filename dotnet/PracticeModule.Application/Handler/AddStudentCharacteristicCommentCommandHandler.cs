@@ -35,6 +35,7 @@ public class AddStudentCharacteristicCommentCommandHandler : IRequestHandler<Add
         characteristic.PracticeComment ??= new List<StudentPracticeCharacteristicComment>();
         characteristic.PracticeComment.Add(comment);
 
+        _context.Update(characteristic);
         await _context.SaveChangesAsync(cancellationToken);
     }
 }

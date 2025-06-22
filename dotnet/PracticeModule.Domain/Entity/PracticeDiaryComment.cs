@@ -8,6 +8,4 @@ public class PracticeDiaryComment : BaseEntity
 
     public string Comment { get; set; }
     public Guid? DiaryId { get; set; }
-    public PracticeDiary? Diary { get; set; }
-    
 }
