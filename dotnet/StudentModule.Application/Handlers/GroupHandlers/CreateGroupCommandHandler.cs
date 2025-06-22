@@ -19,11 +19,14 @@ namespace StudentModule.Application.Handlers.GroupHandlers
         }
         public async Task<GroupDto> Handle(CreateGroupCommand request, CancellationToken cancellationToken)
         {
-            StreamEntity? stream = await _streamRepository.GetByIdAsync(request.StreamId) 
+            StreamEntity? stream = await _streamRepository.GetStreamByIdAsync(request.StreamId) 
                 ?? throw new NotFound("Stream not found");
 
             if (await _groupRepository.IsGroupWithNumderExistsAsync(request.GroupNumber))
                 throw new Conflict($"Group with number {request.GroupNumber} already exists");
+
+            if (request.GroupNumber < 0)
+                throw new BadRequest("Invalid group number");
 
             GroupEntity group = new GroupEntity()
             {

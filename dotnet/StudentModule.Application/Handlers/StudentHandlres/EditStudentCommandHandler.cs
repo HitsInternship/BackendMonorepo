@@ -40,6 +40,8 @@ namespace StudentModule.Application.Handlers.StudentHandlres
             student.IsHeadMan = request.isHeadMan;
             student.User = user;
 
+            await _studentRepository.UpdateAsync(student);
+
             return new StudentDto(student);
         }
     }
