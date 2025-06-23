@@ -63,8 +63,15 @@ namespace PracticeModule.Application.Handler.PracticePart
                     users.Add(await _userRepository.GetByIdAsync(student.UserId));
                 }
 
-                SemesterEntity? Semester = await _semesterRepository.GetByIdAsync(request.SemesterId)
-                 ?? throw new NotFound("No current semester found");
+                SemesterEntity? Semester = null;
+                try
+                {
+                    Semester = await _semesterRepository.GetByIdAsync(request.SemesterId);
+                }
+                catch (InvalidOperationException)
+                {
+                    throw new NotFound("Semester not found");
+                }
 
                 string sem = Semester.StartDate.Month == 9
                            ? $"Осенний семестр {Semester.StartDate.Year}/{Semester.StartDate.Year + 1}"

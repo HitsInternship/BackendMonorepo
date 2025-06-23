@@ -51,8 +51,15 @@ namespace PracticeModule.Application.Handler.PracticePart
         {
             Company company = await _companyRepository.GetByIdAsync(request.CompanyId);
 
-            SemesterEntity? Semester = await _semesterRepository.GetByIdAsync(request.SemestreId)
-                ?? throw new NotFound("No current semester found");
+            SemesterEntity? Semester = null;
+            try
+            {
+                Semester = await _semesterRepository.GetByIdAsync(request.SemesterId);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new NotFound("Semester not found");
+            }
 
             var practices = (await _practiceRepository.ListAllAsync())
                 .Include(p => p.GlobalPractice)
