@@ -6,6 +6,6 @@ namespace PracticeModule.Contracts.Queries
     public record GetExelAboutPracticeByCompanyQuery : IRequest<FileContentResult> 
     {
         public Guid CompanyId { get; set; }
-        public Guid SemestreId { get; set; }
+        public Guid SemesterId { get; set; }
     }
 }

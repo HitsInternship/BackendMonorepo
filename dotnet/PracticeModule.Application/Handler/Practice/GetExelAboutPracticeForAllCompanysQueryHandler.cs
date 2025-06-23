@@ -45,9 +45,16 @@ namespace PracticeModule.Application.Handler.PracticePart
         public async Task<FileContentResult> Handle(GetExelAboutPracticeForAllCompanysQuery request, CancellationToken cancellationToken)
         {
             var companys = await _companyRepository.GetAllAsync();
+            SemesterEntity? Semester = null;
 
-            SemesterEntity? Semester = await _semesterRepository.GetByIdAsync(request.SemesterId)
-                ?? throw new NotFound("No current semester found");
+            try
+            {
+                Semester = await _semesterRepository.GetByIdAsync(request.SemesterId);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new NotFound("Semester not found");
+            }
 
             ExcelPackage.License.SetNonCommercialPersonal("<My Name>");
             using var package = new ExcelPackage();
