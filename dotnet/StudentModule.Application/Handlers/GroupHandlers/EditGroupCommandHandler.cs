@@ -26,8 +26,11 @@ namespace StudentModule.Application.Handlers.GroupHandlers
             GroupEntity? group = await _groupRepository.GetGroupByIdAsync(request.Id)
                 ?? throw new NotFound("Stream not found");
 
-            if (await _groupRepository.IsGroupWithNumderExistsAsync(request.GroupNumber))
+            if (await _groupRepository.IsGroupWithNumderExistsAsync(request.GroupNumber) && request.GroupNumber != group.GroupNumber)
                 throw new Conflict($"Group with number {request.GroupNumber} already exists");
+
+            if (request.GroupNumber < 0)
+                throw new BadRequest("Invalid group number");
 
             group.GroupNumber = request.GroupNumber;
 

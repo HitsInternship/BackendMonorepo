@@ -7,5 +7,4 @@ public class StudentPracticeCharacteristicComment : BaseEntity
 {
     public string Comment { get; set; }
     public Guid? PracticeCharacteristicId { get; set; }
-    public StudentPracticeCharacteristic? PracticeCharacteristic { get; set; }
 }

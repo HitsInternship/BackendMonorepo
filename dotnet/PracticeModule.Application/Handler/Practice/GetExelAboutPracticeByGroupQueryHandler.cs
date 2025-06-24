@@ -15,6 +15,7 @@ using CompanyModule.Domain.Entities;
 using SelectionModule.Domain.Entites;
 using DeanModule.Domain.Entities;
 using DeanModule.Contracts.Repositories;
+using PracticeModule.Domain.Enum;
 
 namespace PracticeModule.Application.Handler.PracticePart
 {
@@ -58,15 +59,21 @@ namespace PracticeModule.Application.Handler.PracticePart
                 users.Add(await _userRepository.GetByIdAsync(student.UserId));
             }
 
-            SemesterEntity? currentSemester = (await _semesterRepository.ListAllAsync()).Where(semester =>
-                semester.EndDate > DateOnly.FromDateTime(DateTime.UtcNow) &&
-                semester.StartDate < DateOnly.FromDateTime(DateTime.UtcNow)).FirstOrDefault();
-
-            if (currentSemester == null)
+            SemesterEntity? Semester = null;
+            try
             {
-                throw new NotFound("No current semester found");
+                Semester = await _semesterRepository.GetByIdAsync(request.SemesterId);
             }
-            var practices = await _practiceRepository.GetPracticesByStudentIdAsync(studentsId, currentSemester.Id);
+            catch (InvalidOperationException)
+            {
+                throw new NotFound("Semester not found");
+            }
+
+            string sem = Semester.StartDate.Month == 9
+                       ? $"Осенний семестр {Semester.StartDate.Year}/{Semester.StartDate.Year + 1}"
+                       : $"Весенний семестр {Semester.StartDate.Year}";
+
+            var practices = await _practiceRepository.GetPracticesByStudentIdAsync(studentsId, Semester.Id);
 
             ExcelPackage.License.SetNonCommercialPersonal("<My Name>");
 
@@ -74,34 +81,40 @@ namespace PracticeModule.Application.Handler.PracticePart
             {
                 var worksheet = package.Workbook.Worksheets.Add("Практики");
 
-                worksheet.Cells[1, 1].Value = "Фамилия";
-                worksheet.Cells[1, 2].Value = "Имя";
-                worksheet.Cells[1, 3].Value = "Отчество";
-                worksheet.Cells[1, 4].Value = "Компания";
-                worksheet.Cells[1, 5].Value = "Позиция";
+                worksheet.Cells[1, 1].Value = "ФИО";
+                worksheet.Cells[1, 2].Value = "Группа";
+                worksheet.Cells[1, 3].Value = "Компания";
+                worksheet.Cells[1, 4].Value = "Позиция";
+                worksheet.Cells[1, 5].Value = "Тип практики";
+                worksheet.Cells[1, 6].Value = "Семестр";
 
                 for (int i = 0; i < students.Count(); i++)
                 {
                     students[i].User = users.First(user => user.Id == students[i].UserId);
+                    string name = students[i].User.Surname + " " + students[i].User.Name + " " + students[i].Middlename;
 
                     var practice = practices.FirstOrDefault(practice => practice?.StudentId == students[i].Id);
                     Company company = null;
                     PositionEntity position = null;
+                    string practiceType = null;
 
                     if (practice != null)
                     {
                         company = await _companyRepository.GetByIdAsync(practice.CompanyId);
                         position = await _positionRepository.GetByIdAsync(practice.PositionId);
+                        practiceType = GetPracticeType(practice.GlobalPractice.PracticeType);
                     }
 
-                    worksheet.Cells[i + 2, 1].Value = students[i].User.Surname;
-                    worksheet.Cells[i + 2, 2].Value = students[i].User.Name;
-                    worksheet.Cells[i + 2, 3].Value = students[i].Middlename;
-                    worksheet.Cells[i + 2, 4].Value = company?.Name ?? "-";
-                    worksheet.Cells[i + 2, 5].Value = position?.Name ?? "-";
+                    worksheet.Cells[i + 2, 1].Value = name;
+                    worksheet.Cells[i + 2, 2].Value = group.GroupNumber;
+                    worksheet.Cells[i + 2, 3].Value = company?.Name ?? "-";
+                    worksheet.Cells[i + 2, 4].Value = position?.Name ?? "-";
+                    worksheet.Cells[i + 2, 5].Value = practiceType;
+                    worksheet.Cells[i + 2, 6].Value = sem;
                 }
 
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+                worksheet.Cells[1, 1, 1, 6].Style.Font.Bold = true;
 
                 byte[] fileContents = package.GetAsByteArray();
 
@@ -112,6 +125,15 @@ namespace PracticeModule.Application.Handler.PracticePart
                 };
 
             }    
+        }
+
+        private static string GetPracticeType(GlobalPracticeType type)
+        {
+            return type switch
+            {
+                (GlobalPracticeType)1 => "Технологическая",
+                _ => "Сость и причмокивать"
+            };
         }
     }
 }

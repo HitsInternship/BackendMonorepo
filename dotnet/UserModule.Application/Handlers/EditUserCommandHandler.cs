@@ -21,7 +21,7 @@ namespace UserModule.Application.Handlers
 
         public async Task<User> Handle(EditUserCommand command, CancellationToken cancellationToken)
         {
-            User? user = await _userRepository.GetByIdAsync(command.userId);
+            User? user = (await _userRepository.ListAllAsync()).Where(user => user.Id == command.userId).FirstOrDefault();
             if (user == null) throw new NotFound("No user with such id");
 
             if (user.Email != command.editRequest.email && (await _userRepository.GetByEmailAsync(command.editRequest.email)) != null) throw new Conflict("User with such email already exists");

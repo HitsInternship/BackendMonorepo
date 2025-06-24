@@ -13,7 +13,6 @@ using UserModule.Persistence;
 namespace UserModule.Controllers.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("api/users/")]
     public class UserController : ControllerBase
     {
@@ -49,7 +48,8 @@ namespace UserModule.Controllers.Controllers
         /// Изменяет информацию о пользователе.
         /// </summary>
         /// <returns>Измененный пользователь.</returns>
-        [HttpPost]
+        [HttpPut]
+        [Authorize(Roles = "DeanMember")]
         [Route("{id}/edit")]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> EditUser(Guid id, UserRequest userRequest)

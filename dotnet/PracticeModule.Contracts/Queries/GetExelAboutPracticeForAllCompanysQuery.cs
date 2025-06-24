@@ -8,5 +8,8 @@ using System.Threading.Tasks;
 
 namespace PracticeModule.Contracts.Queries
 {
-    public record GetExelAboutPracticeForAllCompanysQuery : IRequest<FileContentResult> { }
+    public record GetExelAboutPracticeForAllCompanysQuery : IRequest<FileContentResult> 
+    {
+        public Guid SemesterId { get; set; }
+    }
 }

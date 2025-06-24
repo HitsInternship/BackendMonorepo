@@ -8,8 +8,8 @@ namespace PracticeModule.Contracts.DTOs.Requests
 {
     public class SearchPotentialPracticeRequest
     {
-        public Guid lastSemesterId { get; set; }
-        public Guid streamId { get; set; }
+        public required Guid lastSemesterId { get; set; }
+        public required Guid streamId { get; set; }
         public Guid? groupId { get; set; }
 
         public Guid? oldCompanyId { get; set; }

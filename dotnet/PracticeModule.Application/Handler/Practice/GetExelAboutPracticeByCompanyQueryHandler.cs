@@ -16,6 +16,8 @@ using SelectionModule.Domain.Entites;
 using DeanModule.Domain.Entities;
 using DeanModule.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
+using PracticeModule.Domain.Enum;
+using PracticeModule.Contracts.DTOs;
 
 namespace PracticeModule.Application.Handler.PracticePart
 {
@@ -27,10 +29,13 @@ namespace PracticeModule.Application.Handler.PracticePart
         private readonly ICompanyRepository _companyRepository;
         private readonly IPositionRepository _positionRepository;
         private readonly ISemesterRepository _semesterRepository;
+        private readonly IGroupRepository _groupRepository;
+        private readonly ExelService _exelService;
 
         public GetExelAboutPracticeByCompanyQueryHandler(IPracticeRepository practiceRepository, IUserRepository userRepository, 
             IStudentRepository studentRepository, ICompanyRepository companyRepository,
-            IPositionRepository positionRepository, IGroupRepository groupRepository, ISemesterRepository semesterRepository)
+            IPositionRepository positionRepository, IGroupRepository groupRepository,
+            ISemesterRepository semesterRepository, ExelService excelService)
         {
             _practiceRepository = practiceRepository;
             _userRepository = userRepository;
@@ -38,23 +43,53 @@ namespace PracticeModule.Application.Handler.PracticePart
             _companyRepository = companyRepository;
             _positionRepository = positionRepository;
             _semesterRepository = semesterRepository;
+            _groupRepository = groupRepository;
+            _exelService = excelService;
         }
 
         public async Task<FileContentResult> Handle(GetExelAboutPracticeByCompanyQuery request, CancellationToken cancellationToken)
         {
-            Company company = await _companyRepository.GetByIdAsync(request.CompanyId);
+            Company? company = null;
+            SemesterEntity? Semester = null;
 
-            SemesterEntity? currentSemester = (await _semesterRepository.ListAllAsync()).Where(semester =>
-                semester.EndDate > DateOnly.FromDateTime(DateTime.UtcNow) &&
-                semester.StartDate < DateOnly.FromDateTime(DateTime.UtcNow)).FirstOrDefault();
-
-            if (currentSemester == null)
+            try
             {
-                throw new NotFound("No current semester found");
+                company = await _companyRepository.GetByIdAsync(request.CompanyId);
             }
-            var practices = (await _practiceRepository.ListAllAsync()).Where(practice => practice.CompanyId == company.Id && practice.GlobalPractice.SemesterId == currentSemester.Id).ToList();
-            var students = (await _studentRepository.ListAllAsync()).Where(student => practices.Select(practice => practice.StudentId).Contains(student.Id)).ToList();
-            var users = (await _userRepository.ListAllAsync()).Where(user => students.Select(student => student.UserId).Contains(user.Id)).ToList();
+            catch (InvalidOperationException)
+            {
+                throw new NotFound("Company not found");
+            }
+
+            try
+            {
+                Semester = await _semesterRepository.GetByIdAsync(request.SemesterId);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new NotFound("Semester not found");
+            }
+
+            var practices = (await _practiceRepository.ListAllAsync())
+                .Include(p => p.GlobalPractice)
+                .Where(practice => practice.CompanyId == company.Id && 
+                practice.GlobalPractice.SemesterId == Semester.Id)
+                .ToList();
+
+            var students = (await _studentRepository.ListAllAsync())
+                .Include(s => s.Group)
+                .Where(student => practices.Select(practice => practice.StudentId)
+                .Contains(student.Id))
+                .ToList();
+
+            var users = (await _userRepository.ListAllAsync())
+                .Where(user => students.Select(student => student.UserId)
+                .Contains(user.Id))
+                .ToList();
+
+            string sem = Semester.StartDate.Month == 9
+                        ? $"Осенний семестр {Semester.StartDate.Year}/{Semester.StartDate.Year + 1}"
+                        : $"Весенний семестр {Semester.StartDate.Year}";
 
             ExcelPackage.License.SetNonCommercialPersonal("<My Name>");
 
@@ -62,27 +97,36 @@ namespace PracticeModule.Application.Handler.PracticePart
             {
                 var worksheet = package.Workbook.Worksheets.Add("Практики");
 
-                worksheet.Cells[1, 1].Value = "Фамилия";
-                worksheet.Cells[1, 2].Value = "Имя";
-                worksheet.Cells[1, 3].Value = "Отчество";
-                worksheet.Cells[1, 4].Value = "Компания";
-                worksheet.Cells[1, 5].Value = "Позиция";
+                worksheet.Cells[1, 1].Value = "ФИО";
+                worksheet.Cells[1, 2].Value = "Группа";
+                worksheet.Cells[1, 3].Value = "Компания";
+                worksheet.Cells[1, 4].Value = "Позиция";
+                worksheet.Cells[1, 5].Value = "Тип практики";
+                worksheet.Cells[1, 6].Value = "Семестр";
 
-                for (int i = 0; i < practices.Count(); i++)
+                for (int i = 0; i < students.Count(); i++)
                 {
-                    var student = students.First(student => student.Id == practices[i].StudentId);
+                    var student = students[i];
                     student.User = users.First(user => user.Id == student.UserId);
+                    var practice = practices.First(practice => practice.StudentId == student.Id);
 
                     var position = await _positionRepository.GetByIdAsync(practices[i].PositionId);
 
-                    worksheet.Cells[i + 2, 1].Value = student.User.Surname;
-                    worksheet.Cells[i + 2, 2].Value = student.User.Name;
-                    worksheet.Cells[i + 2, 3].Value = student.Middlename;
-                    worksheet.Cells[i + 2, 4].Value = company.Name;
-                    worksheet.Cells[i + 2, 5].Value = position.Name;
+
+                    ExelRaw exelRaw = new()
+                    {
+                        StudentName = student.User.Surname + " " + student.User.Name + " " + student.Middlename,
+                        PracticeType = practices[i].GlobalPractice.PracticeType,
+                        Position = position.Name,
+                        Company = company.Name,
+                        Semestr = sem,
+                        GroupNumber = student.Group.GroupNumber
+                    };
+
+                    _exelService.FillWorksheetRaw(worksheet, exelRaw, i + 2);
                 }
 
-                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+                _exelService.MakeBeautiful(worksheet);
 
                 byte[] fileContents = package.GetAsByteArray();
 
