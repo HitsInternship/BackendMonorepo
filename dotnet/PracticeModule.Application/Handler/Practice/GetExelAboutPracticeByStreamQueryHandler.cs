@@ -46,7 +46,7 @@ namespace PracticeModule.Application.Handler.PracticePart
             ExcelPackage.License.SetNonCommercialPersonal("<My Name>");
 
             var stream = await _streamRepository.GetStreamByIdAsync(request.StreamId)
-                ?? throw new NotFound("Поток ненайден");
+                ?? throw new NotFound("Stream not found");
 
             using var package = new ExcelPackage();
 
