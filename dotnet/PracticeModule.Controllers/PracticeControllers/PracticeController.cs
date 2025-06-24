@@ -114,8 +114,8 @@ namespace PracticeModule.Controllers.PracticeControllers
         /// </summary>
         [HttpGet]
         [Authorize(Roles = "DeanMember")]
-        [Route("{groupId}/{semesterId}/group-practice-exel")]
-        public async Task<IActionResult> GetExelForGroup([FromRoute] Guid groupId, Guid semesterId)
+        [Route("{groupId}/group-practice-exel")]
+        public async Task<IActionResult> GetExelForGroup([FromRoute] Guid groupId, [FromQuery] Guid? semesterId)
         {
             var querry = new GetExelAboutPracticeByGroupQuery() { GroupId = groupId, SemesterId = semesterId };
 
@@ -127,8 +127,8 @@ namespace PracticeModule.Controllers.PracticeControllers
         /// </summary>
         [HttpGet]
         [Authorize(Roles = "DeanMember")]
-        [Route("{streamId}/{semesterId}/stream-practice-exel")]
-        public async Task<IActionResult> GetExelForStream([FromRoute] Guid streamId, Guid semesterId)
+        [Route("{streamId}/stream-practice-exel")]
+        public async Task<IActionResult> GetExelForStream([FromRoute] Guid streamId, [FromQuery] Guid? semesterId)
         {
             var querry = new GetExelAboutPracticeByStreamQuery() { StreamId = streamId, SemesterId = semesterId };
 
@@ -140,8 +140,8 @@ namespace PracticeModule.Controllers.PracticeControllers
         /// </summary>
         [HttpGet]
         [Authorize(Roles = "DeanMember")]
-        [Route("{companyId}/{semesterId}/company-practice-exel")]
-        public async Task<IActionResult> GetExelForCompany([FromRoute] Guid companyId, Guid semesterId)
+        [Route("{companyId}/company-practice-exel")]
+        public async Task<IActionResult> GetExelForCompany([FromRoute] Guid companyId, [FromQuery] Guid? semesterId)
         {
             var querry = new GetExelAboutPracticeByCompanyQuery() { CompanyId = companyId, SemesterId = semesterId };
 
@@ -153,12 +153,12 @@ namespace PracticeModule.Controllers.PracticeControllers
         /// </summary>
         [HttpGet]
         [Authorize(Roles = "DeanMember")]
-        [Route("{semesterId}/company-practice-exel")]
-        public async Task<IActionResult> GetExelForAllCompanys([FromRoute] Guid semesterId)
+        [Route("company-practice-exel")]
+        public async Task<IActionResult> GetExelForAllCompanys([FromQuery] Guid? semesterId)
         {
-            var querry = new GetExelAboutPracticeForAllCompanysQuery() { SemesterId = semesterId};
+            var query = new GetExelAboutPracticeForAllCompanysQuery() { SemesterId = semesterId };
 
-            return await _sender.Send(querry);
+            return await _sender.Send(query);
         }
     }
 }
