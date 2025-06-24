@@ -49,9 +49,18 @@ namespace PracticeModule.Application.Handler.PracticePart
 
         public async Task<FileContentResult> Handle(GetExelAboutPracticeByCompanyQuery request, CancellationToken cancellationToken)
         {
-            Company company = await _companyRepository.GetByIdAsync(request.CompanyId);
-
+            Company? company = null;
             SemesterEntity? Semester = null;
+
+            try
+            {
+                company = await _companyRepository.GetByIdAsync(request.CompanyId);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new NotFound("Company not found");
+            }
+
             try
             {
                 Semester = await _semesterRepository.GetByIdAsync(request.SemesterId);
