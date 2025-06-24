@@ -10,6 +10,7 @@ using PracticeModule.Contracts.DTOs.Responses;
 using PracticeModule.Contracts.Queries;
 using StudentModule.Contracts.Queries.StudentQueries;
 using StudentModule.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace PracticeModule.Controllers.PracticeControllers
 {
@@ -101,7 +102,7 @@ namespace PracticeModule.Controllers.PracticeControllers
         [Authorize(Roles = "DeanMember")]
         [Route("{practiceId}/mark")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> MarkPractice(Guid practiceId, int mark)
+        public async Task<IActionResult> MarkPractice(Guid practiceId, [Range(2, 5)][Required] int mark)
         {
             await _sender.Send(new MarkPracticeCommand(practiceId, mark));
 
