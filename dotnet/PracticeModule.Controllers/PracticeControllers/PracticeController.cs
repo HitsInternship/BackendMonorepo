@@ -142,7 +142,7 @@ namespace PracticeModule.Controllers.PracticeControllers
         [Route("{companyId}/{semesterId}/company-practice-exel")]
         public async Task<IActionResult> GetExelForCompany([FromRoute] Guid companyId, Guid semesterId)
         {
-            var querry = new GetExelAboutPracticeByCompanyQuery() { CompanyId = companyId, SemestreId = semesterId };
+            var querry = new GetExelAboutPracticeByCompanyQuery() { CompanyId = companyId, SemesterId = semesterId };
 
             return await _sender.Send(querry);
         } 
