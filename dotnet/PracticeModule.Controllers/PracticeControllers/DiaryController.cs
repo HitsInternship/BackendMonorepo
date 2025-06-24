@@ -24,19 +24,21 @@ public class DiaryController : ControllerBase
     /// </summary>
     /// <param name="dto">Данные дневника практики</param>
     /// <returns>Ничего</returns>
+    [Authorize]
     [HttpPost("student-practice-diary")]
     public async Task<IActionResult> StudentPracticeDiary([FromForm] PracticeDiaryAddCommand dto)
     {
         await _mediator.Send(dto);
         return Ok();
     }
-    
+
 
     /// <summary>
     /// Получить дневник практики по ID
     /// </summary>
     /// <param name="id">ID дневника</param>
     /// <returns>Дневник практики</returns>
+    [Authorize]
     [HttpGet("student-practice-diary/{id}")]
     public async Task<IActionResult> GetPracticeDiary(Guid id)
     {
@@ -48,19 +50,21 @@ public class DiaryController : ControllerBase
     /// Получить все дневники практик
     /// </summary>
     /// <returns>Список дневников</returns>
+    [Authorize]
     [HttpGet("student-practice-diary")]
     public async Task<IActionResult> GetAllPracticeDiaries()
     {
         var result = await _mediator.Send(new GetAllPracticeDiariesQuery());
         return Ok(result);
     }
-    
+
     /// <summary>
     /// Добавить комментарий к дневнику практики
     /// </summary>
     /// <param name="diaryId">ID дневника</param>
     /// <param name="request">Данные комментария</param>
     /// <returns>Ничего</returns>
+    [Authorize]
     [HttpPost("practice-diary/{diaryId}/comments")]
     public async Task<IActionResult> AddPracticeDiaryComment(
         Guid diaryId, 

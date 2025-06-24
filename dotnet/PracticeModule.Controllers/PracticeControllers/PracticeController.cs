@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CompanyModule.Contracts.DTOs.Responses;
+using DeanModule.Contracts.Dtos.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +10,7 @@ using PracticeModule.Contracts.Commands;
 using PracticeModule.Contracts.DTOs.Requests;
 using PracticeModule.Contracts.DTOs.Responses;
 using PracticeModule.Contracts.Queries;
+using SelectionModule.Contracts.Dtos.Responses;
 using StudentModule.Contracts.Queries.StudentQueries;
 using StudentModule.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -159,6 +162,32 @@ namespace PracticeModule.Controllers.PracticeControllers
             var query = new GetExelAboutPracticeForAllCompanysQuery() { SemesterId = semesterId };
 
             return await _sender.Send(query);
+        }
+
+        /// <summary>
+        /// Получить статистику по компаниям.
+        /// </summary>
+        /// <returns>Статистика по компаниям.</returns>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("stats/companies")]
+        [ProducesResponseType(typeof(Dictionary<SemesterResponseDto, Dictionary<CompanyResponse, int>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPracticeStatisticsByCompanies([FromQuery] List<Guid> companyIds)
+        {
+            return Ok((await _sender.Send(new GetPracticeStatisticsByCompanyQuery(companyIds))).ToDictionary(keyPair => keyPair.Key.Description, keyPair => keyPair.Value.ToDictionary(keyPair => keyPair.Key.Name, keyPair => keyPair.Value)));
+        }
+
+        /// <summary>
+        /// Получить статистику по позициям.
+        /// </summary>
+        /// <returns>Статистика по позициям.</returns>
+        [HttpGet]
+        [Authorize(Roles = "DeanMember")]
+        [Route("stats/positions")]
+        [ProducesResponseType(typeof(Dictionary<SemesterResponseDto, Dictionary<PositionDto, int>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPracticeStatisticsByPositions([FromQuery] List<Guid> positionIds)
+        {
+            return Ok((await _sender.Send(new GetPracticeStatisticsByPositionQuery(positionIds))).ToDictionary(keyPair => keyPair.Key.Description, keyPair => keyPair.Value.ToDictionary(keyPair => keyPair.Key.Name, keyPair => keyPair.Value)));
         }
     }
 }

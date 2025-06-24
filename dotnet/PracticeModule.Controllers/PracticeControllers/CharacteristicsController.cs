@@ -24,18 +24,20 @@ public class CharacteristicsController : ControllerBase
     /// </summary>
     /// <param name="dto">Данные характеристики</param>
     /// <returns>Ничего</returns>
+    [Authorize]
     [HttpPost("add")]
     public async Task<IActionResult> StudentCharacteristics([FromForm] StudentCharacteristicsAddCommand dto)
     {
         await _mediator.Send(dto);
         return Ok();
     }
-    
+
     /// <summary>
     /// Получить характеристику студента по ID
     /// </summary>
     /// <param name="id">ID характеристики</param>
     /// <returns>Характеристика студента</returns>
+    [Authorize]
     [HttpGet("student-characteristics/{id}")]
     public async Task<IActionResult> GetStudentCharacteristic(Guid id)
     {
@@ -47,6 +49,7 @@ public class CharacteristicsController : ControllerBase
     /// Получить все характеристики студентов
     /// </summary>
     /// <returns>Список характеристик</returns>
+    [Authorize]
     [HttpGet("student-characteristics")]
     public async Task<IActionResult> GetAllStudentCharacteristics()
     {
@@ -61,6 +64,7 @@ public class CharacteristicsController : ControllerBase
     /// <param name="characteristicId">ID характеристики</param>
     /// <param name="request">Данные комментария</param>
     /// <returns>Ничего</returns>
+    [Authorize]
     [HttpPost("student-characteristic/{characteristicId}/comments")]
     public async Task<IActionResult> AddStudentCharacteristicComment(
         Guid characteristicId, 
