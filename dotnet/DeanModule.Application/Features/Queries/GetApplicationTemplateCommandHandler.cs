@@ -22,7 +22,7 @@ public class GetApplicationTemplateCommandHandler : IRequestHandler<GetApplicati
         try
         {
             return await _mediator.Send(new GetDocumentQuery(Guid.Parse("8bcea8ec-2bc0-4d14-bfd2-e1e151bb8aff"),
-                DocumentType.Attachement), cancellationToken);
+                DocumentType.ChangePracticeApplication), cancellationToken);
         }
         catch (Exception e)
         {

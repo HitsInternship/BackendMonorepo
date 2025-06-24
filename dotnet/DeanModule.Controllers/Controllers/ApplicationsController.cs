@@ -54,7 +54,9 @@ public class ApplicationsController : ControllerBase
     [HttpPost, Authorize(Roles = "Student")]
     public async Task<IActionResult> CreateApplication([FromBody] ApplicationRequestDto applicationRequestDto)
     {
-        return Ok(await _sender.Send(new CreateApplicationCommand(applicationRequestDto, User.GetUserId())));
+        var id = await _sender.Send(new CreateApplicationCommand(applicationRequestDto, User.GetUserId()));
+
+        return Ok(new { Id = id });
     }
 
     /// <summary>

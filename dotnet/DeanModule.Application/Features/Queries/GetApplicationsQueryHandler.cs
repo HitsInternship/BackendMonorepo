@@ -81,10 +81,11 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
         var pagedApplications = await query
             .Skip(skip)
             .Take(_size)
+            .Include(x => x.Comments)
             .ToListAsync(cancellationToken);
 
         var result = new List<ListedApplicationResponseDto>();
-        
+
         foreach (var application in pagedApplications)
         {
             var student = await _studentRepository.GetStudentByIdAsync(application.StudentId);
@@ -106,6 +107,7 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
                 Email = user.Email,
                 Surname = user.Surname
             };
+            applicationDto.CommentsCount = application.Comments.Count;
 
             result.Add(applicationDto);
         }

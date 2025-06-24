@@ -26,8 +26,10 @@ public record ListedApplicationResponseDto : BaseDto
     public CompanyResponse NewCompany { get; set; }
 
     public PositionDto NewPosition { get; set; }
-    
+
     public CompanyResponse OldCompany { get; set; }
 
     public PositionDto OldPosition { get; set; }
+
+    public int CommentsCount { get; set; }
 }

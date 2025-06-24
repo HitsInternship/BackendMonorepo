@@ -47,7 +47,7 @@ public class DownloadApplicationFileCommandHandler : IRequestHandler<DownloadApp
             try
             {
                 return await _mediator.Send(
-                    new GetDocumentQuery(application.DocumentId.Value, DocumentType.Attachement),
+                    new GetDocumentQuery(application.DocumentId.Value, DocumentType.ChangePracticeApplication),
                     cancellationToken);
             }
             catch (Exception e)

@@ -1,8 +1,7 @@
 using CompanyModule.Contracts.DTOs.Responses;
 using DeanModule.Domain.Enums;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using SelectionModule.Contracts.Dtos.Responses;
+using Shared.Contracts.Dtos;
 using StudentModule.Contracts.DTOs;
 
 namespace DeanModule.Contracts.Dtos.Responses;
@@ -10,7 +9,7 @@ namespace DeanModule.Contracts.Dtos.Responses;
 /// <summary>
 /// Ответ по заявке студента.
 /// </summary>
-public record ApplicationResponseDto
+public record ApplicationResponseDto : BaseDto
 {
     /// <summary>
     /// Описание заявки.
@@ -21,11 +20,6 @@ public record ApplicationResponseDto
     /// Дата подачи заявки.
     /// </summary>
     public DateOnly Date { get; init; }
-
-    /// <summary>
-    /// URL на прикреплённый документ (если имеется).
-    /// </summary>
-    public string? DocumentUrl { get; init; }
 
     /// <summary>
     /// Текущий статус заявки.
