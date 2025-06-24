@@ -30,18 +30,20 @@ public class UploadApplicationFileCommandHandler : IRequestHandler<UploadApplica
         if (application.Status is ApplicationStatus.Rejected or ApplicationStatus.Accepted)
             throw new BadRequest("You cannot update a rejected or accepted application");
 
-        if(application.IsDeleted) throw new BadRequest("You cannot upload a file a deleted application");
-        
+        if (application.IsDeleted) throw new BadRequest("You cannot upload a file a deleted application");
+
         var student = await _studentRepository.GetByIdAsync(application.StudentId);
 
         if (student.UserId != request.UserId)
             throw new Forbidden("You cannot update this application.");
 
-        if (application.DocumentId.HasValue)
-            await _mediator.Send(new RemoveDocumentCommand(application.DocumentId.Value, DocumentType.Attachement),
-                cancellationToken);
-
-        return await _mediator.Send(new LoadDocumentCommand(DocumentType.ChangePracticeApplication, request.File.File),
+        var fileId = await _mediator.Send(
+            new LoadDocumentCommand(DocumentType.ChangePracticeApplication, request.File.File),
             cancellationToken);
+
+        application.DocumentId = fileId;
+        await _applicationRepository.UpdateAsync(application);
+
+        return fileId;
     }
 }

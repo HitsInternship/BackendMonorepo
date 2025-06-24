@@ -11,7 +11,7 @@ using StudentModule.Contracts.Repositories;
 
 namespace DeanModule.Application.Features.Commands.Application;
 
-public class CreateApplicationCommandHandler : IRequestHandler<CreateApplicationCommand, Unit>
+public class CreateApplicationCommandHandler : IRequestHandler<CreateApplicationCommand, Guid>
 {
     private readonly IMapper _mapper;
     private readonly ISender _mediator;
@@ -32,7 +32,7 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
         _mediator = mediator;
     }
 
-    public async Task<Unit> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateApplicationCommand request, CancellationToken cancellationToken)
     {
         var student = await _studentRepository.GetStudentByUserIdAsync(request.UserId) ??
                       throw new BadRequest("You are not a student");
@@ -56,6 +56,6 @@ public class CreateApplicationCommandHandler : IRequestHandler<CreateApplication
 
         await _applicationRepository.AddAsync(application);
 
-        return Unit.Value;
+        return application.Id;
     }
 }
