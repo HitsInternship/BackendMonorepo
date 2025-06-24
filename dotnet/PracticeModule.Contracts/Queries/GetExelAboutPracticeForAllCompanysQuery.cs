@@ -10,6 +10,6 @@ namespace PracticeModule.Contracts.Queries
 {
     public record GetExelAboutPracticeForAllCompanysQuery : IRequest<FileContentResult> 
     {
-        public Guid SemesterId { get; set; }
+        public Guid? SemesterId { get; set; }
     }
 }

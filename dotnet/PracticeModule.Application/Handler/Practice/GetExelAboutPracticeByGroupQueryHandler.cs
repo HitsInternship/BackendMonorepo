@@ -60,13 +60,23 @@ namespace PracticeModule.Application.Handler.PracticePart
             }
 
             SemesterEntity? Semester = null;
-            try
+
+            if (request.SemesterId == null)
             {
-                Semester = await _semesterRepository.GetByIdAsync(request.SemesterId);
+                Semester = (await _semesterRepository.ListAllAsync()).Where(semester =>
+                    semester.EndDate > DateOnly.FromDateTime(DateTime.UtcNow) &&
+                    semester.StartDate < DateOnly.FromDateTime(DateTime.UtcNow)).FirstOrDefault();
             }
-            catch (InvalidOperationException)
+            else
             {
-                throw new NotFound("Semester not found");
+                try
+                {
+                    Semester = await _semesterRepository.GetByIdAsync((Guid)request.SemesterId);
+                }
+                catch (InvalidOperationException)
+                {
+                    throw new NotFound("Semester not found");
+                }
             }
 
             string sem = Semester.StartDate.Month == 9

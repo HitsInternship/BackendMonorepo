@@ -11,6 +11,6 @@ namespace PracticeModule.Contracts.Queries
     public record GetExelAboutPracticeByStreamQuery : IRequest<FileContentResult>
     {
         public Guid StreamId { get; set; }
-        public Guid SemesterId { get; set; }
+        public Guid? SemesterId { get; set; }
     }
 }
