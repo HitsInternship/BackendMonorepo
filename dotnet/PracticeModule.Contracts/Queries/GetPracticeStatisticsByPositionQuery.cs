@@ -4,5 +4,5 @@ using SelectionModule.Domain.Entites;
 
 namespace PracticeModule.Contracts.Queries
 {
-    public record GetPracticeStatisticsByPositionQuery(List<Guid> positionIds) : IRequest<Dictionary<SemesterEntity, Dictionary<PositionEntity, int>>>;
+    public record GetPracticeStatisticsByPositionQuery(List<Guid> positionIds, List<Guid>? companyIds) : IRequest<Dictionary<SemesterEntity, Dictionary<PositionEntity, int>>>;
 }

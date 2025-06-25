@@ -5,6 +5,7 @@ using DeanModule.Domain.Entities;
 using MediatR;
 using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
+using PracticeModule.Domain.Entity;
 using SelectionModule.Contracts.Repositories;
 using SelectionModule.Domain.Entites;
 
@@ -33,7 +34,12 @@ public class GetPracticeStatisticsByPositionQueryHandler : IRequestHandler<GetPr
 
         foreach (var semester in semestersOrdered)
         {
-            Dictionary<PositionEntity, int> positionStatsInSemester = (await _practiceRepository.ListAllAsync()).Where(practice => practice.GlobalPractice.SemesterId == semester.Id && query.positionIds.Contains(practice.PositionId)).GroupBy(practice => practice.PositionId).ToDictionary(group => positions.First(position => position.Id == group.Key), group => group.Count());
+            var dbQuery = (await _practiceRepository.ListAllAsync()).Where(practice => practice.GlobalPractice.SemesterId == semester.Id && query.positionIds.Contains(practice.PositionId));
+            if (query.companyIds.Count > 0)
+            {
+                dbQuery = dbQuery.Where(practice => query.companyIds.Contains(practice.CompanyId));
+            }
+            Dictionary<PositionEntity, int> positionStatsInSemester = dbQuery.GroupBy(practice => practice.PositionId).ToDictionary(group => positions.First(position => position.Id == group.Key), group => group.Count());
             statistics.Add(semester, positionStatsInSemester);
         }
 

@@ -172,7 +172,7 @@ namespace PracticeModule.Controllers.PracticeControllers
         [Authorize(Roles = "DeanMember")]
         [Route("stats/companies")]
         [ProducesResponseType(typeof(Dictionary<SemesterResponseDto, Dictionary<CompanyResponse, int>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetPracticeStatisticsByCompanies([FromQuery] List<Guid> companyIds)
+        public async Task<IActionResult> GetPracticeStatisticsByCompanies([FromQuery][Required] List<Guid> companyIds)
         {
             return Ok((await _sender.Send(new GetPracticeStatisticsByCompanyQuery(companyIds))).ToDictionary(keyPair => keyPair.Key.Description, keyPair => keyPair.Value.ToDictionary(keyPair => keyPair.Key.Name, keyPair => keyPair.Value)));
         }
@@ -185,9 +185,9 @@ namespace PracticeModule.Controllers.PracticeControllers
         [Authorize(Roles = "DeanMember")]
         [Route("stats/positions")]
         [ProducesResponseType(typeof(Dictionary<SemesterResponseDto, Dictionary<PositionDto, int>>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetPracticeStatisticsByPositions([FromQuery] List<Guid> positionIds)
+        public async Task<IActionResult> GetPracticeStatisticsByPositions([FromQuery][Required] List<Guid> positionIds, [FromQuery] List<Guid> companyIds)
         {
-            return Ok((await _sender.Send(new GetPracticeStatisticsByPositionQuery(positionIds))).ToDictionary(keyPair => keyPair.Key.Description, keyPair => keyPair.Value.ToDictionary(keyPair => keyPair.Key.Name, keyPair => keyPair.Value)));
+            return Ok((await _sender.Send(new GetPracticeStatisticsByPositionQuery(positionIds, companyIds))).ToDictionary(keyPair => keyPair.Key.Description, keyPair => keyPair.Value.ToDictionary(keyPair => keyPair.Key.Name, keyPair => keyPair.Value)));
         }
     }
 }
