@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using NotificationModule.Contracts.Commands;
 using NotificationModule.Kafka.Messages;
 
-namespace NotificationModule.Kafka;
+namespace NotificationModule.Kafka.Consumers;
 
 public class MessageConsumer : BackgroundService
 {
