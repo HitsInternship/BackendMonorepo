@@ -1,8 +1,5 @@
-using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NotificationModule.Contracts.Kafka;
-using NotificationModule.Kafka.Producers;
 using NotificationModule.Kafka.TopicInitializer;
 
 namespace NotificationModule.Kafka;
@@ -11,48 +8,19 @@ public static class DependencyInjection
 {
     public static void AddKafka(this IServiceCollection services, IConfiguration configuration)
     {
-        var kafkaSettings = configuration.GetSection("Kafka").Get<KafkaSettings>() ?? throw new ArgumentException();
+        var kafkaSection = configuration.GetSection("Kafka");
 
+        if (!kafkaSection.Exists())
+            throw new ArgumentException("Kafka configuration section is missing");
 
-        services.Configure<KafkaSettings>(configuration.GetSection("Kafka"));
+        var kafkaSettings = kafkaSection.Get<KafkaSettings>()
+                            ?? throw new ArgumentException("Kafka settings are invalid");
 
-        if (kafkaSettings.KafkaEnabled)
-        {
-            services.AddSingleton<IProducer<Null, string>>(_ =>
-            {
-                var config = new ProducerConfig
-                {
-                    BootstrapServers = kafkaSettings.BootstrapServers
-                };
-                return new ProducerBuilder<Null, string>(config).Build();
-            });
+        services.Configure<KafkaSettings>(kafkaSection);
 
-            services.AddSingleton<IConsumer<Ignore, string>>(_ =>
-            {
-                var config = new ConsumerConfig
-                {
-                    BootstrapServers = kafkaSettings.BootstrapServers,
-                    GroupId = kafkaSettings.GroupId,
-                    AutoOffsetReset =
-                        Enum.TryParse<AutoOffsetReset>(kafkaSettings.AutoOffsetReset, true, out var offset)
-                            ? offset
-                            : AutoOffsetReset.Latest
-                };
-                return new ConsumerBuilder<Ignore, string>(config).Build();
-            });
-
-
-            services.AddHostedService<MessageConsumer>();
-            services.AddSingleton<IMessageProducer, MessageProducer>();
-            services.AddTransient<IKafkaTopicInitializer, KafkaTopicInitializer>();
-        }
-        else
-        {
-            services.AddSingleton<IMessageProducer, DisabledMessageProducer>();
-            services.AddTransient<IKafkaTopicInitializer, DisabledKafkaTopicInitializer>();
-
-        }
+        services.TryAddKafkaSafe(kafkaSettings);
     }
+
 
     public static async Task UseKafka(this IServiceProvider services)
     {

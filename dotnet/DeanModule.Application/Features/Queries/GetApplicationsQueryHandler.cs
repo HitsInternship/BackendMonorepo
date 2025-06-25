@@ -62,8 +62,8 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
         }
         else
         {
-            if (request.ApplicationStatus != null)
-                query = query.Where(x => x.Status == request.ApplicationStatus);
+            if (request.ApplicationStatus.HasValue)
+                query = query.Where(x => x.Status == request.ApplicationStatus.Value);
 
             if (request.Name != null)
             {
@@ -72,6 +72,7 @@ public class GetApplicationsQueryHandler : IRequestHandler<GetApplicationsQuery,
                 query = query.Where(x => students.Contains(x.StudentId));
             }
         }
+        
 
         var totalCount = await query.CountAsync(cancellationToken);
         var totalPages = Math.Max(1, (int)Math.Ceiling((double)totalCount / _size));
