@@ -1,5 +1,6 @@
 using AutoMapper;
 using CompanyModule.Contracts.DTOs.Responses;
+using CompanyModule.Contracts.Queries;
 using CompanyModule.Contracts.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,17 +17,20 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
 {
     private readonly int _size;
     private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
     private readonly ICompanyRepository _companyRepository;
     private readonly IVacancyRepository _vacancyRepository;
     private readonly IPositionRepository _positionRepository;
 
     public GetVacanciesQueryHandler(IMapper mapper, IVacancyRepository vacancyRepository,
-        IOptions<PaginationConfig> config, ICompanyRepository companyRepository, IPositionRepository positionRepository)
+        IOptions<PaginationConfig> config, ICompanyRepository companyRepository, IPositionRepository positionRepository,
+        IMediator mediator)
     {
         _mapper = mapper;
         _vacancyRepository = vacancyRepository;
         _companyRepository = companyRepository;
         _positionRepository = positionRepository;
+        _mediator = mediator;
         _size = config.Value.PageSize;
     }
 
@@ -40,8 +44,16 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
             ? await _vacancyRepository.ListAllArchivedAsync()
             : await _vacancyRepository.ListAllActiveAsync();
 
-        if (request.CompanyId.HasValue) vacancies = vacancies.Where(x => x.CompanyId == request.CompanyId.Value);
-        if (request.PositionId.HasValue) vacancies = vacancies.Where(x => x.PositionId == request.PositionId.Value);
+        if (request.Roles.Contains("Curator"))
+        {
+            var curator = await _mediator.Send(new GetCuratorQuery(request.UserId), cancellationToken);
+            vacancies = vacancies.Where(x => x.CompanyId == curator.Company.Id);
+        }
+        else
+        {
+            if (request.CompanyId.HasValue) vacancies = vacancies.Where(x => x.CompanyId == request.CompanyId.Value);
+            if (request.PositionId.HasValue) vacancies = vacancies.Where(x => x.PositionId == request.PositionId.Value);
+        }
 
         vacancies = vacancies.Where(x => x.IsDeleted == request.IsArchived);
         vacancies = vacancies.Where(x => x.IsClosed == request.IsClosed);

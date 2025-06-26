@@ -114,6 +114,7 @@ public class VacancyController : ControllerBase
         bool isClosed = false,
         bool isArchived = false)
     {
-        return Ok(await _mediator.Send(new GetVacanciesQuery(isClosed, isArchived, page, companyId, positionId)));
+        return Ok(await _mediator.Send(new GetVacanciesQuery(User.GetUserId(), User.GetRoles(), isClosed, isArchived,
+            page, companyId, positionId)));
     }
 }
