@@ -15,17 +15,12 @@ public class ConfirmSelectionStatusCommandHandler : IRequestHandler<ConfirmSelec
 {
     private readonly ISender _mediator;
     private readonly ISelectionRepository _selectionRepository;
-    private readonly ICandidateRepository _candidateRepository;
     private readonly IUserRepository _userRepository;
-    private readonly IVacancyResponseRepository _vacancyResponseRepository;
 
     public ConfirmSelectionStatusCommandHandler(ISelectionRepository selectionRepository,
-        ICandidateRepository candidateRepository, IVacancyResponseRepository vacancyResponseRepository,
         ISender mediator, IUserRepository userRepository)
     {
         _selectionRepository = selectionRepository;
-        _candidateRepository = candidateRepository;
-        _vacancyResponseRepository = vacancyResponseRepository;
         _mediator = mediator;
         _userRepository = userRepository;
     }

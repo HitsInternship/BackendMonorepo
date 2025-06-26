@@ -2,6 +2,7 @@ using DeanModule.Contracts.Repositories;
 using DeanModule.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
 using PracticeModule.Domain.Entity;
 using StudentModule.Contracts.Repositories;

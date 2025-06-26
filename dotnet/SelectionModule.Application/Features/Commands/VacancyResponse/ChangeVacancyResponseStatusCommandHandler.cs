@@ -38,7 +38,11 @@ public class ChangeVacancyResponseStatusCommandHandler : IRequestHandler<ChangeV
 
         if (request.Status == VacancyResponseStatus.GotOffer)
         {
-            if (candidate.Selection != null) candidate.Selection.Offer = vacancyResponse.Vacancy.Id;
+            if (candidate.Selection != null)
+            {
+                candidate.Selection.Offer = vacancyResponse.Vacancy.Id;
+                candidate.Selection.SelectionStatus = SelectionStatus.OffersAccepted;
+            }
         }
 
         await _candidateRepository.UpdateAsync(candidate);
