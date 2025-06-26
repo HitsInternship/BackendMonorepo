@@ -129,7 +129,8 @@ public class GetSelectionQueryHandler : IRequestHandler<GetSelectionQuery, Selec
             DeadLine = selection.DeadLine,
             SelectionStatus = selection.SelectionStatus,
             Candidate = candidateDto,
-            Responses = vacanciesDtos
+            Responses = vacanciesDtos,
+            IsConfirmed = selection.IsConfirmed,
         };
 
         if (selection.Offer.HasValue)

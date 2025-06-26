@@ -64,19 +64,19 @@ namespace StudentModule.Controllers.Controllers
 
         [HttpGet]
         [Route("get-students-by-group/{groupId}")]
-        [Authorize(Roles = "DeanMember")]
+        [Authorize(Roles = "DeanMember, Curator")]
         public async Task<IActionResult> GetStudentsByGroup([FromRoute] Guid groupId)
         {
-            var query = new GetStudentsFromGroupQuery() { GroupId = groupId };
+            var query = new GetStudentsFromGroupQuery(User.GetUserId(), User.GetRoles()) { GroupId = groupId };
             return Ok(await _mediator.Send(query));
         }
 
         [HttpGet]
         [Route("get-students-by-stream/{streamId}")]
-        [Authorize(Roles = "DeanMember")]
+        [Authorize(Roles = "DeanMember, Curator")]
         public async Task<IActionResult> GetStudentsByStream([FromRoute] Guid streamId)
         {
-            var query = new GetStudentsFromStreamQuery() { streamId = streamId };
+            var query = new GetStudentsFromStreamQuery(User.GetUserId(), User.GetRoles()) { streamId = streamId };
             return Ok(await _mediator.Send(query));
         }
         

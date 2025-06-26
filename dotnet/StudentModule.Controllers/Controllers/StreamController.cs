@@ -9,7 +9,6 @@ namespace StudentModule.Controllers.Controllers
 {
     [ApiController]
     [Route("api/streams/")]
-    [Authorize(Roles = "DeanMember")]
     public class StreamController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -21,6 +20,7 @@ namespace StudentModule.Controllers.Controllers
 
         [HttpPost]
         [Route("create")]
+        [Authorize(Roles = "DeanMember")]
         public async Task<IActionResult> CreateStream(CreateStreamCommand command)
         {
             return Ok(await _mediator.Send(command));
@@ -28,6 +28,7 @@ namespace StudentModule.Controllers.Controllers
 
         [HttpPut]
         [Route("edit")]
+        [Authorize(Roles = "DeanMember")]
         public async Task<IActionResult> EditStream(EditStreamCommand command)
         {
             return Ok(await _mediator.Send(command));
@@ -35,6 +36,7 @@ namespace StudentModule.Controllers.Controllers
 
         [HttpPatch]
         [Route("edit-status")]
+        [Authorize(Roles = "DeanMember")]
         public async Task<IActionResult> EditStreamStatus(EditStreamStatusCommand command)
         {
             return Ok(await _mediator.Send(command));
@@ -42,6 +44,7 @@ namespace StudentModule.Controllers.Controllers
 
         [HttpDelete]
         [Route("delete")]
+        [Authorize(Roles = "DeanMember")]
         public async Task<IActionResult> DeleteStream(DeleteStreamCommand command)
         {
             return Ok(await _mediator.Send(command));

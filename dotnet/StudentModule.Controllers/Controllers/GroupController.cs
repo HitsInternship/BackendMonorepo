@@ -9,7 +9,6 @@ namespace StudentModule.Controllers.Controllers
 {
     [ApiController]
     [Route("api/groups/")]
-    [Authorize(Roles = "DeanMember")]
     public class GroupController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -20,6 +19,7 @@ namespace StudentModule.Controllers.Controllers
 
         [HttpPost]
         [Route("create")]
+        [Authorize(Roles = "DeanMember")]
         public async Task<IActionResult> CreateGroup(CreateGroupCommand command)
         {
             return Ok(await _mediator.Send(command));
@@ -27,6 +27,7 @@ namespace StudentModule.Controllers.Controllers
 
         [HttpPut]
         [Route("edit")]
+        [Authorize(Roles = "DeanMember")]
         public async Task<IActionResult> EditGroup(EditGroupCommand command)
         {
             return Ok(await _mediator.Send(command));
@@ -34,6 +35,7 @@ namespace StudentModule.Controllers.Controllers
 
         [HttpDelete]
         [Route("delete")]
+        [Authorize(Roles = "DeanMember")]
         public async Task<IActionResult> DeleteGroup(DeleteGroupCommand command)
         {
             return Ok(await _mediator.Send(command));

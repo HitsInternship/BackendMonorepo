@@ -22,9 +22,7 @@ public class AddStudentCharacteristicCommentCommandHandler : IRequestHandler<Add
             .FirstOrDefaultAsync(c => c.Id == request.CharacteristicId, cancellationToken);
 
         if (characteristic == null)
-        {
             throw new Exception("Student characteristic not found");
-        }
 
         var comment = new StudentPracticeCharacteristicComment
         {
@@ -35,7 +33,6 @@ public class AddStudentCharacteristicCommentCommandHandler : IRequestHandler<Add
         characteristic.PracticeComment ??= new List<StudentPracticeCharacteristicComment>();
         characteristic.PracticeComment.Add(comment);
 
-        _context.Update(characteristic);
-        await _context.SaveChangesAsync(cancellationToken);
-    }
+        await _context.StudentPracticeCharacteristicComment.AddAsync(comment, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);    }
 }
