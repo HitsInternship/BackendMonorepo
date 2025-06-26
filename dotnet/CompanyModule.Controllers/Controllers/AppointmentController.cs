@@ -129,7 +129,7 @@ namespace CompanyModule.Controllers.Controllers
         [ProducesResponseType(typeof(Dictionary<DateTime, Dictionary<int, ShortenAppointmentResponse?>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAppointmentsCalendar(DateTime startDate, DateTime endDate)
         {
-            return Ok((await _sender.Send(new GetTimeslotsQuery(startDate, endDate))).GroupBy(timeslot => timeslot.Date).OrderBy(group => group.Key).ToDictionary(group => group.Key.ToString("dd.MM.yyyy"), group => group.ToDictionary(list => list.PeriodNumber, list => list.Appointment == null ? (object)list.Id : _mapper.Map<ShortenAppointmentResponse>(list.Appointment))));
+            return Ok((await _sender.Send(new GetTimeslotsQuery(startDate, endDate))).GroupBy(timeslot => timeslot.Date).OrderBy(group => group.Key).ToDictionary(group => group.Key.ToLocalTime().ToString("dd.MM.yyyy"), group => group.ToDictionary(list => list.PeriodNumber, list => list.Appointment == null ? (object)list.Id : _mapper.Map<ShortenAppointmentResponse>(list.Appointment))));
         }
 
         /// <summary>
