@@ -19,7 +19,7 @@ namespace CompanyModule.Application.Handlers.Appointment
 
         public async Task<Timeslot> Handle(AddTimeslotCommand command, CancellationToken cancellationToken)
         {
-            Timeslot? timeslot = (await _timeslotRepository.ListAllAsync()).Where(timeslot => timeslot.Date == command.createRequest.date && timeslot.PeriodNumber == command.createRequest.periodNumber).FirstOrDefault();
+            Timeslot? timeslot = (await _timeslotRepository.ListAllAsync()).Where(timeslot => timeslot.Date.Date == command.createRequest.date.Date.ToUniversalTime() && timeslot.PeriodNumber == command.createRequest.periodNumber).FirstOrDefault();
             if (timeslot != null) throw new Conflict("This date and time is already scheduled");
 
             timeslot = _mapper.Map<Timeslot>(command.createRequest);

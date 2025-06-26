@@ -26,7 +26,7 @@ public class EditPasswordHandler : IRequestHandler<EditPasswordQuery>
         using SHA256 sha256Hash = SHA256.Create();
         var hash = _hashService.GetHash(sha256Hash, request.OldPassword);
 
-        var aspNetUser = await _context.AspNetUsers.Where(x => x.Id.Equals(request.UserId) && x.Password == hash)
+        var aspNetUser = await _context.AspNetUsers.Where(x => x.UserId.Equals(request.UserId) && x.Password == hash)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (aspNetUser == null)

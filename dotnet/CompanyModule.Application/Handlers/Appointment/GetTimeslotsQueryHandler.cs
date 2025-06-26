@@ -16,7 +16,7 @@ namespace CompanyModule.Application.Handlers.Appointment
 
         public async Task<List<Timeslot>> Handle(GetTimeslotsQuery query, CancellationToken cancellationToken)
         {
-            return (await _timeslotRepository.ListAllAsync()).Where(timeslot => timeslot.Date >= query.startDate && timeslot.Date <= query.endDate).Include(timeslot => timeslot.Appointment).ThenInclude(appointment => appointment.Company).ToList();
+            return (await _timeslotRepository.ListAllAsync()).Where(timeslot => timeslot.Date >= query.startDate.ToUniversalTime() && timeslot.Date <= query.endDate).Include(timeslot => timeslot.Appointment).ThenInclude(appointment => appointment.Company).ToList();
         }
     }
 }
