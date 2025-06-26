@@ -31,15 +31,15 @@ namespace StudentModule.Application.Handlers.StudentHandlres
 
             foreach (var exelStudent in request.ExelStudentDto)
             {
+                var group = await _groupRepository.GetGroupByNumberAsync(int.Parse(exelStudent.Group))
+                    ?? throw new NotFound("Group not found");
+
                 UserRequest userRequest = new UserRequest()
                 {
                     name = exelStudent.Name,
                     surname = exelStudent.Surname,
                     email = exelStudent.Email
                 };
-
-                var group = await _groupRepository.GetGroupByNumberAsync(int.Parse(exelStudent.Group))
-                    ?? throw new NotFound("Group not found");
 
                 User user = await _mediator.Send(new CreateUserCommand(userRequest), cancellationToken);
 
