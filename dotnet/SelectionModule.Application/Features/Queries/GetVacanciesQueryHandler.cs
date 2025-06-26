@@ -18,7 +18,7 @@ public class GetVacanciesQueryHandler : IRequestHandler<GetVacanciesQuery, Vacan
     private readonly IMapper _mapper;
     private readonly ICompanyRepository _companyRepository;
     private readonly IVacancyRepository _vacancyRepository;
-    private IPositionRepository _positionRepository;
+    private readonly IPositionRepository _positionRepository;
 
     public GetVacanciesQueryHandler(IMapper mapper, IVacancyRepository vacancyRepository,
         IOptions<PaginationConfig> config, ICompanyRepository companyRepository, IPositionRepository positionRepository)

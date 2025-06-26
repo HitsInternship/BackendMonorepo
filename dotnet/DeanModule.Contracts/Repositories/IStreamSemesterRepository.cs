@@ -10,4 +10,6 @@ public interface IStreamSemesterRepository : IBaseEntityRepository<StreamSemeste
     new Task<IQueryable<StreamSemesterEntity>> ListAllAsync();
     Task SoftDeleteRangBySemesterAsync(Guid semesterId);
     Task SoftDeleteRangeByStreamAsync (Guid streamId);
+    
+    Task<bool> CheckIfStreamSemesterExistsAsync(Guid semesterId, Guid streamId);
 }

@@ -54,7 +54,16 @@ public class GetSelectionQueryHandler : IRequestHandler<GetSelectionQuery, Selec
             candidate = await _candidateRepository.GetCandidateByStudentIdAsync(request.StudentId.Value) ?? throw new
                 BadRequest("You are not a candidate");
 
-            selection = candidate.Selection ?? throw new BadRequest("You do not have a selection");
+            if (candidate.Selection != null)
+            {
+                selection = candidate.Selection;
+            }
+            else
+            {
+                var selectionEntity = await _selectionRepository.GetByCandidateIdAsync(candidate.Id);
+
+                selection = selectionEntity ?? throw new NotFound("Selection not found");
+            }
         }
         else
         {

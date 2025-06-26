@@ -64,8 +64,6 @@ public class EmailService {
             helper.setFrom("testmail6743@gmail.com");
             helper.setText(mail.getBody(), true);
             helper.setTo(mail.getTo());
-            ClassPathResource classPathResource = new ClassPathResource("extension.jpg");
-            helper.addAttachment(Objects.requireNonNull(classPathResource.getFilename()), classPathResource);
             mailSender.send(message);
 
             KafkaMessageResponse successfulMessage = new KafkaMessageResponse(mail.getId(), KafkaMessageStatus.completed, null);
@@ -106,7 +104,7 @@ public class EmailService {
     }
 
     public void createDeadlineMail(Deadline deadline) {
-        String url = deadline.getEvent().equals(DeadlineType.practise_diary) ? "https://ваш-сайт.ru/practise-diary" : "https://ваш-сайт.ru/internship-application";
+        String url = deadline.getEvent().equals(DeadlineType.practise_diary) ? "http://185.239.51.32/practices" : "http://185.239.51.32/vacancies";
         Context context = new Context();
         context.setVariable("deadline", deadline);
         context.setVariable("daysRemaining", calculateDaysRemaining(deadline.getDeadlineDate()));
@@ -145,12 +143,12 @@ public class EmailService {
             case practice_diary -> {
                 context.setVariable("typeName", "дневнику практики");
                 theme = "дневнику практики";
-                url = baseUrlPracticeDiary;
+                url = baseUrlPracticeDiary + "/" + newComment.getTypeId();
             }
             case application -> {
                 context.setVariable("typeName", "заявке на практику");
                 theme = "заявке на практику";
-                url = baseUrlApplication;
+                url = baseUrlApplication + "/" + newComment.getTypeId();
             }
             case characteristic -> {
                 context.setVariable("typeName", "характеристике");
@@ -160,16 +158,16 @@ public class EmailService {
             case selection -> {
                 context.setVariable("typeName", "отбору на практику");
                 theme = "отбору на практику";
-                url = baseUrlSelection;
+                url = baseUrlSelection + "/" + newComment.getTypeId();
             }
             case vacancy_response -> {
                 context.setVariable("typeName", "отклику на вакансию");
                 theme = "отклику на вакансию";
-                url = baseUrlSelection;
+                url = baseUrlSelection + "/" + newComment.getTypeId();
             }
         }
 
-        context.setVariable("url", url + "/" + newComment.getTypeId());
+        context.setVariable("url", url);
 
         String process = templateEngine.process("New-comment", context);
         Mail mail = new Mail(newComment.getId(), newComment.getEmail(), "Новый комментарий к " + theme, process);
@@ -194,6 +192,15 @@ public class EmailService {
 
         String process = templateEngine.process("Meeting", context);
         Mail mail = new Mail(meeting.getId(), meeting.getEmail(), "Компания назначила встречу", process);
+        sendEmailWithThymeLeaf(mail);
+    }
+
+    public void createChangingPassword(ChangingPassword changingPassword) {
+        Context context = new Context();
+        context.setVariable("code", changingPassword.getCode());
+
+        String process = templateEngine.process("Changing-password", context);
+        Mail mail = new Mail(changingPassword.getId(), changingPassword.getEmail(), "Смена пароля", process);
         sendEmailWithThymeLeaf(mail);
     }
 }

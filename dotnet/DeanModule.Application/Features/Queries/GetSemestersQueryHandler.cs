@@ -23,12 +23,14 @@ public class GetSemestersQueryHandler : IRequestHandler<GetSemestersQuery, List<
         if (request.IsArchive)
         {
             var archivedSemesters = await _semesterRepository.ListAllArchivedAsync();
-            var archivedSemesterList = await archivedSemesters.ToListAsync(cancellationToken: cancellationToken);
+            var archivedSemesterList = await archivedSemesters.OrderByDescending(x => x.StartDate)
+                .ToListAsync(cancellationToken: cancellationToken);
             return _mapper.Map<List<SemesterResponseDto>>(archivedSemesterList);
         }
 
         var semesters = await _semesterRepository.ListAllActiveAsync();
-        var semesterList = await semesters.ToListAsync(cancellationToken: cancellationToken);
+        var semesterList = await semesters.OrderByDescending(s => s.StartDate)
+            .ToListAsync(cancellationToken: cancellationToken);
         return _mapper.Map<List<SemesterResponseDto>>(semesterList);
     }
 }

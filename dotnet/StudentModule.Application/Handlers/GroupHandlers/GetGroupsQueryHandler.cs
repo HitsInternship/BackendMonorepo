@@ -2,7 +2,6 @@
 using StudentModule.Contracts.DTOs;
 using StudentModule.Contracts.Queries.GroupQueries;
 using StudentModule.Contracts.Repositories;
-using UserModule.Contracts.Repositories;
 
 namespace StudentModule.Application.Handlers.GroupHandlers
 {
@@ -14,11 +13,12 @@ namespace StudentModule.Application.Handlers.GroupHandlers
         {
             _groupRepository = groupRepository;
         }
+
         public async Task<List<GroupDto>> Handle(GetGroupsQuery request, CancellationToken cancellationToken)
         {
-            var groups = await _groupRepository.GetGroupAsync();
+            var groups = (await _groupRepository.GetGroupAsync()).OrderByDescending(x => x.GroupNumber).ToList();
             var groupsDto = new List<GroupDto>(groups.Count);
-           
+
             foreach (var group in groups)
             {
                 groupsDto.Add(new GroupDto(group));

@@ -9,10 +9,11 @@ namespace DeanModule.Persistence.Repositories;
 public class StreamSemesterRepository(DeanModuleDbContext context)
     : BaseEntityRepository<StreamSemesterEntity>(context), IStreamSemesterRepository
 {
+    private IStreamSemesterRepository _streamSemesterRepositoryImplementation;
+
     public async Task<IEnumerable<StreamSemesterEntity>> GetByStreamIdAsync(Guid streamId)
     {
-        return await DbSet.Include(x => x.SemesterEntity).
-            Where(s => s.StreamId == streamId).ToListAsync();
+        return await DbSet.Include(x => x.SemesterEntity).Where(s => s.StreamId == streamId).ToListAsync();
     }
 
     public async Task<StreamSemesterEntity?> GetBySemesterIdAsync(Guid semesterId, int semesterNumber)
@@ -50,5 +51,10 @@ public class StreamSemesterRepository(DeanModuleDbContext context)
         }
 
         await Context.SaveChangesAsync();
+    }
+
+    public async Task<bool> CheckIfStreamSemesterExistsAsync(Guid semesterId, Guid streamId)
+    {
+        return await DbSet.AnyAsync(x => x.StreamId == streamId && x.StreamId == semesterId);
     }
 }

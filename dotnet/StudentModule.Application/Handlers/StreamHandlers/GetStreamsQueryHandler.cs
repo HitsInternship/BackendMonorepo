@@ -21,7 +21,7 @@ namespace StudentModule.Application.Handlers.StreamHandlers
 
         public async Task<List<StreamDto>> Handle(GetStreamsQuery request, CancellationToken cancellationToken)
         {
-            var streams = await _streamRepository.GetStreamsAsync();
+            var streams = (await _streamRepository.GetStreamsAsync()).OrderByDescending(x => x.StreamNumber).ToList();
 
             List<StreamDto> streamDtos = new List<StreamDto>();
             List<GroupDto> groupDtos = new List<GroupDto>();
