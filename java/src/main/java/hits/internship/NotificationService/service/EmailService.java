@@ -194,4 +194,13 @@ public class EmailService {
         Mail mail = new Mail(meeting.getId(), meeting.getEmail(), "Компания назначила встречу", process);
         sendEmailWithThymeLeaf(mail);
     }
+
+    public void createChangingPassword(ChangingPassword changingPassword) {
+        Context context = new Context();
+        context.setVariable("code", changingPassword.getCode());
+
+        String process = templateEngine.process("Changing-password", context);
+        Mail mail = new Mail(changingPassword.getId(), changingPassword.getEmail(), "Смена пароля", process);
+        sendEmailWithThymeLeaf(mail);
+    }
 }
