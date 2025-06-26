@@ -61,7 +61,7 @@ namespace CompanyModule.Controllers.Controllers
         /// </summary>
         /// <returns>Встреча с компанией.</returns>
         [HttpPost]
-        [Authorize(Roles = "Curator")]
+        [Authorize(Roles = "Curator, DeanMember")]
         [Route("{companyId}/appointments/add")]
         [ProducesResponseType(typeof(AppointmentResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddAppointment(Guid companyId, AppointmentRequest createRequest)
@@ -124,7 +124,7 @@ namespace CompanyModule.Controllers.Controllers
         /// </summary>
         /// <returns>Встречи на конкретную неделю.</returns>
         [HttpGet]
-        [Authorize(Roles = "Curator, DeanMember")]
+        [Authorize(Roles = "Curator, DeanMember, Student")]
         [Route("appointments/calendar")]
         [ProducesResponseType(typeof(Dictionary<DateTime, Dictionary<int, ShortenAppointmentResponse?>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAppointmentsCalendar(DateTime startDate, DateTime endDate)
