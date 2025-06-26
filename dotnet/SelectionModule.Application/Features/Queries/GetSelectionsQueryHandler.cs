@@ -101,6 +101,7 @@ public class GetSelectionsQueryHandler : IRequestHandler<GetSelectionsQuery, Lis
                     Phone = student.Phone,
                     GroupNumber = student.Group.GroupNumber,
                 },
+                IsConfirmed = selectionEntity.IsConfirmed,
             };
 
             if (selectionEntity.Offer.HasValue)
