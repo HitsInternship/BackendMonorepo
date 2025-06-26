@@ -119,6 +119,7 @@ public class NotificationService {
     public void parsingChangingPassword(String message) {
         try {
             ChangingPassword changingPassword = objectMapper.readValue(message, ChangingPassword.class);
+            emailService.createChangingPassword(changingPassword);
         } catch (JsonProcessingException e) {
             log.error("Error parsing the message: {}", message);
             sendError(message);
