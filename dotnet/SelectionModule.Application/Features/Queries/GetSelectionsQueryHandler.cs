@@ -60,9 +60,9 @@ public class GetSelectionsQueryHandler : IRequestHandler<GetSelectionsQuery, Lis
 
         if (request.GroupNumber.HasValue)
         {
-            students = students.Where(x => x.Group.GroupNumber == request.GroupNumber.Value);
+            students = students.Include(x=>x.Group).Where(x => x.Group.GroupNumber == request.GroupNumber.Value);
             userIds = students.Select(s => s.UserId).ToList();
-            selectionsEntity = selectionsEntity.Where(x => userIds.Contains(x.Id));
+            selectionsEntity = selectionsEntity.Where(x => userIds.Contains(x.Candidate.UserId));
         }
 
         if (request.Status.HasValue)

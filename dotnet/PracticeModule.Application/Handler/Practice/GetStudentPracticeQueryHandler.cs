@@ -1,16 +1,11 @@
-using DeanModule.Contracts.Repositories;
-using DeanModule.Domain.Entities;
 using MediatR;
 using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
-using PracticeModule.Domain.Entity;
 using Shared.Domain.Exceptions;
-using StudentModule.Contracts.Repositories;
-using StudentModule.Domain.Entities;
 
-namespace PracticeModule.Application.Handler.PracticePart;
+namespace PracticeModule.Application.Handler.Practice;
 
-public class GetStudentPracticeQueryHandler : IRequestHandler<GetStudentPracticeQuery, Practice>
+public class GetStudentPracticeQueryHandler : IRequestHandler<GetStudentPracticeQuery, Domain.Entity.Practice>
 {
     private readonly IPracticeRepository _practiceRepository;
 
@@ -19,9 +14,9 @@ public class GetStudentPracticeQueryHandler : IRequestHandler<GetStudentPractice
         _practiceRepository = practiceRepository;
     }
 
-    public async Task<Practice> Handle(GetStudentPracticeQuery query, CancellationToken cancellationToken)
+    public async Task<Domain.Entity.Practice> Handle(GetStudentPracticeQuery query, CancellationToken cancellationToken)
     {
-        Practice? practice =
+        Domain.Entity.Practice? practice =
             (await _practiceRepository.ListAllActiveAsync()).FirstOrDefault(practice =>
                 practice.StudentId == query.studentId);
         if (practice == null)

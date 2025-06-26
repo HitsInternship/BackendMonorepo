@@ -4,6 +4,8 @@ using SelectionModule.Contracts.Commands.Selection;
 using SelectionModule.Contracts.Repositories;
 using SelectionModule.Domain.Entites;
 using SelectionModule.Domain.Enums;
+using StudentModule.Contracts.Repositories;
+using StudentModule.Domain.Enums;
 
 namespace SelectionModule.Application.Features.Commands.Selection;
 
@@ -11,11 +13,13 @@ public class CreateSelectionCommandHandler : IRequestHandler<CreateSelectionComm
 {
     private readonly IMediator _mediator;
     private readonly ISelectionRepository _selectionRepository;
+    private readonly IStudentRepository _studentRepository;
 
-    public CreateSelectionCommandHandler(IMediator mediator, ISelectionRepository selectionRepository)
+    public CreateSelectionCommandHandler(IMediator mediator, ISelectionRepository selectionRepository, IStudentRepository studentRepository)
     {
         _mediator = mediator;
         _selectionRepository = selectionRepository;
+        _studentRepository = studentRepository;
     }
 
     public async Task<Unit> Handle(CreateSelectionCommand request, CancellationToken cancellationToken)
@@ -41,6 +45,9 @@ public class CreateSelectionCommandHandler : IRequestHandler<CreateSelectionComm
             selection.Candidate = candidate;
 
             selections.Add(selection);
+
+            student.InternshipStatus = StudentInternshipStatus.Candidate;
+            await _studentRepository.UpdateAsync(student);
         }
 
         await _selectionRepository.AddRangeAsync(selections);

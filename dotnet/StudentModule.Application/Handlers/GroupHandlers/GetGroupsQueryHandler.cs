@@ -16,7 +16,7 @@ namespace StudentModule.Application.Handlers.GroupHandlers
 
         public async Task<List<GroupDto>> Handle(GetGroupsQuery request, CancellationToken cancellationToken)
         {
-            var groups = (await _groupRepository.GetGroupAsync()).OrderByDescending(x => x.GroupNumber).ToList();
+            var groups = (await _groupRepository.GetGroupAsync()).OrderBy(x => x.GroupNumber).ToList();
             var groupsDto = new List<GroupDto>(groups.Count);
 
             foreach (var group in groups)

@@ -10,6 +10,8 @@ namespace StudentModule.Persistence.Repositories
     public class StudentRepository(StudentModuleDbContext context, UserModuleDbContext userDbContext)
         : BaseEntityRepository<StudentEntity>(context), IStudentRepository
     {
+        private IStudentRepository _studentRepositoryImplementation;
+
         public async Task<List<StudentEntity>> GetStudentsByGroup(int groupNumber)
         {
             return await DbSet.Where(x => x.Group.GroupNumber == groupNumber).AsNoTracking().ToListAsync();
@@ -74,6 +76,11 @@ namespace StudentModule.Persistence.Repositories
                 .ToList();
 
             return result;
+        }
+
+        public new async Task<IQueryable<StudentEntity>> ListAllAsync()
+        {
+            return await Task.FromResult(DbSet.Include(x => x.Group).AsQueryable());
         }
     }
 }

@@ -26,4 +26,11 @@ public class SelectionRepository(SelectionDbContext context)
     {
         return await DbSet.AnyAsync(x => x.Candidate.StudentId == studentId);
     }
+    
+    public new async Task<IQueryable<SelectionEntity>> ListAllAsync()
+    {
+        return await Task.FromResult(DbSet.Include(x => x.Candidate)
+            .Include(x => x.GlobalSelection)
+            .AsNoTracking());
+    }
 }
