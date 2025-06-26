@@ -81,7 +81,7 @@
     </div>
 
     <div class="content">
-        <p class="notification">Компания назначила встречу для обсуждения практики:</p>
+        <p class="notification">Компания назначила встречу:</p>
 
         <div class="meeting-card">
             <div class="company-name" th:text="'Компания: ' + ${companyName}"></div>
@@ -94,13 +94,9 @@
             <p>Пожалуйста, проверьте детали встречи.</p>
         </div>
 
-        <p>Для просмотра подробностей и подтверждения встречи перейдите по ссылке:</p>
+        <p>Для просмотра подробностей перейдите по ссылке:</p>
         <a th:href="${url}" class="button">Подробнее о встрече</a>
 
-        <p style="margin-top: 20px;">
-            Если у вас возникли вопросы или вам нужно перенести встречу:<br>
-            <a href="mailto:meetings@university.edu">meetings@university.edu</a>
-        </p>
     </div>
 
     <div class="footer">
