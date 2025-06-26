@@ -14,7 +14,7 @@ public class CreateCandidateCommandHandler : IRequestHandler<CreateCandidateComm
         _candidateRepository = candidateRepository;
     }
 
-    public async Task<CandidateEntity> Handle(CreateCandidateCommand request, CancellationToken cancellationToken)
+    public Task<CandidateEntity> Handle(CreateCandidateCommand request, CancellationToken cancellationToken)
     {
         var candidate = new CandidateEntity
         {
@@ -23,6 +23,6 @@ public class CreateCandidateCommandHandler : IRequestHandler<CreateCandidateComm
             Selection = request.SelectionEntity
         };
         
-        return candidate;
+        return Task.FromResult(candidate);
     }
 }

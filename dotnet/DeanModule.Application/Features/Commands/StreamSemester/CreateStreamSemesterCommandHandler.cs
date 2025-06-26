@@ -29,10 +29,16 @@ public class CreateStreamSemesterCommandHandler : IRequestHandler<CreateStreamSe
     {
         if (!await _streamRepository.CheckIfExistsAsync(request.SemesterRequestDto.StreamId))
             throw new NotFound("Stream not found");
-        
+
         if (!await _semesterRepository.CheckIfExistsAsync(request.SemesterRequestDto.SemesterId))
             throw new SemesterNotFound(request.SemesterRequestDto.SemesterId);
 
+        if (await _streamSemesterRepository.CheckIfStreamSemesterExistsAsync(request.SemesterRequestDto.SemesterId,
+                request.SemesterRequestDto.StreamId))
+            throw new BadRequest("Stream already exists");
+
+        if (request.SemesterRequestDto.Number <= 0) throw new BadRequest("Number must be greater than 0");
+        
         var streamSemester = _mapper.Map<StreamSemesterEntity>(request.SemesterRequestDto);
 
         streamSemester.SemesterEntity = await _semesterRepository.GetByIdAsync(streamSemester.SemesterId);

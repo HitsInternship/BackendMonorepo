@@ -5,6 +5,7 @@ using DeanModule.Contracts.Dtos.Requests;
 using DeanModule.Contracts.Repositories;
 using DeanModule.Domain.Entities;
 using MediatR;
+using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
 
 namespace DeanModule.Application.Features.Commands.StreamSemester;
@@ -34,6 +35,12 @@ public class UpdateStreamSemesterCommandHandler : IRequestHandler<UpdateStreamSe
 
         if (!await _semesterRepository.CheckIfExistsAsync(request.StreamSemesterRequestDto.SemesterId))
             throw new SemesterNotFound(request.StreamSemesterRequestDto.StreamId);
+
+        if (await _streamSemesterRepository.CheckIfStreamSemesterExistsAsync(
+                request.StreamSemesterRequestDto.SemesterId, request.StreamSemesterRequestDto.StreamId))
+            throw new BadRequest("");
+
+        if (request.StreamSemesterRequestDto.Number <= 0) throw new BadRequest("Number must be greater than 0");
 
         var streamSemester = await _streamSemesterRepository.GetByIdAsync(request.StreamSemesterId);
 
