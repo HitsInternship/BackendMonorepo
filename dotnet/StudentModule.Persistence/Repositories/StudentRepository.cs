@@ -14,7 +14,7 @@ namespace StudentModule.Persistence.Repositories
 
         public async Task<List<StudentEntity>> GetStudentsByGroup(int groupNumber)
         {
-            return await DbSet.Where(x => x.Group.GroupNumber == groupNumber).AsNoTracking().ToListAsync();
+            return await DbSet.Where(x => x.Group.GroupNumber == groupNumber).ToListAsync();
         }
 
         public async Task<StudentEntity> GetStudentByIdAsync(Guid id)

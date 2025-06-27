@@ -63,7 +63,7 @@ public class CreateGlobalSelectionCommandHandler : IRequestHandler<CreateGlobalS
         {
             students.AddRange(await _studentRepository.GetStudentsByGroup(group.GroupNumber));
         }
-
+        
         if (students.Count == 0) throw new BadRequest("No students found");
 
         await _globalSelectionRepository.AddAsync(selection);
