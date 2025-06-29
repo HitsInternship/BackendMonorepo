@@ -4,10 +4,10 @@ namespace CompanyModule.Contracts.DTOs.Responses
 {
     public class CompanyResponse
     {
-        public Guid id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public CompanyStatus status { get; set; }
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public CompanyStatus Status { get; set; }
 
         public CompanyResponse() {}
     }

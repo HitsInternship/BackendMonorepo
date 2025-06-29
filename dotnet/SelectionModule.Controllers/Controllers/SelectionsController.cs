@@ -55,6 +55,38 @@ namespace SelectionModule.Controllers.Controllers
         }
 
         /// <summary>
+        /// Получение текущих глобальных отборов.
+        /// </summary>
+        /// <param name="isArchived">Архиынее или текущие</param>
+        /// <returns></returns>
+        [HttpGet, Route("selection/global")]
+        [Authorize(Roles = "DeanMember, Curator")]
+        [ProducesResponseType(typeof(List<GlobalSelectionDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetGlobalSelection([FromQuery] bool? isArchived = false)
+        {
+            return Ok(await _sender.Send(new GetGlobalSelectionsQuery(isArchived ?? false)));
+        }
+
+        /// <summary>
+        /// Получение отбора по ID.
+        /// </summary>
+        /// <param name="selectionId"></param>
+        /// <param name="semesterId"></param>
+        /// <param name="groupNumber"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet, Route("selection/global/{selectionId}")]
+        [Authorize(Roles = "DeanMember, Curator")]
+        [ProducesResponseType(typeof(GlobalSelectionResponseDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetGlobalSelectionById(Guid selectionId, Guid? semesterId, int? groupNumber,
+            SelectionStatus? status)
+        {
+            return Ok(await _sender.Send(new GetGlobalSelectionQuery(selectionId, groupNumber, status, semesterId,
+                User.GetUserId(), User.GetRoles())));
+        }
+
+
+        /// <summary>
         /// Получение процедуры отбора для указанного студента.
         /// </summary>
         /// <param name="selectionId">ID студента.</param>
@@ -66,24 +98,6 @@ namespace SelectionModule.Controllers.Controllers
         {
             return Ok(await _sender.Send(new GetSelectionQuery(selectionId, User.GetUserId(), User.GetRoles(),
                 null)));
-        }
-
-        /// <summary>
-        /// Получение списка всех процедур отбора с возможностью фильтрации.
-        /// Только для пользователей с ролью DeanMember.
-        /// </summary>
-        /// <param name="semesterId">ID семестра (опционально).</param>
-        /// <param name="groupNumber">Номер группы (опционально).</param>
-        /// <param name="status">Статус процедуры отбора (опционально).</param>
-        /// <returns>Список отборов с учётом применённых фильтров.</returns>
-        [HttpGet]
-        [Authorize(Roles = "DeanMember, Curator")]
-        [Route("selections")]
-        [ProducesResponseType(typeof(List<ListedSelectionDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetSelections(Guid? semesterId, int? groupNumber, SelectionStatus? status)
-        {
-            return Ok(await _sender.Send(new GetSelectionsQuery(groupNumber, status, semesterId, User.GetUserId(),
-                User.GetRoles())));
         }
 
         /// <summary>
@@ -107,10 +121,10 @@ namespace SelectionModule.Controllers.Controllers
         /// <returns>Результат архивирования.</returns>
         [HttpPost]
         [Authorize(Roles = "DeanMember")]
-        [Route("selection/archive")]
-        public async Task<IActionResult> ArchiveSelection()
+        [Route("selection/global/{id}/archive")]
+        public async Task<IActionResult> ArchiveSelection(Guid id)
         {
-            return Ok(await _sender.Send(new ArchiveGlobalSelectionCommand()));
+            return Ok(await _sender.Send(new ArchiveGlobalSelectionCommand(id)));
         }
 
         /// <summary>

@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PracticeModule.Application.Handler.PracticePart;
 using PracticeModule.Contracts.Commands;
 using PracticeModule.Contracts.DTOs.Requests;
 using PracticeModule.Contracts.DTOs.Responses;
@@ -14,6 +13,7 @@ using SelectionModule.Contracts.Dtos.Responses;
 using StudentModule.Contracts.Queries.StudentQueries;
 using StudentModule.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
+using Shared.Contracts.Dtos;
 
 namespace PracticeModule.Controllers.PracticeControllers
 {

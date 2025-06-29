@@ -1,25 +1,20 @@
-﻿using MediatR;
-using PracticeModule.Contracts.Queries;
+﻿using CompanyModule.Contracts.Repositories;
+using CompanyModule.Domain.Entities;
+using DeanModule.Contracts.Repositories;
+using DeanModule.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using PracticeModule.Contracts.DTOs;
+using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
-using UserModule.Contracts.Repositories;
-using StudentModule.Contracts.Repositories;
-using CompanyModule.Contracts.Repositories;
 using SelectionModule.Contracts.Repositories;
 using Shared.Domain.Exceptions;
-using OfficeOpenXml;
-using System.Data;
-using UserModule.Domain.Entities;
-using PracticeModule.Domain.Entity;
-using CompanyModule.Domain.Entities;
-using SelectionModule.Domain.Entites;
-using DeanModule.Domain.Entities;
-using DeanModule.Contracts.Repositories;
-using Microsoft.EntityFrameworkCore;
-using PracticeModule.Domain.Enum;
-using PracticeModule.Contracts.DTOs;
+using StudentModule.Contracts.Repositories;
+using UserModule.Contracts.Repositories;
 
-namespace PracticeModule.Application.Handler.PracticePart
+namespace PracticeModule.Application.Handler.Practice
 {
     public class GetExelAboutPracticeByCompanyQueryHandler : IRequestHandler<GetExelAboutPracticeByCompanyQuery, FileContentResult>
     {

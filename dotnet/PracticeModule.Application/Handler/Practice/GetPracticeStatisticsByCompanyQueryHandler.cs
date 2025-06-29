@@ -6,8 +6,7 @@ using MediatR;
 using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
 
-
-namespace PracticeModule.Application.Handler.PracticePart;
+namespace PracticeModule.Application.Handler.Practice;
 
 public class GetPracticeStatisticsByCompanyQueryHandler : IRequestHandler<GetPracticeStatisticsByCompanyQuery, Dictionary<SemesterEntity, Dictionary<Company, int>>>
 {

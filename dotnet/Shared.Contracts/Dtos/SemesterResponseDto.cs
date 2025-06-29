@@ -1,6 +1,4 @@
-using Shared.Contracts.Dtos;
-
-namespace DeanModule.Contracts.Dtos.Responses;
+namespace Shared.Contracts.Dtos;
 
 /// <summary>
 /// DTO для отображения информации о семестре.

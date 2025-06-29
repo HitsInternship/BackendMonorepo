@@ -7,18 +7,16 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
-using PracticeModule.Domain.Entity;
 using SelectionModule.Contracts.Repositories;
 using SelectionModule.Domain.Entites;
 using SelectionModule.Domain.Enums;
 using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
 using StudentModule.Domain.Entities;
-using StudentModule.Domain.Enums;
 using UserModule.Contracts.Queries;
 using UserModule.Domain.Entities;
 
-namespace PracticeModule.Application.Handler.PracticePart;
+namespace PracticeModule.Application.Handler.Practice;
 
 public class SearchPotentialPracticeQueryHandler : IRequestHandler<SearchPotentialPracticeQuery, List<Domain.Entity.Practice>>
 {

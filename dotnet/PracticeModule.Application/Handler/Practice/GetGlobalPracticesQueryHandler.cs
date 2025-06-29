@@ -8,7 +8,7 @@ using PracticeModule.Domain.Entity;
 using StudentModule.Contracts.Repositories;
 using StudentModule.Domain.Entities;
 
-namespace PracticeModule.Application.Handler.PracticePart;
+namespace PracticeModule.Application.Handler.Practice;
 
 public class GetGlobalPracticesQueryHandler : IRequestHandler<GetGlobalPracticesQuery, List<IGrouping<SemesterEntity, GlobalPractice>>>
 {

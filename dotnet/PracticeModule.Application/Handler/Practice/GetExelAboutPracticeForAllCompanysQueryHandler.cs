@@ -14,7 +14,7 @@ using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
 using UserModule.Contracts.Repositories;
 
-namespace PracticeModule.Application.Handler.PracticePart
+namespace PracticeModule.Application.Handler.Practice
 {
     public class GetExelAboutPracticeForAllCompanysQueryHandler : IRequestHandler<GetExelAboutPracticeForAllCompanysQuery, FileContentResult>
     {

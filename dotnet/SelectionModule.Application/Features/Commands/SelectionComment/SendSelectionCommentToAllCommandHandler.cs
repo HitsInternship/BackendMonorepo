@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NotificationModule.Contracts.Commands;
 using NotificationModule.Domain.Enums;
 using SelectionModule.Contracts.Commands.SelectionComment;
+using SelectionModule.Contracts.Dtos.Requests;
 using SelectionModule.Contracts.Repositories;
 using SelectionModule.Domain.Entites;
 using UserModule.Contracts.Repositories;
@@ -14,15 +15,17 @@ public class SendSelectionCommentToAllCommandHandler : IRequestHandler<SendSelec
     private readonly ISender _sender;
     private readonly IUserRepository _userRepository;
     private readonly ISelectionRepository _selectionRepository;
+    private readonly IVacancyRepository _vacancyRepository;
     private readonly ISelectionCommentRepository _selectionCommentRepository;
 
     public SendSelectionCommentToAllCommandHandler(ISender sender, ISelectionRepository selectionRepository,
-        IUserRepository userRepository, ISelectionCommentRepository selectionCommentRepository)
+        IUserRepository userRepository, ISelectionCommentRepository selectionCommentRepository, IVacancyRepository vacancyRepository)
     {
         _sender = sender;
         _selectionRepository = selectionRepository;
         _userRepository = userRepository;
         _selectionCommentRepository = selectionCommentRepository;
+        _vacancyRepository = vacancyRepository;
     }
 
     public async Task<Unit> Handle(SendSelectionCommentToAllCommand request, CancellationToken cancellationToken)
@@ -37,6 +40,16 @@ public class SendSelectionCommentToAllCommandHandler : IRequestHandler<SendSelec
         }
         else if (request.CommentRequestDto.SelectionStatus.HasValue)
             selections = selections.Where(x => x.SelectionStatus == request.CommentRequestDto.SelectionStatus.Value);
+        else if(request.CommentRequestDto.CompanyId.HasValue)
+        {
+            var vacancies = await _vacancyRepository.FindAsync(x=>x.CompanyId == request.CommentRequestDto.CompanyId.Value);
+            selections = selections.Where(x => vacancies.Any(v => v.Id == x.Offer));
+        }
+        else if (request.CommentRequestDto.PositionId.HasValue)
+        {
+            var vacancies = await _vacancyRepository.FindAsync(x => x.PositionId == request.CommentRequestDto.PositionId.Value);
+            selections = selections.Where(x => vacancies.Any(v => v.Id == x.Offer));
+        }
 
         var selectionsEntity = selections.Include(x => x.Candidate).ToList();
 

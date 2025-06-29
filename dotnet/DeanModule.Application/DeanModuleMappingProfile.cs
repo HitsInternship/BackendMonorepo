@@ -2,6 +2,7 @@ using AutoMapper;
 using DeanModule.Contracts.Dtos.Requests;
 using DeanModule.Contracts.Dtos.Responses;
 using DeanModule.Domain.Entities;
+using Shared.Contracts.Dtos;
 
 namespace DeanModule.Application;
 

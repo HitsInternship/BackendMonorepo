@@ -1,16 +1,12 @@
-using CompanyModule.Contracts.Repositories;
-using CompanyModule.Domain.Entities;
 using DeanModule.Contracts.Repositories;
 using DeanModule.Domain.Entities;
 using MediatR;
 using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
-using PracticeModule.Domain.Entity;
 using SelectionModule.Contracts.Repositories;
 using SelectionModule.Domain.Entites;
 
-
-namespace PracticeModule.Application.Handler.PracticePart;
+namespace PracticeModule.Application.Handler.Practice;
 
 public class GetPracticeStatisticsByPositionQueryHandler : IRequestHandler<GetPracticeStatisticsByPositionQuery, Dictionary<SemesterEntity, Dictionary<PositionEntity, int>>>
 {

@@ -1,3 +1,4 @@
+using System.Runtime.Intrinsics.X86;
 using DeanModule.Contracts.Repositories;
 using MediatR;
 using SelectionModule.Contracts.Commands.Selection;
@@ -41,12 +42,9 @@ public class CreateGlobalSelectionCommandHandler : IRequestHandler<CreateGlobalS
 
         var semester = await _semesterRepository.GetByIdAsync(request.SelectionRequestDto.SemesterId);
 
-        var result =
-            await _globalSelectionRepository.FindAsync(x =>
-                x.SemesterId == semester.Id && x.StreamId == stream.Id && x.IsDeleted == false);
-
-        if (result.Any()) throw new BadRequest("Selection with provided info already exists");
-
+        if((await _globalSelectionRepository.FindAsync(x=>x.IsDeleted == false && x.StreamId == stream.Id)).Any())
+            throw new BadRequest("Selection for selected stream already exists");
+        
         var selection = new GlobalSelection
         {
             StreamId = stream.Id,

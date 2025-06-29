@@ -1,16 +1,13 @@
-using DeanModule.Contracts.Repositories;
-using DeanModule.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PracticeModule.Contracts.Queries;
 using PracticeModule.Contracts.Repositories;
-using Shared.Domain.Exceptions;
 using StudentModule.Contracts.Repositories;
 using StudentModule.Domain.Entities;
 using UserModule.Contracts.Queries;
 using UserModule.Domain.Entities;
 
-namespace PracticeModule.Application.Handler.PracticePart;
+namespace PracticeModule.Application.Handler.Practice;
 
 public class SearchPracticeQueryHandler : IRequestHandler<SearchPracticeQuery, List<Domain.Entity.Practice>>
 {

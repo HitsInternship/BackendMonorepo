@@ -4,6 +4,7 @@ using DeanModule.Contracts.Queries;
 using DeanModule.Contracts.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Contracts.Dtos;
 
 namespace DeanModule.Application.Features.Queries;
 

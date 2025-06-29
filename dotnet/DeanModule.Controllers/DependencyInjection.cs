@@ -5,6 +5,7 @@ using DeanModule.Infrastructure;
 using DeanModule.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Contracts.Dtos;
 
 namespace DeanModule.Controllers;
 

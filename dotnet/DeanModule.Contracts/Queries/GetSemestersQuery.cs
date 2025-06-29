@@ -1,5 +1,6 @@
 using DeanModule.Contracts.Dtos.Responses;
 using MediatR;
+using Shared.Contracts.Dtos;
 
 namespace DeanModule.Contracts.Queries;
 
