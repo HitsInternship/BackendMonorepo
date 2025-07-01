@@ -94,7 +94,7 @@ namespace PracticeModule.Application.Handler.Practice
                 }
 
                 students = students
-                    .OrderByDescending(s => s.Group.GroupNumber)
+                    .OrderBy(s => s.Group.GroupNumber)
                     .ThenBy(s => s.User.Surname)
                     .ToList();
 
@@ -115,7 +115,6 @@ namespace PracticeModule.Application.Handler.Practice
                 for (int i = 0; i < students.Count(); i++)
                 {
                     var student = students[i];
-                    student.User = users.First(user => user.Id == student.UserId);
                     var practice = practices.First(practice => practice.StudentId == student.Id);
 
                     var position = await _positionRepository.GetByIdAsync(practices[i].PositionId);
