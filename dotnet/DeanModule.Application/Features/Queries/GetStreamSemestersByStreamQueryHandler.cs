@@ -46,6 +46,6 @@ public class
             result.Add(dto);
         }
 
-        return result;
+        return result.OrderBy(x => x.Number).ToList();
     }
 }

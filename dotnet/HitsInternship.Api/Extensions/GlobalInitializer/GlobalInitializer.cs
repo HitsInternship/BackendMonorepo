@@ -67,7 +67,7 @@ namespace HitsInternship.Api.Extensions.GlobalInitializer
                     {
                         StreamNumber = 9722,
                         Year = 2022,
-                        Status = StreamStatus.Practice,
+                        Status = StreamStatus.None,
                         Course = 3
                     }
                 )).id;
