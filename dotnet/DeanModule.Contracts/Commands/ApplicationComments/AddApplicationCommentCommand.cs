@@ -1,4 +1,3 @@
-using System.Windows.Input;
 using MediatR;
 
 namespace DeanModule.Contracts.Commands.ApplicationComments;

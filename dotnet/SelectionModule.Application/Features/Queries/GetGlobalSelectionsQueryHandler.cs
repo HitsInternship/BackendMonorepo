@@ -44,7 +44,7 @@ public class
                 IsDeleted = globalSelection.IsDeleted,
                 Semester = _mapper.Map<SemesterResponseDto>(
                     await _semesterRepository.GetByIdAsync(globalSelection.SemesterId)),
-                Stream = _mapper.Map<StreamDto>(await _streamRepository.GetByIdAsync(globalSelection.StreamId)),
+                Stream = _mapper.Map<StreamDto>(await _streamRepository.GetStreamByIdAsync(globalSelection.StreamId)),
             });
         }
 
