@@ -74,7 +74,6 @@ public class UploadExcelHandler : IRequestHandler<UploadExcelDTO, List<ExcelStud
 
        await _mediator.Send(command, cancellationToken);
 
-        await _context.Students.AddRangeAsync(studentEntities, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
         return students;

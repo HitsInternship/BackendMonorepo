@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudentModule.Infrastructure;
@@ -11,9 +12,11 @@ using StudentModule.Infrastructure;
 namespace StudentModule.Infrastructure.Migrations
 {
     [DbContext(typeof(StudentModuleDbContext))]
-    partial class StudentModuleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250702155434_table students renamed")]
+    partial class tablestudentsrenamed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

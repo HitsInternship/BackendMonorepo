@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentModule.Domain.Entities;
-using StudentModule.Domain.Enums;
 
 namespace StudentModule.Infrastructure
 {
@@ -10,7 +9,7 @@ namespace StudentModule.Infrastructure
 
         public DbSet<StreamEntity> Streams { get; set; }
         public DbSet<GroupEntity> Groups { get; set; }
-        public DbSet<StudentEntity> SStudents { get; set; }
+        public DbSet<StudentEntity> Students { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {

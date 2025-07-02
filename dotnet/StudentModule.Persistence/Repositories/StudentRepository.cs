@@ -10,8 +10,6 @@ namespace StudentModule.Persistence.Repositories
     public class StudentRepository(StudentModuleDbContext context, UserModuleDbContext userDbContext)
         : BaseEntityRepository<StudentEntity>(context), IStudentRepository
     {
-        private IStudentRepository _studentRepositoryImplementation;
-
         public async Task<List<StudentEntity>> GetStudentsByGroup(int groupNumber)
         {
             return await DbSet.Where(x => x.Group.GroupNumber == groupNumber).ToListAsync();
@@ -19,7 +17,7 @@ namespace StudentModule.Persistence.Repositories
 
         public async Task<StudentEntity> GetStudentByIdAsync(Guid id)
         {
-            var student = await context.SStudents
+            var student = await context.Students
                 .Include(s => s.Group)
                 .ThenInclude(g => g.Stream)
                 .FirstOrDefaultAsync(s => s.Id == id);
@@ -29,7 +27,7 @@ namespace StudentModule.Persistence.Repositories
 
         public async Task<StudentEntity> GetStudentByUserIdAsync(Guid id)
         {
-            var student = await context.SStudents
+            var student = await context.Students
                 .Include(s => s.Group)
                 .ThenInclude(g => g.Stream)
                 .FirstOrDefaultAsync(s => s.UserId == id);
@@ -39,7 +37,7 @@ namespace StudentModule.Persistence.Repositories
 
         public async Task<StudentEntity> GetStudentByName(Guid userId, string? middlename)
         {
-            var students = await context.SStudents
+            var students = await context.Students
                 .Include(s => s.Group)
                 .ThenInclude(g => g.Stream)
                 .FirstOrDefaultAsync(s => s.UserId == userId && s.Middlename == middlename);
@@ -49,7 +47,7 @@ namespace StudentModule.Persistence.Repositories
 
         public async Task<List<StudentEntity>> GetStudentsByGroupIdAsync(Guid groupId)
         {
-            var students = await context.SStudents
+            var students = await context.Students
                 .Where(s => s.GroupId == groupId)
                 .ToListAsync();
 
@@ -64,7 +62,7 @@ namespace StudentModule.Persistence.Repositories
                 .Select(u => new { u.Id, u.Name, u.Surname })
                 .ToListAsync();
 
-            var students = await context.SStudents
+            var students = await context.Students
                 .Select(s => new { s.Id, s.UserId, s.Middlename })
                 .ToListAsync();
 
