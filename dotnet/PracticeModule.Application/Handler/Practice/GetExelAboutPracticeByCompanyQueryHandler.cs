@@ -91,6 +91,17 @@ namespace PracticeModule.Application.Handler.Practice
                 .Contains(user.Id))
                 .ToList();
 
+            for (int i = 0; i < students.Count(); i++)
+            {
+                var student = students[i];
+                student.User = users[i];
+            }
+
+            students = students
+                .OrderByDescending(s => s.Group.GroupNumber)
+                .ThenBy(s => s.User.Surname)
+                .ToList();
+
             string sem = Semester.StartDate.Month == 9
                         ? $"Осенний семестр {Semester.StartDate.Year}/{Semester.StartDate.Year + 1}"
                         : $"Весенний семестр {Semester.StartDate.Year}";
