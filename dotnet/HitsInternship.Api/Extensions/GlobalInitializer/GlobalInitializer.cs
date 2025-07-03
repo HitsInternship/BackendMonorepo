@@ -22,13 +22,13 @@ namespace HitsInternship.Api.Extensions.GlobalInitializer
             {
                 var sender = scope.ServiceProvider.GetRequiredService<ISender>();
 
-                Guid? adminId = (await sender.Send(new GetListSearchUserQuery(new SearchUserRequest()
+                Guid? deanId = (await sender.Send(new GetListSearchUserQuery(new SearchUserRequest()
                     {
-                        email = "admin@example.com"
+                        email = "dean@example.com"
                     }
                 ))).FirstOrDefault()?.Id;
 
-                if (adminId != null) return;
+                if (deanId != null) return;
 
                 //Добавление сотрудника деканата
                 await sender.Send(new CreateDeanMemberCommand(new DeanMemberRequestDto()
