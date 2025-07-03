@@ -62,7 +62,7 @@ namespace HitsInternship.Api.Extensions.GlobalInitializer
                 ));
 
 
-                //Добавление студента
+                /*//Добавление студента
                 Guid streamId = (await sender.Send(new CreateStreamCommand()
                     {
                         StreamNumber = 9722,
@@ -126,7 +126,7 @@ namespace HitsInternship.Api.Extensions.GlobalInitializer
                     IsHeadMan = false,
                     Status = StudentStatus.OnAcademicLeave,
                     GroupId = groupId,
-                });
+                });*/
             }
         }
     }
