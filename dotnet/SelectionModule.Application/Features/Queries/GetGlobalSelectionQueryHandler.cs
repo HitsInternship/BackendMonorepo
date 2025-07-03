@@ -40,7 +40,7 @@ public class GetGlobalSelectionQueryHandler : IRequestHandler<GetGlobalSelection
             Semester = _mapper.Map<SemesterResponseDto>(
                 await _semesterRepository.GetByIdAsync(globalSelection.SemesterId)),
             Stream = _mapper.Map<StreamDto>(await _streamRepository.GetByIdAsync(globalSelection.StreamId)),
-            Selections = await _mediator.Send(new GetSelectionsQuery(request.GroupNumber, request.Status,
+            Selections = await _mediator.Send(new GetSelectionsQuery(request.Id,request.GroupNumber, request.Status,
                 request.SemesterId, request.UserId, request.Roles), cancellationToken)
         };
     }

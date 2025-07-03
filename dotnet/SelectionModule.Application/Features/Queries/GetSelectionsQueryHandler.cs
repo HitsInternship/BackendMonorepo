@@ -42,6 +42,7 @@ public class GetSelectionsQueryHandler : IRequestHandler<GetSelectionsQuery, Lis
         List<Guid> userIds;
         IQueryable<StudentEntity> students = await _studentRepository.ListAllAsync();
         var selectionsEntity = await _selectionRepository.ListAllAsync();
+        selectionsEntity = selectionsEntity.Where(x => x.GlobalSelectionId == request.SelectionId);
 
         if (request.Roles.Contains("Curator"))
         {
@@ -60,7 +61,7 @@ public class GetSelectionsQueryHandler : IRequestHandler<GetSelectionsQuery, Lis
 
         if (request.GroupNumber.HasValue)
         {
-            students = students.Include(x=>x.Group).Where(x => x.Group.GroupNumber == request.GroupNumber.Value);
+            students = students.Include(x => x.Group).Where(x => x.Group.GroupNumber == request.GroupNumber.Value);
             userIds = students.Select(s => s.UserId).ToList();
             selectionsEntity = selectionsEntity.Where(x => userIds.Contains(x.Candidate.UserId));
         }

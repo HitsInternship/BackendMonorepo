@@ -5,6 +5,7 @@ using SelectionModule.Domain.Enums;
 namespace SelectionModule.Contracts.Queries;
 
 public record GetSelectionsQuery(
+    Guid SelectionId,
     int? GroupNumber,
     SelectionStatus? Status,
     Guid? SemesterId,
