@@ -32,11 +32,11 @@ public class SendSelectionCommentToAllCommandHandler : IRequestHandler<SendSelec
     {
         var selections = await _selectionRepository.ListAllActiveAsync();
 
-        if (request.CommentRequestDto.SelectedSelections != null && request.CommentRequestDto.SelectedSelections.Any())
+        if (request.CommentRequestDto.SelectedUsers != null && request.CommentRequestDto.SelectedUsers.Any())
         {
             selections = selections.Where(x =>
                 x.Candidate.Selection != null &&
-                request.CommentRequestDto.SelectedSelections.Contains(x.Candidate.Selection.Id));
+                request.CommentRequestDto.SelectedUsers.Contains(x.Candidate.Selection.Id));
         }
         else if (request.CommentRequestDto.SelectionStatus.HasValue)
             selections = selections.Where(x => x.SelectionStatus == request.CommentRequestDto.SelectionStatus.Value);

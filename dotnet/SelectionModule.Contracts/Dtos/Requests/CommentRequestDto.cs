@@ -11,5 +11,5 @@ public record CommentRequestDto
     public Guid? CompanyId { get; set; }
     
     public Guid? PositionId { get; set; }
-    public List<Guid>? SelectedSelections { get; set; }
+    public List<Guid>? SelectedUsers { get; set; }
 }
